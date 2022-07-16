@@ -1,3 +1,29 @@
+# WGU Capstone
+
+## Assignment
+
+https://sites.google.com/wgu.edu/soft-dev-capstone-site/home
+
+## Assets
+
+https://fontawesome.com/icons/
+https://bootstrap.build/themes
+https://react-bootstrap.netlify.app/
+https://getbootstrap.com/
+https://reactrouter.com/
+
+## APIs
+
+collection: https://rapidapi.com/collection/food-apis
+
+### Tasty
+
+https://rapidapi.com/apidojo/api/tasty/
+
+
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
