@@ -1,17 +1,18 @@
+import { Container } from 'react-bootstrap'
 import Navigation from './Navigation'
 
 const TopNav = ({ children }) => {
   return (
     <>
       <Navigation />
-      <div className='container-fluid'>{children}</div>
+      <Container>{children}</Container>
     </>
   )
 }
 
 const SideNav = ({ children }) => {
   return (
-    <div className='container-fluid p-3'>
+    <Container className='p-3'>
       <div className='row'>
         <div className='col'>
           <Navigation />
@@ -20,7 +21,7 @@ const SideNav = ({ children }) => {
           <div className='container-fluid'>{children}</div>
         </div>
       </div>
-    </div>
+    </Container>
   )
 }
 const Layout = ({ sideNav, children }) => {
