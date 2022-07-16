@@ -7,18 +7,16 @@ import Navigation from './components/Navigation'
 
 import './styles/App.css'
 import './styles/bootstrap.css'
+import Reports from './pages/Reports'
 
 function App() {
   return (
-    <>
-      <Navigation />
-
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path={routes.GROCERIES} element={<Groceries />} />
-        <Route path={routes.INVENTORY} element={<Inventory />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path={routes.GROCERIES} element={<Groceries />} />
+      <Route path={routes.INVENTORY} element={<Inventory />} />
+      <Route path={routes.REPORTS} element={<Reports />} />
+    </Routes>
   )
 }
 

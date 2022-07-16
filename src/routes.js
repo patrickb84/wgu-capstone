@@ -1,7 +1,8 @@
 const routes = {
   HOME: '/',
   GROCERIES: '/groceries',
-  INVENTORY: '/inventory'
+  INVENTORY: '/inventory',
+  REPORTS: '/reports'
 }
 
 export default routes
