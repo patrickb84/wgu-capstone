@@ -5,25 +5,26 @@ const TopNav = ({ children }) => {
   return (
     <>
       <Navigation />
-      <Container>{children}</Container>
+      <Container fluid className='py-2'>{children}</Container>
     </>
   )
 }
 
 const SideNav = ({ children }) => {
   return (
-    <Container className='p-3'>
+    <Container className='py-5'>
       <div className='row'>
         <div className='col'>
           <Navigation />
         </div>
         <div className='col-9'>
-          <div className='container-fluid'>{children}</div>
+          <div className='container'>{children}</div>
         </div>
       </div>
     </Container>
   )
 }
+
 const Layout = ({ sideNav, children }) => {
   return sideNav ? <SideNav {...{ children }} /> : <TopNav {...{ children }} />
 }
