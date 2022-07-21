@@ -3,63 +3,80 @@ import routes from '../routes'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
-import NavDropdown from 'react-bootstrap/NavDropdown'
+import { NavDropdown } from 'react-bootstrap'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import useFirebaseContext from '../context/FirebaseContext'
+import { signOut } from 'firebase/auth'
+import { CONST_APP_NAME } from '../constants'
 
-const TopNav = () => {
+const NavbarBrandContainer = () => (
+  <LinkContainer to={routes.HOME}>
+    <Navbar.Brand>{CONST_APP_NAME}</Navbar.Brand>
+  </LinkContainer>
+)
+
+const NavLinkContainer = ({ path, children }) => (
+  <LinkContainer to={path}>
+    <Nav.Link>{children}</Nav.Link>
+  </LinkContainer>
+)
+
+const NavDropdownContainer = ({ path, children }) => (
+  <LinkContainer to={path}>
+    <NavDropdown.Item>{children}</NavDropdown.Item>
+  </LinkContainer>
+)
+
+export const TopBar = ({ bg = 'transparent', children, ...props }) => (
+  <Navbar bg={bg} {...props}>
+    <NavbarBrandContainer />
+    {children}
+  </Navbar>
+)
+
+const Navigation = ({user}) => {
+  const { auth } = useFirebaseContext()
+
+  const logout = async () => {
+    await signOut(auth)
+  }
+
   return (
-    <Navbar bg='dark' variant='dark' expand='lg'>
-      {/* <Container fluid> */}
-      <LinkContainer to={routes.HOME}>
-        <Navbar.Brand>WGU Capstone</Navbar.Brand>
-      </LinkContainer>
-
+    <Navbar bg='dark' variant='dark' expand='lg' fixed='top'>
+      <NavbarBrandContainer />
       <Navbar.Toggle aria-controls='basic-navbar-nav' />
+
       <Navbar.Collapse id='basic-navbar-nav'>
         <Nav style={{ width: '100%', justifyContent: 'end' }}>
-          <LinkContainer to={routes.HOME}>
-            <Nav.Link>Home</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to={routes.GROCERIES}>
-            <Nav.Link>Groceries</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to={routes.INVENTORY}>
-            <Nav.Link>Inventory</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to={routes.REPORTS}>
-            <Nav.Link>Reports</Nav.Link>
-          </LinkContainer>
+          <NavLinkContainer path={routes.HOME}>Home</NavLinkContainer>
 
           <NavDropdown id='user-menu-dropdown' title={userMenuIcon}>
-            <NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>
-            <NavDropdown.Item href='#action/3.2'>
-              Another action
-            </NavDropdown.Item>
-            <NavDropdown.Item href='#action/3.3'>Something</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href='#action/3.4'>
-              Separated link
-            </NavDropdown.Item>
+            {user ? (
+              <>
+                <NavDropdown.Item>
+                  <div className='mb-2'>
+                    <small className='d-block mb-0'>Logged in as:</small>
+                    <div className='text-dark'>{user.email}</div>
+                  </div>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+              </>
+            ) : (
+              <>
+                <NavDropdownContainer path={routes.LOGIN}>
+                  Login
+                </NavDropdownContainer>
+                <NavDropdownContainer path={routes.REGISTER}>
+                  Register
+                </NavDropdownContainer>
+              </>
+            )}
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>
-      {/* </Container> */}
     </Navbar>
   )
-}
-
-const SideNav = () => {
-  return (
-    <ul className='list-group'>
-      <li className='list-group-item'>An item</li>
-      <li className='list-group-item'>A second item</li>
-      <li className='list-group-item'>A third item</li>
-      <li className='list-group-item'>A fourth item</li>
-      <li className='list-group-item'>And a fifth one</li>
-    </ul>
-  )
-}
-const Navigation = ({ sideNav }) => {
-  return sideNav ? <SideNav /> : <TopNav />
 }
 
 export default Navigation

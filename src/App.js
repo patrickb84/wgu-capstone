@@ -1,22 +1,36 @@
-import { Routes, Route } from 'react-router-dom'
-import Groceries from './pages/Groceries'
+import { Route, Routes } from 'react-router-dom'
+import Login from './pages/Login'
 import Home from './pages/Home'
-import Inventory from './pages/Inventory'
+import Register from './pages/Register'
 import routes from './routes'
-import Navigation from './components/Navigation'
+import Dashboard from './pages/Dashboard'
 
 import './styles/App.css'
 import './styles/bootstrap.css'
-import Reports from './pages/Reports'
+import useFirebaseContext from './context/FirebaseContext'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import Navigation from './components/Navigation'
+
+// https://www.robinwieruch.de/react-router-private-routes/
+// PROTECTED ROUTES
 
 function App() {
+  const { auth } = useFirebaseContext()
+  const [user, loading, error] = useAuthState(auth)
+
   return (
-    <Routes>
-      <Route path='/' element={<Home />} />
-      <Route path={routes.GROCERIES} element={<Groceries />} />
-      <Route path={routes.INVENTORY} element={<Inventory />} />
-      <Route path={routes.REPORTS} element={<Reports />} />
-    </Routes>
+    <>
+      <Navigation user={user} />
+
+      <main id='layout'>
+        <Routes>
+          <Route index element={<Home user={user} />} />
+          <Route path={routes.LOGIN} element={<Login user={user} />} />
+          <Route path={routes.REGISTER} element={<Register user={user} />} />
+          <Route path={routes.DASHBOARD} element={<Dashboard user={user} />} />
+        </Routes>
+      </main>
+    </>
   )
 }
 
