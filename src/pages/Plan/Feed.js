@@ -2,6 +2,7 @@ import { Container } from 'react-bootstrap'
 import Layout from '../../components/Layout'
 
 import { format, addDays } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 
 const getNext30 = () => {
   const days = []
@@ -14,6 +15,7 @@ const getNext30 = () => {
 }
 
 const Feed = () => {
+  const navigate = useNavigate()
   const next30 = getNext30()
 
   return (
@@ -30,10 +32,14 @@ const Feed = () => {
                 key={idx}
                 className='col-12 py-2'
                 style={{ lineHeight: 1.8 }}>
-                <div className='card card-body'>
+                <div
+                  className='card card-body'
+                  onClick={() => navigate('/day/0')}>
                   <div className='p-3 d-flex justify-content-end-'>
                     {/* <i class='fa-light fa-pot-food fa-lg text-muted'></i> */}
-                    <i class='fa-light fa-user-chef' style={{fontSize: 24}}></i>
+                    <i
+                      class='fa-light fa-user-chef'
+                      style={{ fontSize: 24 }}></i>
                   </div>
                   <div className='row'>
                     <div className='col'>

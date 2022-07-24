@@ -1,8 +1,14 @@
+import { Container } from 'react-bootstrap'
+import Layout from '../../components/Layout'
+
 const MealPlanDay = () => {
   return (
-    <div>
-      <h1>Meal Plan Day</h1>
-    </div>
+    <Layout>
+      <Container className='py-2'>
+        
+        <h1>Meal Plan Day</h1>
+      </Container>
+    </Layout>
   )
 }
 

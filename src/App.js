@@ -26,7 +26,7 @@ function App() {
         ) : (
           <>
             <Route index element={<Feed />} />
-            <Route index element={<MealPlanDay />} />
+            <Route path='day/:id' element={<MealPlanDay />} />
           </>
         )}
 
