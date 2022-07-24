@@ -1,14 +1,5 @@
-import Navigation from './Navigation'
-
-const Layout = ({ children, ...props }) => {
-  return (
-    <>
-
-      <div id='layout' className={`${props.className ? props.className : ''}`}>
-        {children}
-      </div>
-    </>
-  )
+const Layout = ({ children }) => {
+  return <div className='pt-5'>{children}</div>
 }
 
 export default Layout

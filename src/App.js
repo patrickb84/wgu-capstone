@@ -1,35 +1,37 @@
 import { Route, Routes } from 'react-router-dom'
-import Login from './pages/Login'
-import Home from './pages/Home'
-import Register from './pages/Register'
-import routes from './routes'
-import Dashboard from './pages/Dashboard'
-
-import './styles/App.css'
-import './styles/bootstrap.css'
+import Navbar from './components/Navbar'
 import useFirebaseContext from './context/FirebaseContext'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import Navigation from './components/Navigation'
-
-// https://www.robinwieruch.de/react-router-private-routes/
-// PROTECTED ROUTES
+import Error404 from './pages/404'
+import Login from './pages/Auth/Login'
+import Register from './pages/Auth/Register'
+import Home from './pages/Home/Home'
+import Feed from './pages/Plan/Feed'
+import MealPlanDay from './pages/Plan/MealPlanDay'
+import './styles/App.scss'
 
 function App() {
-  const { auth } = useFirebaseContext()
-  const [user, loading, error] = useAuthState(auth)
+  const { user } = useFirebaseContext()
 
   return (
     <>
-      <Navigation user={user} />
+      <Navbar />
 
-      <main id='layout'>
-        <Routes>
-          <Route index element={<Home user={user} />} />
-          <Route path={routes.LOGIN} element={<Login user={user} />} />
-          <Route path={routes.REGISTER} element={<Register user={user} />} />
-          <Route path={routes.DASHBOARD} element={<Dashboard user={user} />} />
-        </Routes>
-      </main>
+      <Routes>
+        {!user ? (
+          <>
+            <Route index element={<Home />} />
+            <Route path='login' element={<Login />} />
+            <Route path='register' element={<Register />} />
+          </>
+        ) : (
+          <>
+            <Route index element={<Feed />} />
+            <Route index element={<MealPlanDay />} />
+          </>
+        )}
+
+        <Route path='*' element={<Error404 />} />
+      </Routes>
     </>
   )
 }

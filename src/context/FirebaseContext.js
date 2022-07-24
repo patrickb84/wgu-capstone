@@ -1,14 +1,23 @@
-import { getAuth } from 'firebase/auth'
+import { getAuth, signOut as signOutFirebase } from 'firebase/auth'
 import { createContext, useContext } from 'react'
-import { app } from '../firebase/config'
+import { firebaseConfig } from '../api/firebase/config'
+import { initializeApp } from 'firebase/app'
+import { useAuthState } from 'react-firebase-hooks/auth'
+
+const app = initializeApp(firebaseConfig)
 
 const FirebaseContext = createContext(null)
 
 export const FirebaseProvider = ({ children }) => {
   const auth = getAuth(app)
+  const [user, loading, error] = useAuthState(auth)
+
+  console.log([user, loading, error])
+
+  const signOut = () => signOutFirebase(auth)
 
   return (
-    <FirebaseContext.Provider value={{ auth }}>
+    <FirebaseContext.Provider value={{ auth, user, signOut }}>
       {children}
     </FirebaseContext.Provider>
   )

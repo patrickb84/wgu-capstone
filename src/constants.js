@@ -1,1 +1,0 @@
-export const CONST_APP_NAME = 'Food Stash'

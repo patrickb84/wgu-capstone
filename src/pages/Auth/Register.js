@@ -1,27 +1,20 @@
 import { useState } from 'react'
 import { Button, Card, Container, Form } from 'react-bootstrap'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import useFirebaseContext from '../context/FirebaseContext'
-import { CONST_APP_NAME } from '../constants'
-import { Link } from 'react-router-dom'
-import routes from '../routes'
+import { Link, Navigate } from 'react-router-dom'
+import GoogleSignInButton from '../../components/GoogleSignInButton'
+import LineSplitWord from '../../components/LineSplitWord'
+import useFirebaseContext from '../../context/FirebaseContext'
+import { APP_NAME } from '../../settings'
 
 const Register = () => {
-  /**
-   * in form:
-   *
-   * [] get email
-   * [] get password
-   * [] or login with gmail
-   * [] validate
-   * [] validation handling
-   */
-  const { auth } = useFirebaseContext()
-  const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth)
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const { auth } = useFirebaseContext()
+
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth)
 
   const validate = () => {
     // TODO: Validate
@@ -34,31 +27,28 @@ const Register = () => {
   }
 
   if (loading) {
-    console.warn('sign up loading', loading)
-  }
-  if (error) {
-    console.error('sign up error', error)
-  }
-  if (user) {
-    console.log('sign up -- user', user)
+    console.warn('sign in loading', loading)
   }
 
-  const handleRegisterGoogle = () => {
-    console.log('handle google sign up')
+  if (error) {
+    console.error('sign in error', error)
   }
+
+  if (user) return <Navigate to='/' replace />
 
   return (
     <Container
       fluid
       className='bg-secondary d-flex justify-content-center align-items-center h-100'>
-      <Card style={{ width: '30rem', maxWidth: '100%' }} className='shadow p-2'>
+      <Card style={{ width: '27rem', maxWidth: '100%' }} className='shadow p-2'>
         <Card.Body>
-          <Card.Title className='text-center'>
-            <h4>Create a {CONST_APP_NAME} account</h4>
+          <Card.Title className='text-center font-display'>
+            <i className='fa-regular fa-hat-chef fa-2x mb-2' />
+            <h4>Create a {APP_NAME} account</h4>
           </Card.Title>
 
           <p className='text-center text-muted mb-4'>
-            Already registered? <Link to={routes.REGISTER}>Sign in</Link>
+            Already registered? <Link to={'/login'}>Sign in</Link>
           </p>
 
           <Form.Group className='mb-3' controlId='formBasicEmail'>
@@ -81,12 +71,14 @@ const Register = () => {
               value={password}
             />
           </Form.Group>
-          <Button variant='primary' size='block' onClick={handleRegisterEmail}>
+          <Button
+            variant='primary'
+            className='w-100 mb-2'
+            onClick={handleRegisterEmail}>
             Sign Up
           </Button>
-          <Button variant='danger' size='block' onClick={handleRegisterGoogle}>
-            Sign up with Google
-          </Button>
+          <LineSplitWord>or</LineSplitWord>
+          <GoogleSignInButton />
         </Card.Body>
       </Card>
     </Container>

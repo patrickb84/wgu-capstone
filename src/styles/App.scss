@@ -1,0 +1,16 @@
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Leckerli+One&family=Sacramento&family=Yellowtail&display=swap');
+
+.font-display {
+  font-family: 'Fredoka One', cursive;
+}
+
+@import 'custom';
