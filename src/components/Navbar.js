@@ -8,10 +8,10 @@ const Navbar = () => {
   const { user, signOut } = useFirebaseContext()
 
   return (
-    <BsNavbar bg='dark' variant='dark' expand='lg' fixed='top'>
+    <BsNavbar bg='white' variant='light' className='navbar-border' expand='lg' fixed='top'>
       <Container>
         <LinkContainer to='/'>
-          <BsNavbar.Brand className='font-display'>
+          <BsNavbar.Brand className='font-display text-primary'>
             <i className='fa fa-hat-chef me-2' />
             {APP_NAME}
           </BsNavbar.Brand>
@@ -21,15 +21,15 @@ const Navbar = () => {
           <Nav className='ms-auto'>
             {!user ? (
               <>
-                <Link to='/login' className='btn btn-primary'>
+                <Link to='/login' className='btn btn-outline-secondary'>
                   Sign In
                 </Link>
-                <Link to='/register' className='btn btn-secondary ms-2'>
+                <Link to='/register' className='btn btn-primary ms-2'>
                   Sign Up
                 </Link>
               </>
             ) : (
-              <Button onClick={signOut} className='btn btn-danger'>
+              <Button onClick={signOut} className='btn btn-secondary'>
                 Sign Out
               </Button>
             )}

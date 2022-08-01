@@ -11,9 +11,9 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const { auth } = useFirebaseContext()
+  const { auth, user } = useFirebaseContext()
 
-  const [signInWithEmailAndPassword, user, loading, error] =
+  const [signInWithEmailAndPassword, _user, loading, error] =
     useSignInWithEmailAndPassword(auth)
 
   const handleSignIn = async () => {
@@ -28,7 +28,10 @@ const Login = () => {
     console.error('sign in error', error)
   }
 
-  if (user) return <Navigate to='/' replace />
+  if (user) {
+    console.log('user....', user)
+    return <Navigate to='/' replace />
+  }
 
   return (
     <Container
@@ -36,12 +39,12 @@ const Login = () => {
       className='bg-secondary d-flex justify-content-center align-items-center h-100'>
       <Card style={{ width: '27rem', maxWidth: '100%' }} className='shadow p-2'>
         <Card.Body>
-          <Card.Title className='text-center font-display'>
-            <i className='fa-regular fa-hat-chef fa-2x mb-2' />
-            <h3>{APP_NAME}</h3>
+          <Card.Title className='text-center font-display text-primary py-2'>
+            <i className='fa-solid fa-hat-chef fa-2x mb-2' />
+            <h3>Sign In</h3>
           </Card.Title>
 
-          <p className='text-center text-muted mb-4'>
+          <p className='text-center text-muted mb-4 py-1'>
             New to {APP_NAME}? <Link to={'/register'}>Sign up now</Link>
           </p>
 
@@ -67,7 +70,7 @@ const Login = () => {
           </div>
 
           <Button
-            variant='primary'
+            variant='secondary'
             className='w-100 mb-2'
             onClick={handleSignIn}>
             Sign In

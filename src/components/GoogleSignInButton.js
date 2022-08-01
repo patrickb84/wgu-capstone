@@ -3,11 +3,9 @@ import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { Navigate } from 'react-router-dom'
 import useFirebaseContext from '../context/FirebaseContext'
 
-const GoogleSignInButton = ({ children }) => {
+const GoogleSignInButton = () => {
   const { auth } = useFirebaseContext()
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
-
-  if (user) return <Navigate to='/' replace />
 
   return (
     <Button

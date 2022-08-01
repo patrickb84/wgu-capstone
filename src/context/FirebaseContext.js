@@ -14,7 +14,7 @@ export const FirebaseProvider = ({ children }) => {
 
   console.log([user, loading, error])
 
-  const signOut = () => signOutFirebase(auth)
+  const signOut = async () => signOutFirebase(auth)
 
   return (
     <FirebaseContext.Provider value={{ auth, user, signOut }}>
