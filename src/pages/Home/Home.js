@@ -1,11 +1,23 @@
 import { Container } from 'react-bootstrap'
+import { useLocation } from 'react-router-dom'
 import { Link, Navigate } from 'react-router-dom'
 import useFirebaseContext from '../../context/FirebaseContext'
 
 const Home = () => {
   const { user } = useFirebaseContext()
+  const location = useLocation()
+  console.warn(location)
 
-  if (user) return <Navigate to='/dashboard' />
+  if (user)
+    return (
+      <Navigate
+        to={
+          location.state && location.state.from
+            ? location.state.from
+            : '/dashboard'
+        }
+      />
+    )
 
   return (
     <section className='bg-light pt-5'>

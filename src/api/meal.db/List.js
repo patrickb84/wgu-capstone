@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { APIRequest } from '../APIRequest'
 import { headers } from './config'
 

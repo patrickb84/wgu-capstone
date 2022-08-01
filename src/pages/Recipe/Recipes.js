@@ -1,33 +1,22 @@
-import { useEffect, useState } from 'react'
-import MealDB from '../../api/meal.db'
+import { useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
+import useMealDB from '../../context/MealsDBContext'
+import LatestRecipes from './LatestRecipes'
 
 const Recipes = () => {
-  const [categories, setCategories] = useState([])
+  const { fetchCategories, fetchAreas } = useMealDB()
 
   useEffect(() => {
-    // MealDB.list
-    //   .fetchMealCategories()
-    //   .then(data => setCategories(data.categories))
-    MealDB.lookup.fetchRandomMeal().then(data => console.log(data))
-  }, [])
+    fetchCategories()
+    fetchAreas()
+  }, [fetchCategories, fetchAreas])
+
   return (
     <>
       <h1>Recipes</h1>
-      {/* {categories.map(
-        ({
-          idCategory,
-          strCategory,
-          strCategoryThumb,
-          strCategoryDescription,
-        }) => (
-          <div key='idCategory'>
-            <div>{idCategory}</div>
-            <div>{strCategory}</div>
-            <img src={strCategoryThumb} />
-            <div>{strCategoryDescription}</div>
-          </div>
-        )
-      )} */}
+
+      <LatestRecipes />
+      {/* <Outlet /> */}
     </>
   )
 }

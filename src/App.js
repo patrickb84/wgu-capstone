@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard/Dashboard'
 import Home from './pages/Home/Home'
 import Feed from './pages/Plan/Feed'
 import MealPlanDay from './pages/Plan/MealPlanDay'
+import Recipe from './pages/Recipe/Recipe'
 import Recipes from './pages/Recipe/Recipes'
 import './styles/App.scss'
 
@@ -24,7 +25,9 @@ function App() {
         <Route path='dashboard' element={<Dashboard />}>
           <Route index element={<Feed />} />
           <Route path='recipes' element={<Recipes />} />
+          <Route path='recipe/:recipeId' element={<Recipe />} />
         </Route>
+
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
 

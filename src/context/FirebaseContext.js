@@ -12,9 +12,11 @@ export const FirebaseProvider = ({ children }) => {
   const auth = getAuth(app)
   const [user, loading, error] = useAuthState(auth)
 
-  console.log([user, loading, error])
+  console.log({ user, loading, error })
 
   const signOut = async () => signOutFirebase(auth)
+
+  // const signInSetCookie = () => {}
 
   return (
     <FirebaseContext.Provider value={{ auth, user, signOut }}>
@@ -23,8 +25,6 @@ export const FirebaseProvider = ({ children }) => {
   )
 }
 
-const useFirebaseContext = () => {
-  return useContext(FirebaseContext)
-}
+const useFirebaseContext = () => useContext(FirebaseContext)
 
 export default useFirebaseContext
