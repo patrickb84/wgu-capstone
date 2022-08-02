@@ -3,7 +3,7 @@ import { headers } from './config'
 
 export class Filter extends APIRequest {
   _url = 'https://themealdb.p.rapidapi.com/filter.php'
-  
+
   /**
    *
    * @param {string} ingredient i.e. 'chicken_breast'
@@ -61,7 +61,9 @@ export class Filter extends APIRequest {
       params: { a: area },
       headers,
     }
-    return this.runRequest(options)
+    const data = await this.runRequest(options)
+    
+    return data.meals
   }
 }
 

@@ -45,7 +45,10 @@ export class List extends APIRequest {
         'X-RapidAPI-Host': 'themealdb.p.rapidapi.com',
       },
     }
-    return this.runRequest(options)
+    const data = await this.runRequest(options)
+    const categories = data.meals
+
+    return categories
   }
 
   /**
@@ -59,7 +62,10 @@ export class List extends APIRequest {
       params: { a: 'list' },
       headers,
     }
-    return this.runRequest(options)
+    const data = await this.runRequest(options)
+    const areas = data.meals
+
+    return areas
   }
 
   /**
@@ -73,7 +79,10 @@ export class List extends APIRequest {
       params: { i: 'list' },
       headers,
     }
-    return this.runRequest(options)
+    const data = await this.runRequest(options)
+    const ingredients = data.meals
+
+    return ingredients
   }
 }
 

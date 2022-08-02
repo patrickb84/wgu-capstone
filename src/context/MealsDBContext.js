@@ -6,21 +6,24 @@ const MealDBContext = createContext(null)
 export const MealDBProvider = ({ children }) => {
   const fetchIngredients = async () => {
     const data = await MealDB.list.fetchIngredients()
-    console.log(data)
-    return data.ingredients
+    return data
   }
 
   const fetchCategories = async () => {
-    const data = await MealDB.list.fetchCategories()
-    const categories = data.meals
+    const categories = await MealDB.list.fetchCategories()
+
+    console.log(categories)
     return categories
   }
 
   const fetchAreas = async () => {
-    const data = await MealDB.list.fetchAreas()
-    const areas = data.meals
-    console.log(areas)
+    const areas = await MealDB.list.fetchAreas()
     return areas
+  }
+
+  const filterByArea = async area => {
+    const recipes = await MealDB.filter.filterByArea(area)
+    return recipes
   }
 
   return (
@@ -29,6 +32,7 @@ export const MealDBProvider = ({ children }) => {
         fetchIngredients,
         fetchCategories,
         fetchAreas,
+        filterByArea
       }}>
       {children}
     </MealDBContext.Provider>

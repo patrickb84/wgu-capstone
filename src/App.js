@@ -10,6 +10,8 @@ import Feed from './pages/Plan/Feed'
 import MealPlanDay from './pages/Plan/MealPlanDay'
 import Recipe from './pages/Recipe/Recipe'
 import Recipes from './pages/Recipe/Recipes'
+import Search from './pages/Recipe/Search'
+import SearchResults from './pages/Recipe/SearchResults'
 import './styles/App.scss'
 
 function App() {
@@ -24,8 +26,14 @@ function App() {
 
         <Route path='dashboard' element={<Dashboard />}>
           <Route index element={<Feed />} />
-          <Route path='recipes' element={<Recipes />} />
+
+          <Route path='recipes' element={<Recipes />}>
+            <Route index element={<Search />} />
+            <Route path='search/:type/:term' element={<SearchResults />} />
+          </Route>
+
           <Route path='recipe/:recipeId' element={<Recipe />} />
+          <Route path='*' element={<Error404 />} />
         </Route>
 
         <Route path='login' element={<Login />} />

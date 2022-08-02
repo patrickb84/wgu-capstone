@@ -5,7 +5,11 @@ $secondary: #3d405b;
 $tertiary: #81b29a;
 $light: #d8e2dc;
 
-$spacer: 1rem !default;
+$link-decoration: none;
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+
 $spacers: (
   0: 0,
   1: $spacer * .25,
@@ -15,9 +19,6 @@ $spacers: (
   5: $spacer * 3,
   6: $spacer * 5,
 );
-
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 
 $theme-colors: (
   primary: $primary,
@@ -52,6 +53,18 @@ button.icon-button {
   &:focus-visible {
     outline: -webkit-focus-ring-color auto 1px;
     outline-offset: 1px;
+  }
+}
+
+.combobox-see-all-results:hover {
+  background-color: $secondary;
+  color: white;
+}
+
+#secondary-navigation .list-group-item:not(.active) {
+  transition: 0.2s linear background-color;
+  &:hover {
+    background-color: $gray-200;
   }
 }
 
