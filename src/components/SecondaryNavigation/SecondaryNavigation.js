@@ -1,6 +1,29 @@
 import { useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
+const SECONDARY_NAVS = [
+  {
+    to: '/dashboard',
+    label: 'My Meal Plan',
+    icon: 'fa-calendar',
+  },
+  {
+    to: '/dashboard/recipes',
+    label: 'Recipes',
+    icon: 'fa-calendar',
+  },
+  {
+    to: '/dashboard/grocery-list',
+    label: 'Grocery List',
+    icon: 'fa-calendar',
+  },
+  {
+    to: '/dashboard/offers',
+    label: 'Offers',
+    icon: 'fa-calendar',
+  },
+]
+
 const SecondaryNavigation = () => {
   const location = useLocation()
 
@@ -19,15 +42,12 @@ const SecondaryNavigation = () => {
   )
 
   return (
-    <div id='secondary-navigation' className='list-group'>
-      <NavLink to='/dashboard'>My Meal Plan</NavLink>
-      <NavLink to='/dashboard/recipes'>Recipes</NavLink>
-      <button type='button' className='list-group-item list-group-item-action'>
-        Grocery List
-      </button>
-      <button type='button' className='list-group-item list-group-item-action'>
-        Offers
-      </button>
+    <div id='secondary-navigation' className='list-group list-group-flush'>
+      {SECONDARY_NAVS.map(({ to, label, icon }) => (
+        <NavLink to={to} key={label}>
+          <i className={`fa-duotone fa-lg me-1 ${icon}`} /> {label}
+        </NavLink>
+      ))}
     </div>
   )
 }
