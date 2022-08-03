@@ -5,7 +5,7 @@ export class APIRequest {
     try {
       const response = await axios.request(options)
       const { data } = response
-      console.log(data)
+      // console.log(data)
       return data
     } catch (error) {
       console.error(error)

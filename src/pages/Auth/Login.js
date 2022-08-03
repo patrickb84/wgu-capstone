@@ -10,27 +10,13 @@ import { APP_NAME } from '../../settings'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const { auth } = useFirebaseContext()
 
-  const { auth, user } = useFirebaseContext()
-
-  const [signInWithEmailAndPassword, _user, loading, error] =
+  const [signInWithEmailAndPassword] =
     useSignInWithEmailAndPassword(auth)
 
   const handleSignIn = async () => {
     await signInWithEmailAndPassword(email, password)
-  }
-
-  if (loading) {
-    console.warn('sign in loading', loading)
-  }
-
-  if (error) {
-    console.error('sign in error', error)
-  }
-
-  if (user) {
-    console.log('user....', user)
-    return <Navigate to='/' replace />
   }
 
   return (

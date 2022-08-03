@@ -14,7 +14,9 @@ export class Lookup extends APIRequest {
       params: { i: id },
       headers,
     }
-    return this.runRequest(options)
+    const data = await this.runRequest(options)
+
+    return data.meals ? data.meals[0] : null
   }
 
   /**
@@ -40,7 +42,9 @@ export class Lookup extends APIRequest {
       url: 'https://themealdb.p.rapidapi.com/randomselection.php',
       headers,
     }
-    return this.runRequest(options)
+    const data = await this.runRequest(options)
+
+    return data
   }
 }
 
