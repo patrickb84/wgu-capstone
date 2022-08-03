@@ -4,11 +4,16 @@ import { Link } from 'react-router-dom'
 import useFirebaseContext from '../context/FirebaseContext'
 import { APP_NAME } from '../settings'
 
-const Navbar = () => {
+const Navbar = ({ links }) => {
   const { user, signOut } = useFirebaseContext()
 
   return (
-    <BsNavbar bg='white' variant='light' className='navbar-border' expand='lg' fixed='top'>
+    <BsNavbar
+      bg='white'
+      variant='light'
+      className='navbar-border'
+      expand='lg'
+      fixed='top'>
       <Container>
         <LinkContainer to='/'>
           <BsNavbar.Brand className='font-display text-primary'>
@@ -19,6 +24,11 @@ const Navbar = () => {
         <BsNavbar.Toggle aria-controls='navbar' />
         <BsNavbar.Collapse id='navbar'>
           <Nav className='ms-auto'>
+            {links.map(({ to, name }) => (
+              <LinkContainer key={to} to={to}>
+                <Nav.Link>{name}</Nav.Link>
+              </LinkContainer>
+            ))}
             {!user ? (
               <>
                 <Link to='/login' className='btn btn-outline-secondary'>
@@ -29,7 +39,7 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <Button onClick={signOut} className='btn btn-secondary'>
+              <Button onClick={signOut} className='btn btn-secondary ms-2'>
                 Sign Out
               </Button>
             )}

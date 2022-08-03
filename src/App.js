@@ -9,6 +9,8 @@ import {
   where,
 } from 'firebase/firestore'
 import { useCallback, useEffect, useState } from 'react'
+import { Badge, Button, Card, Col, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import MealDB from './api/meal.db'
 import Navbar from './components/Navbar'
@@ -28,6 +30,7 @@ function App() {
     if (user) {
       MealDB.lookup.fetchRandomMeals10().then(data => {
         if (data.meals) setRecipes(data.meals)
+        console.log('random recipes', data.meals)
       })
     }
   }, [user])
@@ -80,7 +83,18 @@ function App() {
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        links={[
+          {
+            to: '/plan',
+            name: 'My Plan',
+          },
+          {
+            to: '/recipes',
+            name: 'Recipes',
+          },
+        ]}
+      />
 
       <Routes>
         <Route
@@ -91,27 +105,7 @@ function App() {
               <p>user: {user ? user.email : 'none'}</p>
 
               <div className='row'>
-                <div className='col-6'>
-                  <div className='bg-light p-4 mb-5'>
-                    <h2 className='text-center font-display mb-5'>Random 10</h2>
-
-                    {recipes.map(recipe => {
-                      return (
-                        <div key={recipe.idMeal} className='mb-4 d-flex'>
-                          <div className='d-flex me-4'>
-                            <button
-                              disabled={!user}
-                              onClick={() => addRecipeToPlan(recipe.idMeal)}
-                              className='btn btn-primary btn-sm me-4'>
-                              Add
-                            </button>
-                          </div>
-                          <div>{recipe.strMeal}</div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
+                <div className='col-6'></div>
                 <div className='col-6'>
                   <div className='bg-light p-4'>
                     <h2 className='text-center font-display mb-5'>
@@ -140,6 +134,46 @@ function App() {
           }
         />
 
+        <Route
+          path='recipes'
+          element={
+            <>
+              <div className='container pt-3 mt-5'>
+                <h1 className='font-display'>Recipes</h1>
+                <div className='bg-light p-4 mb-5'>
+                  <h2 className='text-center font-display mb-5'>Random 10</h2>
+
+                  {/* {recipes.map(recipe => {
+                    return (
+                      <div key={recipe.idMeal} className='mb-4 d-flex'>
+                        <div className='d-flex me-4'>
+                          <button
+                            disabled={!user}
+                            onClick={() => addRecipeToPlan(recipe.idMeal)}
+                            className='btn btn-primary btn-sm me-4'>
+                            Add
+                          </button>
+                        </div>
+                        <div>{recipe.strMeal}</div>
+                      </div>
+                    )
+                  })} */}
+                  <Row>
+                    {recipes.map((recipe, idx) => (
+                      <Col key={idx} md={4} className='d-flex'>
+                        <RecipeCard
+                          recipe={recipe}
+                          addRecipeToPlan={addRecipeToPlan}
+                        />
+                      </Col>
+                    ))}
+                  </Row>
+                </div>
+              </div>
+            </>
+          }
+        />
+
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
         {/* <Route index element={<Home />} />
@@ -159,6 +193,59 @@ function App() {
         <Route path='*' element={<Error404 />} /> */}
       </Routes>
     </>
+  )
+}
+
+const RecipeCard = ({ recipe, addRecipeToPlan }) => {
+  const {
+    idMeal,
+    strMealThumb,
+    strMeal,
+    strCategory,
+    strArea,
+    strInstructions,
+    strSource,
+    strTags,
+    strYoutube,
+  } = recipe
+
+  const RecipeTags = () => {
+    const tags = []
+    if (strArea) tags.push({ bg: 'secondary', label: strArea })
+    if (strCategory)
+      tags.push(tags.push({ bg: 'gray-500', label: strCategory }))
+    // if (strTags)
+    //   strTags
+    //     .split(',')
+    //     .forEach(tag => tags.push({ bg: 'gray-500', label: tag }))
+
+    return tags.map((tag, idx) => (
+      <Badge bg={tag.bg} key={idx} className='me-1'>
+        {tag.label}
+      </Badge>
+    ))
+  }
+
+  return (
+    <Card className='mb-4'>
+      <Card.Img src={strMealThumb} variant='top' />
+      <Card.Body>
+        <Button
+          className='w-100 btn-sm mb-3'
+          variant='primary'
+          onClick={() => addRecipeToPlan(idMeal)}>
+          Select For Plan
+        </Button>
+        <Card.Title>{strMeal}</Card.Title>
+        <RecipeTags />
+        <div className='mt-1'>
+          <a href={strSource}>Source</a>
+          <br />
+          <a href={strYoutube}>YouTube</a>
+          <br />
+        </div>
+      </Card.Body>
+    </Card>
   )
 }
 
