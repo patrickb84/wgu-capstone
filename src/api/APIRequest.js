@@ -9,6 +9,7 @@ export class APIRequest {
       return data
     } catch (error) {
       console.error(error)
+      // TODO: Throw custom exception ?
     }
   }
 }
