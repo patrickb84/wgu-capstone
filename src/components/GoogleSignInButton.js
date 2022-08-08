@@ -8,8 +8,6 @@ const GoogleSignInButton = () => {
   const [signInWithGoogle, userImpl, loading, error] = useSignInWithGoogle(auth)
 
   if (userImpl) {
-    saveUser(userImpl)
-
     return <Navigate to='/' replace />
   }
 

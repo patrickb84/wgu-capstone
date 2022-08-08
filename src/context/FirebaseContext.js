@@ -19,6 +19,7 @@ export const FirebaseProvider = ({ children }) => {
 
   const signOut = async () => signOutFirebase(auth)
 
+  // TODO: This needs to be part of registration process
   const completeSignIn = async user => {
     console.log('user: ', user)
     const userRef = doc(db, 'users', user.uid)

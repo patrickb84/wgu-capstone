@@ -9,7 +9,8 @@ import {
   where,
 } from 'firebase/firestore'
 import { useCallback, useEffect, useState } from 'react'
-import { Badge, Button, Card, Col, Row } from 'react-bootstrap'
+import { Badge, Button, Card, Col, Row, Table } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Route, Routes } from 'react-router-dom'
 import MealDB from './api/meal.db'
@@ -93,10 +94,22 @@ function App() {
             to: '/recipes',
             name: 'Recipes',
           },
+          {
+            to: '/ingredients',
+            name: 'Ingredients',
+          },
         ]}
       />
 
       <Routes>
+        <Route
+          path='plan'
+          element={
+            <MyPlan
+              {...{ fetchUserRecipes, removeRecipeFromPlan, userRecipes, user }}
+            />
+          }
+        />
         <Route
           path='/'
           element={
@@ -106,29 +119,7 @@ function App() {
 
               <div className='row'>
                 <div className='col-6'></div>
-                <div className='col-6'>
-                  <div className='bg-light p-4'>
-                    <h2 className='text-center font-display mb-5'>
-                      Added to user
-                    </h2>
-
-                    {userRecipes.map(({ id, recipe }) => {
-                      return (
-                        <div key={id} className='mb-4 d-flex'>
-                          <div className='d-flex me-4'>
-                            <button
-                              disabled={!user}
-                              onClick={() => removeRecipeFromPlan(id)}
-                              className='btn btn-dark btn-sm'>
-                              Remove
-                            </button>
-                          </div>
-                          <div>{recipe.strMeal}</div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
+                <div className='col-6'></div>
               </div>
             </div>
           }
@@ -173,6 +164,8 @@ function App() {
             </>
           }
         />
+
+        <Route path='recipe/:mealId' element={<RecipePage />} />
 
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
@@ -236,6 +229,11 @@ const RecipeCard = ({ recipe, addRecipeToPlan }) => {
           onClick={() => addRecipeToPlan(idMeal)}>
           Select For Plan
         </Button>
+        <Link
+          to={`/recipe/${idMeal}`}
+          className='w-100 btn btn-sm mb-3 btn-tertiary'>
+          View Details
+        </Link>
         <Card.Title>{strMeal}</Card.Title>
         <RecipeTags />
         <div className='mt-1'>
@@ -249,4 +247,147 @@ const RecipeCard = ({ recipe, addRecipeToPlan }) => {
   )
 }
 
+const RecipePage = () => {
+  const params = useParams()
+  console.log(params)
+  const [mealDetails, setMealDetails] = useState(null)
+  const [ingredients, setIngredients] = useState([])
+  const { mealId } = params
+
+  useEffect(() => {
+    const getDetails = async () => {
+      const mealDetails = await MealDB.lookup.fetchMealDetails(params.mealId)
+      console.log('🚀 ~ getDetails ~ mealDetails', mealDetails)
+      setMealDetails(mealDetails)
+    }
+    getDetails()
+  }, [params.mealId])
+
+  useEffect(() => {
+    if (mealDetails) {
+      getMealIngredients(mealId).then(ingredients => {
+        setIngredients(ingredients)
+        console.log('🚀 ~ useEffect ~ ingredients', ingredients)
+      })
+    }
+  }, [mealDetails, mealId])
+
+  return !mealDetails ? (
+    <LoadingScreen />
+  ) : (
+    <div className='container pt-3 mt-5'>
+      <h1 className='font-display'>{mealDetails.strMeal}</h1>
+      <IngredientsTable ingredients={ingredients} />
+    </div>
+  )
+}
+
+const IngredientsTable = ({ ingredients }) => {
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Measure</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ingredients.map((ing, index) => (
+          <tr key={index}>
+            <td>{ing.ingredient}</td>
+            <td>{ing.measure}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  )
+}
+
+const getMealIngredients = async mealId => {
+  const mealDetails = await MealDB.lookup.fetchMealDetails(mealId)
+
+  if (mealDetails) {
+    const ingredients = []
+    for (let i = 1; i <= 20; i++) {
+      const f1 = `strIngredient${i}`
+      const f2 = `strMeasure${i}`
+      if (mealDetails[f1]) {
+        ingredients.push({
+          ingredient: mealDetails[f1],
+          measure: mealDetails[f2],
+        })
+      }
+    }
+    // console.log('🚀 ~ useEffect ~ ingredients', ingredients)
+    return ingredients
+  }
+}
+
+const GetMealsIngredients = async mealIds => {
+  const m = mealIds.map(id => getMealIngredients(id))
+  console.log('🚀 ~ GetMealsIngredients ~ m', m)
+  const k = Promise.all(m)
+  console.log('🚀 ~ GetMealsIngredients ~ k', k)
+  return k
+}
+
+const LoadingScreen = () => {
+  return (
+    <div className='container pt-3 mt-5'>
+      <h1 className='font-display'>LOADING</h1>
+    </div>
+  )
+}
+
+const MyPlan = ({ userRecipes, removeRecipeFromPlan, user }) => {
+  const [allIngredients, setAllIngredients] = useState([])
+  useEffect(() => {
+    const mealIds = userRecipes.map(ur => ur.recipe.idMeal)
+    const go = async () => {
+      const all = await GetMealsIngredients(mealIds)
+      console.log('🚀 ~ go ~ all', all)
+
+      const arra = []
+      all.forEach(f => f.forEach(ff => arra.push(ff)))
+      arra.sort((a, b) => a.ingredient.localeCompare(b.ingredient))
+      setAllIngredients(arra.sort())
+    }
+    go()
+  }, [userRecipes])
+
+  return (
+    <div className='mt-5 pt-3 container'>
+      <h1 className='font-display'>Plan</h1>
+      <div className='row pt-5'>
+        <div className='col-md-6'>
+          <div className='bg-light p-4'>
+            <h2 className='text-center font-display mb-5'>Added to user</h2>
+
+            {userRecipes.map(({ id, recipe }) => {
+              return (
+                <div key={id} className='mb-4 d-flex'>
+                  <div className='d-flex me-4'>
+                    <button
+                      disabled={!user}
+                      onClick={() => removeRecipeFromPlan(id)}
+                      className='btn btn-dark btn-sm'>
+                      Remove
+                    </button>
+                  </div>
+                  <div>{recipe.strMeal}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+        <div className='col-md-6'>
+          <div className='p-4'>
+            <h2 className='font-display'>Ingredients...</h2>
+            <IngredientsTable ingredients={allIngredients} />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 export default App
