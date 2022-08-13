@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import MealDB from '../api/meal.db'
+import MealDB from '../api/meal_db'
 
-const MealDBContext = createContext(null)
+const MealApiContext = createContext(null)
 
-export const MealDBProvider = ({ children }) => {
+export const MealApiProvider = ({ children }) => {
   const fetchIngredients = async () => {
     const data = await MealDB.list.fetchIngredients()
     return data
@@ -27,18 +27,19 @@ export const MealDBProvider = ({ children }) => {
   }
 
   return (
-    <MealDBContext.Provider
+    <MealApiContext.Provider
       value={{
         fetchIngredients,
         fetchCategories,
         fetchAreas,
         filterByArea
-      }}>
+      }}
+    >
       {children}
-    </MealDBContext.Provider>
+    </MealApiContext.Provider>
   )
 }
 
-const useMealDB = () => useContext(MealDBContext)
+const useMealDB = () => useContext(MealApiContext)
 
 export default useMealDB

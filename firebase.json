@@ -1,7 +1,7 @@
 {
   "firestore": {
-    "rules": "src/api/firebase/rules/firestore.rules",
-    "indexes": "src/api/firebase/rules/firestore.indexes"
+    "rules": "src/firebase/rules/firestore.rules",
+    "indexes": "src/firebase/rules/firestore.indexes"
   },
   "hosting": {
     "public": "build",
@@ -18,6 +18,6 @@
     ]
   },
   "storage": {
-    "rules": "src/api/firebase/rules/storage.rules"
+    "rules": "src/firebase/rules/storage.rules"
   }
 }

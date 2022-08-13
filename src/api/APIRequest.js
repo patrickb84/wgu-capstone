@@ -15,7 +15,7 @@ export class APIRequest {
 }
 
 class APIRequestException extends Error {
-  constructor(message) {
+  constructor (message) {
     super(message)
     this.name = 'APIRequestException'
   }

@@ -2,7 +2,7 @@ import { addDays } from 'date-fns'
 
 import FeedCard from '../../components/FeedCard/FeedCard'
 
-function getNext30() {
+function getNext30 () {
   const days = []
   const today = new Date()
   for (let i = 1; i <= 31; i++) {

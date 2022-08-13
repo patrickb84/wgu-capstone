@@ -7,7 +7,7 @@ const IconButton = ({
   className,
   style,
   tooltipContent,
-  tooltip,
+  tooltip
 }) => {
   const [showTooltip, setShowTooltip] = useState(false)
   const target = useRef(null)
@@ -20,13 +20,15 @@ const IconButton = ({
         className={`icon-button ${className}`}
         style={style}
         onMouseEnter={tooltip ? () => setShowTooltip(true) : () => {}}
-        onMouseLeave={tooltip ? () => setShowTooltip(false) : () => {}}>
+        onMouseLeave={tooltip ? () => setShowTooltip(false) : () => {}}
+      >
         {icon}
         {tooltip && (
           <Overlay
             target={target.current}
             show={showTooltip}
-            placement='bottom'>
+            placement='bottom'
+          >
             {props => (
               <Tooltip id='overlay-example' {...props}>
                 {tooltipContent}

@@ -5,23 +5,23 @@ const SECONDARY_NAVS = [
   {
     to: '/dashboard',
     label: 'My Meal Plan',
-    icon: 'fa-calendar',
+    icon: 'fa-calendar'
   },
   {
     to: '/dashboard/recipes',
     label: 'Recipes',
-    icon: 'fa-plate-utensils',
+    icon: 'fa-plate-utensils'
   },
   {
     to: '/dashboard/grocery-list',
     label: 'Grocery List',
-    icon: 'fa-basket-shopping',
+    icon: 'fa-basket-shopping'
   },
   {
     to: '/dashboard/offers',
     label: 'Offers',
-    icon: 'fa-badge-dollar',
-  },
+    icon: 'fa-badge-dollar'
+  }
 ]
 
 const SecondaryNavigation = () => {
@@ -33,14 +33,15 @@ const SecondaryNavigation = () => {
 
   const NavLink = ({ to, children }) => {
     const isPathActive = () => {
-      
+
     }
     return (
       <Link
         to={to}
         className={`list-group-item list-group-item-action ${
           location.pathname === to ? 'active' : null
-        }`}>
+        }`}
+      >
         {children}
       </Link>
     )

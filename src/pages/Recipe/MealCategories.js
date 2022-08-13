@@ -18,7 +18,7 @@ const MealCategories = () => {
           idCategory,
           strCategory,
           strCategoryThumb,
-          strCategoryDescription,
+          strCategoryDescription
         }) => (
           <div key={idCategory}>
             <div>{strCategory}</div>

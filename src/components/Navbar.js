@@ -13,7 +13,8 @@ const Navbar = ({ links }) => {
       variant='light'
       className='navbar-border'
       expand='lg'
-      fixed='top'>
+      fixed='top'
+    >
       <Container>
         <LinkContainer to='/'>
           <BsNavbar.Brand className='font-display text-primary'>
@@ -29,20 +30,22 @@ const Navbar = ({ links }) => {
                 <Nav.Link>{name}</Nav.Link>
               </LinkContainer>
             ))}
-            {!user ? (
-              <>
-                <Link to='/login' className='btn btn-outline-secondary'>
-                  Sign In
-                </Link>
-                <Link to='/register' className='btn btn-primary ms-2'>
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <Button onClick={signOut} className='btn btn-secondary ms-2'>
-                Sign Out
-              </Button>
-            )}
+            {!user
+              ? (
+                <>
+                  <Link to='/login' className='btn btn-outline-secondary'>
+                    Sign In
+                  </Link>
+                  <Link to='/register' className='btn btn-primary ms-2'>
+                    Sign Up
+                  </Link>
+                </>
+                )
+              : (
+                <Button onClick={signOut} className='btn btn-secondary ms-2'>
+                  Sign Out
+                </Button>
+                )}
           </Nav>
         </BsNavbar.Collapse>
       </Container>

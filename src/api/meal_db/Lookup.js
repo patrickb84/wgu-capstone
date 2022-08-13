@@ -12,7 +12,7 @@ export class Lookup extends APIRequest {
       method: 'GET',
       url: 'https://themealdb.p.rapidapi.com/lookup.php',
       params: { i: id },
-      headers,
+      headers
     }
     const data = await this.runRequest(options)
 
@@ -27,7 +27,7 @@ export class Lookup extends APIRequest {
     const options = {
       method: 'GET',
       url: 'https://themealdb.p.rapidapi.com/random.php',
-      headers,
+      headers
     }
     return this.runRequest(options)
   }
@@ -40,7 +40,7 @@ export class Lookup extends APIRequest {
     const options = {
       method: 'GET',
       url: 'https://themealdb.p.rapidapi.com/randomselection.php',
-      headers,
+      headers
     }
     const data = await this.runRequest(options)
 

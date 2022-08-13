@@ -7,7 +7,7 @@ const MealDB = {
   filter,
   list,
   lookup,
-  search,
+  search
 }
 
 export default MealDB

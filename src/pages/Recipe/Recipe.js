@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import MealDB from '../../api/meal.db'
 import MealModel from '../../models/Meal.Model'
 
@@ -16,12 +15,13 @@ const Recipe = () => {
     })
   }, [recipeId])
 
-  if (!recipe)
+  if (!recipe) {
     return (
       <div>
         <p>Loading...</p>
       </div>
     )
+  }
 
   return (
     <>

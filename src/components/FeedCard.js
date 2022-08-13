@@ -1,6 +1,6 @@
 import { Card, Col, Row } from 'react-bootstrap'
 import { format } from 'date-fns'
-import IconButton from '../IconButton/IconButton'
+import IconButton from './IconButton'
 
 const FeedCard = ({ day }) => {
   const month = format(day, 'MMMM')
@@ -11,7 +11,8 @@ const FeedCard = ({ day }) => {
     <Card
       // onClick={() => navigate('/day/0')}
       className='mb-4'
-      style={{ fontSize: '1.1rem' }}>
+      style={{ fontSize: '1.1rem' }}
+    >
       <Card.Header className='bg-secondary text-white d-flex align-items-center justify-content-between'>
         <div>
           <span style={{ color: 'white', fontWeight: 400 }}>{dayOfWeek}</span>{' '}
@@ -34,7 +35,7 @@ const FeedCard = ({ day }) => {
               Toast Pizza
             </div>
             <div>
-              <i className='text-primary- fa-duotone fa-circle-d me-1'></i> Just
+              <i className='text-primary- fa-duotone fa-circle-d me-1' /> Just
               Gogurt
             </div>
           </Col>
@@ -42,11 +43,12 @@ const FeedCard = ({ day }) => {
       </Card.Body>
       <Card.Footer
         className='bg-white text-secondary d-flex align-items-center justify-content-between px-2 py-1'
-        style={{ fontSize: '1.35rem' }}>
+        style={{ fontSize: '1.35rem' }}
+      >
         <IconButton
           className='px-2'
           tooltip
-          tooltipContent={'Edit meal plans for this day'}
+          tooltipContent='Edit meal plans for this day'
           icon={<i className='fa-regular fa-pen-to-square' />}
         />
 

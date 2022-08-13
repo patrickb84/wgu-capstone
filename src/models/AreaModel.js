@@ -1,7 +1,7 @@
 import SearchItem from './SearchItem'
 
 export default class Area extends SearchItem {
-  constructor({ strArea }) {
+  constructor ({ strArea }) {
     super()
 
     this.name = strArea

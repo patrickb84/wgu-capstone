@@ -25,7 +25,7 @@ const Search = () => {
       const SearchItems = [
         ...categoryValues,
         ...areaValues,
-        ...ingredientValues,
+        ...ingredientValues
       ]
 
       console.log(SearchItems)

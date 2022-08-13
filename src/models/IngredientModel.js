@@ -1,8 +1,7 @@
 import SearchItem from './SearchItem'
 
 export default class Ingredient extends SearchItem {
-  constructor({ idIngredient, strIngredient, strDescription, strType }) {
-
+  constructor ({ idIngredient, strIngredient, strDescription, strType }) {
     super()
 
     this.name = strIngredient

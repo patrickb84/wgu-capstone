@@ -16,7 +16,8 @@ const GoogleSignInButton = () => {
       variant='secondary'
       className='w-100'
       style={{ backgroundColor: '#DB4437', borderColor: '#DB4437' }}
-      onClick={() => signInWithGoogle()}>
+      onClick={() => signInWithGoogle()}
+    >
       <i className='fa-brands fa-google' />
     </Button>
   )

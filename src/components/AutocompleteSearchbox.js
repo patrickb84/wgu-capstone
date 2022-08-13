@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { Badge, Form, InputGroup, ListGroup } from 'react-bootstrap'
 import { useCombobox } from 'downshift'
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
-function getFilter(inputValue) {
-  return function regularFilter(item) {
+function getFilter (inputValue) {
+  return function regularFilter (item) {
     return (
       !inputValue ||
       item.name.toLowerCase().includes(inputValue) ||
@@ -27,15 +26,15 @@ const AutocompleteSearchbox = ({ data }) => {
     getComboboxProps,
     highlightedIndex,
     getItemProps,
-    selectedItem,
+    selectedItem
   } = useCombobox({
-    onInputValueChange({ inputValue }) {
+    onInputValueChange ({ inputValue }) {
       setItems(data.filter(getFilter(inputValue.toLowerCase())))
     },
     items,
-    itemToString(item) {
+    itemToString (item) {
       return item ? item.name : ''
-    },
+    }
   })
 
   const handleSearchValueChange = event => {
@@ -47,7 +46,7 @@ const AutocompleteSearchbox = ({ data }) => {
       <div className='autocomplete-searchbox'>
         <InputGroup className='mb-1' {...getComboboxProps()}>
           <InputGroup.Text id='inputGroup-sizing-default'>
-            <i className='fa-duotone fa-magnifying-glass'></i>
+            <i className='fa-duotone fa-magnifying-glass' />
           </InputGroup.Text>
           <Form.Control
             aria-label='Default'
@@ -70,7 +69,8 @@ const AutocompleteSearchbox = ({ data }) => {
                   to={`/dashboard/recipes/search/${item.searchPath}`}
                   state={{ searchTerm: item.name }}
                   replace
-                  style={{ textDecoration: 'none' }}>
+                  style={{ textDecoration: 'none' }}
+                >
                   <ListGroup.Item
                     className={`d-flex justify-content-start align-items-center ${
                       highlightedIndex === index &&
@@ -79,10 +79,12 @@ const AutocompleteSearchbox = ({ data }) => {
                     } ${
                       selectedItem === item &&
                       'active bg-secondary border-secondary'
-                    }`}>
+                    }`}
+                  >
                     <div
                       className='ms-1 text-center'
-                      style={{ width: 40, fontSize: '1.6rem' }}>
+                      style={{ width: 40, fontSize: '1.6rem' }}
+                    >
                       <i className={`fa-duotone ${item.typeIcon}`} />
                     </div>
                     <div className='ms-2 me-auto'>
@@ -98,7 +100,8 @@ const AutocompleteSearchbox = ({ data }) => {
               ))}
               {items.length > 10 && (
                 <ListGroup.Item
-                  className={`p-3 text-center combobox-see-all-results`}>
+                  className='p-3 text-center combobox-see-all-results'
+                >
                   {' '}
                   See all results ...
                 </ListGroup.Item>

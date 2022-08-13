@@ -6,7 +6,7 @@ const RecipeCard = ({
   strMealThumb,
   strMeal,
   strArea,
-  strCategory,
+  strCategory
 }) => {
   return (
     <Col md={4}>

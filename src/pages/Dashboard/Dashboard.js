@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import { useLocation } from 'react-router-dom'
-import { Navigate, Outlet } from 'react-router-dom'
+import { useLocation, Navigate, Outlet } from 'react-router-dom'
 import Layout from '../../components/Layout'
 import SecondaryNavigation from '../../components/SecondaryNavigation/SecondaryNavigation'
 import useFirebaseContext from '../../context/FirebaseContext'

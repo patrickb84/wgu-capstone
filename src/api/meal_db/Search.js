@@ -14,7 +14,7 @@ export class Search extends APIRequest {
       method: 'GET',
       url: this._url,
       params: { f: firstLetter },
-      headers,
+      headers
     }
     return this.runRequest(options)
   }
@@ -29,7 +29,7 @@ export class Search extends APIRequest {
       method: 'GET',
       url: this._url,
       params: { s: name },
-      headers,
+      headers
     }
     return this.runRequest(options)
   }

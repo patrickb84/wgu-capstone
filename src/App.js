@@ -10,14 +10,12 @@ import {
 } from 'firebase/firestore'
 import { useCallback, useEffect, useState } from 'react'
 import { Badge, Button, Card, Col, Row, Table } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import { Route, Routes } from 'react-router-dom'
-import MealDB from './api/meal.db'
+import { useParams, Link, Route, Routes } from 'react-router-dom'
+import MealDB from './api/meal_db'
 import Navbar from './components/Navbar'
 import useFirebaseContext from './context/FirebaseContext'
-import Login from './pages/Auth/Login'
-import Register from './pages/Auth/Register'
+import Login from './pages/Login'
+import Register from './pages/Register'
 import './styles/App.scss'
 
 function App() {
@@ -118,8 +116,8 @@ function App() {
               <p>user: {user ? user.email : 'none'}</p>
 
               <div className='row'>
-                <div className='col-6'></div>
-                <div className='col-6'></div>
+                <div className='col-6' />
+                <div className='col-6' />
               </div>
             </div>
           }
@@ -205,8 +203,9 @@ const RecipeCard = ({ recipe, addRecipeToPlan }) => {
   const RecipeTags = () => {
     const tags = []
     if (strArea) tags.push({ bg: 'secondary', label: strArea })
-    if (strCategory)
+    if (strCategory) {
       tags.push(tags.push({ bg: 'gray-500', label: strCategory }))
+    }
     // if (strTags)
     //   strTags
     //     .split(',')

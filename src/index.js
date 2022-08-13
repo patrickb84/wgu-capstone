@@ -4,16 +4,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import { BrowserRouter } from 'react-router-dom'
 import { FirebaseProvider } from './context/FirebaseContext'
-import { MealDBProvider } from './context/MealsDBContext'
+import { MealApiProvider } from './context/MealApiContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
   <FirebaseProvider>
-    <MealDBProvider>
+    <MealApiProvider>
       <BrowserRouter>
         <App />
       </BrowserRouter>
-    </MealDBProvider>
+    </MealApiProvider>
   </FirebaseProvider>
 )

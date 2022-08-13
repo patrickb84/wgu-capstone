@@ -1,7 +1,7 @@
 import SearchItem from './SearchItem'
 
 export default class Category extends SearchItem {
-  constructor({ strCategory }) {
+  constructor ({ strCategory }) {
     super()
 
     this.name = strCategory

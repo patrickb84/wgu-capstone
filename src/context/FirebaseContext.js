@@ -1,10 +1,9 @@
 import { getAuth, signOut as signOutFirebase } from 'firebase/auth'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { firebaseConfig } from '../api/firebase/config'
+import { firebaseConfig } from '../firebase/config'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, setDoc } from 'firebase/firestore'
+import { getFirestore, setDoc, doc, getDoc } from 'firebase/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { doc, getDoc } from 'firebase/firestore'
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
@@ -33,7 +32,7 @@ export const FirebaseProvider = ({ children }) => {
         email: user.email,
         displayName: user.displayName,
         photoUrl: user.photoURL,
-        uid: user.uid,
+        uid: user.uid
       }
       await setDoc(doc(db, 'users', user.uid), userDocument)
     }

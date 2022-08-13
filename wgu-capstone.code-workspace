@@ -27,6 +27,10 @@
       "titleBar.inactiveBackground": "#f9e64f99",
       "titleBar.inactiveForeground": "#15202b99"
     },
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "eslint.validate": ["javascriptreact", "javascript"],
     "peacock.color": "#f9e64f"
   }
 }

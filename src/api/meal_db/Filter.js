@@ -14,13 +14,13 @@ export class Filter extends APIRequest {
       method: 'GET',
       url: this._url,
       params: { i: ingredient },
-      headers,
+      headers
     }
     return this.runRequest(options)
   }
 
   /**
-   *
+   * Filter by multiple ingredients
    * @param {string} ingredients comma-separated i.e. 'chicken_breast,garlic,salt'
    * @returns
    */
@@ -29,7 +29,7 @@ export class Filter extends APIRequest {
       method: 'GET',
       url: this._url,
       params: { i: ingredients },
-      headers,
+      headers
     }
     return this.runRequest(options)
   }
@@ -44,7 +44,7 @@ export class Filter extends APIRequest {
       method: 'GET',
       url: this._url,
       params: { c: category },
-      headers,
+      headers
     }
     return this.runRequest(options)
   }
@@ -59,10 +59,10 @@ export class Filter extends APIRequest {
       method: 'GET',
       url: this._url,
       params: { a: area },
-      headers,
+      headers
     }
     const data = await this.runRequest(options)
-    
+
     return data.meals
   }
 }

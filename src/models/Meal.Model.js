@@ -1,7 +1,7 @@
 export default class MealModel {
   ingredients = []
 
-  constructor(apiMeal) {
+  constructor (apiMeal) {
     const {
       idMeal,
       strMeal,
@@ -14,7 +14,7 @@ export default class MealModel {
       strYoutube,
       strSource,
       dateModified,
-      dateCreated,
+      dateCreated
     } = apiMeal
 
     this.idMeal = idMeal

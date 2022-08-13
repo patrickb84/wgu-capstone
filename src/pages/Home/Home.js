@@ -1,6 +1,5 @@
 import { Container } from 'react-bootstrap'
-import { useLocation } from 'react-router-dom'
-import { Link, Navigate } from 'react-router-dom'
+import { useLocation, Link, Navigate } from 'react-router-dom'
 import useFirebaseContext from '../../context/FirebaseContext'
 
 const Home = () => {
@@ -8,7 +7,7 @@ const Home = () => {
   const location = useLocation()
   console.warn(location)
 
-  if (user)
+  if (user) {
     return (
       <Navigate
         to={
@@ -18,6 +17,7 @@ const Home = () => {
         }
       />
     )
+  }
 
   return (
     <section className='bg-light pt-5'>
@@ -28,8 +28,9 @@ const Home = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
-          }}>
+            justifyContent: 'center'
+          }}
+        >
           <h1 className='font-display text-primary display-4 mb-4'>
             Welcome to Sous Chef, try us out
           </h1>
@@ -39,7 +40,8 @@ const Home = () => {
             </Link>
             <Link
               to='/login'
-              className='ms-3 btn btn-outline-secondary btn-lg px-5'>
+              className='ms-3 btn btn-outline-secondary btn-lg px-5'
+            >
               Sign In
             </Link>
           </div>
