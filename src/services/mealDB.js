@@ -20,12 +20,7 @@ const headers = {
 }
 
 mealDB.fetchCategories = async () => {
-  const data = await request({
-    method: 'GET',
-    url: 'https://themealdb.p.rapidapi.com/list.php',
-    params: { c: 'list' },
-    headers,
-  })
+  const data = await request()
   const categories = data.meals
   return categories
 }

@@ -22,6 +22,8 @@ recipeService.parseIngredients = async mealId => {
   return ingredients
 }
 
-recipeService.parseIngredientsMultipleRecipes = async mealIds => {
+recipeService.parseIngredientsFromRecipes = async mealIds => {
   return Promise.all(mealIds.map(id => recipeService.parseIngredients(id)))
 }
+
+export default recipeService
