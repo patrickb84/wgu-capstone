@@ -1,0 +1,22 @@
+html,
+body {
+	height: 100%;
+}
+
+html {
+	overflow-y: scroll;
+}
+
+#root {
+	height: 100%;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+.font-display,
+h1,
+.navbar-brand {
+	font-family: 'Fredoka One', cursive;
+}
+
+@import 'custom';

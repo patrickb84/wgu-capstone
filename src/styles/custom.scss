@@ -1,4 +1,9 @@
-
+.btn-pill {
+  border-radius: 1.2rem !important;
+}
+.btn-square {
+   border-radius: 0 !important;
+}
 
 $primary: #bc4749;
 $secondary: #3d405b;
@@ -30,6 +35,8 @@ $theme-colors: (
   // gray-300: $gray-300,
   // gray-400: $gray-400,
   gray-500: $gray-500,
+  gray-600: $gray-600,
+  gray-700: $gray-700,
   // accent: $yellow-500,
   'white': $white,
   dark: $black,
