@@ -1,0 +1,76 @@
+{
+   "folders": [
+      {
+         "path": "."
+      }
+   ],
+   "settings": {
+      "editor.formatOnType": true,
+      "better-comments.tags": [
+         {
+            "tag": "!",
+            "backgroundColor": "#c62828",
+            "strikethrough": false,
+            "color": "white"
+         },
+         {
+            "tag": ":!",
+            "backgroundColor": "transparent",
+            "color": "#c62828"
+         },
+         {
+            "tag": "^",
+            "backgroundColor": "#ffee58",
+            "color": "black"
+         },
+         {
+            "tag": ":^",
+            "color": "#ffee58",
+            "backgroundColor": "transparent"
+         },
+         {
+            "tag": ":$",
+            "backgroundColor": "transparent",
+            "color": "#00c853"
+         },
+         {
+            "tag": "$",
+            "backgroundColor": "#00c853",
+            "color": "black"
+         },
+         {
+            "tag": ":?",
+            "color": "#2962ff",
+            "backgroundColor": "transparent"
+         },
+         {
+            "tag": "?",
+            "backgroundColor": "#2962ff",
+            "color": "white"
+         },
+         {
+            "tag": "#",
+            "backgroundColor": "#546e7a",
+            "color": "#fff"
+         },
+         {
+            "tag": "//",
+            "color": "#474747",
+            "strikethrough": true,
+            "backgroundColor": "transparent"
+         },
+         {
+            "tag": "todo",
+            "backgroundColor": "#FF8C00",
+            "strikethrough": false,
+            "color": "#000"
+         },
+         {
+            "tag": "*",
+            "backgroundColor": "#00796b",
+            "strikethrough": false,
+            "color": "white"
+         }
+      ]
+   }
+}
