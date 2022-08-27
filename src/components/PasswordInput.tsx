@@ -1,48 +1,58 @@
-import * as React from 'react'
+import { useState, useRef } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Overlay from 'react-bootstrap/Overlay'
 import Tooltip from 'react-bootstrap/Tooltip'
+import { UseFormRegister } from 'react-hook-form'
+import { errorClass } from './FormField'
 
 export interface IPasswordInputProps {
+	register: UseFormRegister<any>
+	error: any
 	value: string
-	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+	creating?: boolean
 }
 
 export function PasswordInput(props: IPasswordInputProps) {
-	const [showPassword, setShowPassword] = React.useState(false)
-	const target = React.useRef(null)
-	const [show, setShow] = React.useState(false)
+	const { register, error, value, creating } = props
+
+	const target = useRef(null)
+	const [showPassword, setShowPassword] = useState(false)
+	const [showTooltip, setShowTooltip] = useState(false)
+
 	return (
-		<InputGroup>
-			<Form.Control
-				type={showPassword ? 'text' : 'password'}
-				placeholder="Password"
-				value={props.value}
-				onChange={props.onChange}
-				autoComplete="new-password"
-			/>
-			<>
+		<>
+			<InputGroup>
+				<Form.Control
+					className={errorClass(error).border}
+					type={showPassword ? 'text' : 'password'}
+					placeholder="Password"
+					autoComplete={creating ? 'new-password' : undefined}
+					{...register(creating ? 'newPassword' : 'password', {
+						required: true,
+						minLength: 8
+					})}
+				/>
 				<Button
 					ref={target}
-					onMouseEnter={() => setShow(true)}
-					onMouseLeave={() => setShow(false)}
-					disabled={!props.value.length}
-               variant="primary"
-               className='text-white'
+					onMouseEnter={() => setShowTooltip(true)}
+					onMouseLeave={() => setShowTooltip(false)}
+					disabled={!value}
+					variant="brand"
+					className="text-white"
 					onClick={() => setShowPassword(!showPassword)}>
-					<i style={{ width: 20 }} className={showPassword ? 'far fa-eye-slash' : 'far fa-eye'} />
+					<i style={{ width: 20 }} className={`far fa-eye${showPassword ? '-slash' : ''}`} />
 				</Button>
 
-				<Overlay target={target.current} show={show} placement="bottom">
+				<Overlay target={target.current} show={showTooltip} placement="bottom">
 					{props => (
 						<Tooltip id="toggle-password" {...props}>
 							{!showPassword ? 'Show Password' : 'Hide Password'}
 						</Tooltip>
 					)}
 				</Overlay>
-			</>
-		</InputGroup>
+			</InputGroup>
+		</>
 	)
 }

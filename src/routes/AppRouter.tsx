@@ -10,16 +10,16 @@ export const AppRouter = ({ children }: { children: React.ReactNode }) => {
 
 export const ROUTES = {
 	HOME: '/',
-   LOGIN: '/login',
-   REGISTER: '/register'
+	LOGIN: '/login',
+	REGISTER: '/register'
 }
 
 export const AppRoutes = () => {
 	return (
 		<Routes>
 			<Route path={ROUTES.HOME} element={<HomePage />} />
-         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+			<Route path={ROUTES.LOGIN} element={<LoginPage />} />
+			<Route path={ROUTES.REGISTER} element={<RegisterPage />} />
 		</Routes>
 	)
 }

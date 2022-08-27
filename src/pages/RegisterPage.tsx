@@ -1,65 +1,58 @@
-import React, { useState, useContext } from 'react'
-import { Layout } from '../components/Layout'
-import { Form, Button, Card, Row, Col, Container } from 'react-bootstrap'
+import React from 'react'
+import { Row, Col, Container } from 'react-bootstrap'
 import imgCooking from '../assets/img/cooking.png'
 import { SplitText } from '../components/SplitText'
-import imgGoogleIcon from '../assets/img/google-g.png'
 import { RegisterForm } from '../components/RegisterForm'
-import { Spacer } from '../components/Spacer'
+import { ROUTES } from '../routes/AppRouter'
+import { Link } from 'react-router-dom'
+import { GoogleButton } from '../components/GoogleButton'
 
-export interface IRegisterPageProps {
-}
+export interface IRegisterPageProps {}
 
 export const RegisterPage = (props: IRegisterPageProps) => {
-
 	return (
-		<div className="bg-secondary h-100">
-			<Container fluid className="h-100 d-flex flex-column h-100 align-items-center justify-content-center">
-				<Card style={{ width: '80%', height: '80%', overflow: 'hidden' }} className="shadow-lg">
-					<Row className="h-100">
-						<Col className="bg-tertiary">
-							<div className="d-flex flex-column h-100 align-items-center justify-content-center">
-								<img src={imgCooking} alt="cooking" style={{ maxWidth: 360 }} className="mb-5 mt-3" />
-								<h2 className="text-white font-display">Sous Chef!</h2>
-								<h4 className="text-white" style={{ opacity: 0.9 }}>
-									Be the master of your menu
-								</h4>
+		<Container fluid className="h-100">
+			<Row className="h-100">
+				<Col className="bg-secondary d-none d-md-block">
+					<div className="d-flex flex-column h-100 align-items-center justify-content-center">
+						<img
+							src={imgCooking}
+							alt="cooking"
+							style={{ maxWidth: 360 }}
+							className="mb-5 mt-3"
+						/>
+						<h3 className="text-white font-display">Be the master of your menu</h3>
+					</div>
+				</Col>
+				<Col
+					md={6}
+					className="d-flex align-items-center justify-content-center bg-white border-top border-brand border-5">
+					<div className="w-100 p-4" style={{ maxWidth: 500 }}>
+						<div className="text-center">
+							<div className="mb-3">
+								<i className="text-brand far fa-garlic fa-3x mb-0" />
+								<div className="text-brand small font-display">Sous Chef!</div>
 							</div>
-						</Col>
-						<Col md={6} className="d-flex align-items-center justify-content-center">
-							<div className="w-100" style={{ maxWidth: 370 }}>
-								<h2 className="font-display text-center">Register Now!</h2>
-								<Spacer h={2} />
+							<h1 className="font-display mb-1 mb-lg-2">Register Now!</h1>
+							<p className="text-center text-muted text-lg fs-6">
+								Already have an account? <Link to={ROUTES.LOGIN}>Sign in</Link>
+							</p>
+						</div>
 
-								<RegisterForm />
-
-								<Spacer h={1.5} />
-								<SplitText>or</SplitText>
-								<Spacer h={1.5} />
-								<div className="text-center">
-									<GoogleButton className="btn-square btn-gray-200" />
-								</div>
-							</div>
-						</Col>
-					</Row>
-				</Card>
-			</Container>
-		</div>
-	)
-}
-
-interface GoogleButtonProps {
-	style?: React.CSSProperties
-	className?: string
-}
-export const GoogleButton = ({ style, className }: GoogleButtonProps) => {
-	return (
-		<>
-			<Button style={style} className={className}>
-				<img alt="google" src={imgGoogleIcon} style={{ width: '1.2rem' }} />{' '}
-				<span style={{ marginRight: '0.5rem' }} />
-				Register with Google
-			</Button>
-		</>
+						<div className="mb-3 pb-lg-1" />
+						<RegisterForm />
+						<div className="mb-3" />
+						<SplitText>or</SplitText>
+						<div className="mb-3" />
+						<div className="text-center d-flex flex-column px-5">
+							<GoogleButton className="btn-gray-200" />
+							<Link className="btn btn-link mt-2" to={ROUTES.HOME}>
+								Back to Home Page
+							</Link>
+						</div>
+					</div>
+				</Col>
+			</Row>
+		</Container>
 	)
 }

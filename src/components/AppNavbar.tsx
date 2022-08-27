@@ -17,8 +17,8 @@ export const AppNavbar = () => {
 
 	const navbarRoutes = [
 		{ to: ROUTES.HOME, text: 'Home' },
-		{ to: ROUTES.LOGIN, text: 'Login' },
-		{ to: ROUTES.REGISTER, text: 'Register' }
+		{ to: ROUTES.LOGIN, text: 'Sign In' },
+		{ to: ROUTES.REGISTER, text: 'Sign Up' }
 	]
 
 	if (hide) return null

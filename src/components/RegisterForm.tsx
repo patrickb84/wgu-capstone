@@ -1,53 +1,66 @@
-import { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Spacer } from './Spacer'
 import { PasswordInput } from './PasswordInput'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { FormText } from 'react-bootstrap'
+import { errorClass, FormField } from './FormField'
 
-export interface IRegisterFormProps {}
+interface IFormInputs {
+	email: string
+	newPassword: string
+	name: string
+}
 
-export function RegisterForm(props: IRegisterFormProps) {
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-	const [name, setName] = useState('')
+const onSubmit: SubmitHandler<IFormInputs> = data => {
+	console.log(data)
+}
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		e.stopPropagation()
-		console.log(email, password, name)
-	}
+export function RegisterForm() {
+	const {
+		register,
+		handleSubmit,
+		watch,
+		formState: { errors }
+	} = useForm<IFormInputs>()
 
 	return (
-		<Form onSubmit={handleSubmit}>
-			<Form.Group className="mb-3" controlId="registerEmail">
-				<Form.Label>Email address</Form.Label>
-				<Form.Control
-					type="email"
-					placeholder="Enter email"
-					value={email}
-					onChange={e => setEmail(e.currentTarget.value)}
-				/>
-				{/* <Form.Text className="text-muted">We'll never share your email with anyone else.</Form.Text> */}
-			</Form.Group>
+		<Form noValidate onSubmit={handleSubmit(onSubmit)}>
+			<FormField
+				label="Email"
+				placeholder="Enter email"
+				error={errors.email}
+				errorMessage="Please enter a valid email address."
+				registered={register('email', {
+					required: true,
+					pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
+				})}
+			/>
 
-			<Form.Group className="mb-3" controlId="registerName">
-				<Form.Label>Name</Form.Label>
-				<Form.Control
-					type="text"
-					placeholder="Enter your name"
-					value={name}
-					onChange={e => setName(e.currentTarget.value)}
-				/>
-			</Form.Group>
+			<FormField
+				label="Name"
+				placeholder="Enter your name"
+				error={errors.name}
+				errorMessage="Please enter a user name."
+				registered={register('name', { required: true })}
+			/>
 
-			<Form.Group className="mb-3" controlId="registerPassword">
-				<Form.Label>Password</Form.Label>
-				<PasswordInput value={password} onChange={e => setPassword(e.currentTarget.value)} />
+			<Form.Group className="mb-3">
+				<Form.Label className={errorClass(errors.newPassword).text}>Password</Form.Label>
+				<PasswordInput
+					creating
+					register={register}
+					error={errors.newPassword}
+					value={watch('newPassword')}
+				/>
+				<FormText className={errorClass(errors.newPassword).text}>
+					Password must be at least 8 characters long.
+				</FormText>
 			</Form.Group>
 
 			<Spacer h={1} />
 			<div className="text-center">
-				<Button variant="gray-700" type="submit" className="px-5 btn-pill">
+				<Button variant="brand" type="submit" className="px-5 btn-pill">
 					Sign Up
 				</Button>
 			</div>

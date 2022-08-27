@@ -1,15 +1,34 @@
-import * as React from 'react'
-import { Layout } from '../components/Layout'
 import { Link } from 'react-router-dom'
+import { Container } from 'react-bootstrap'
+import { ROUTES } from '../routes/AppRouter'
 
 export interface IHomePageProps {}
 
 export const HomePage = (props: IHomePageProps) => {
 	return (
-		<Layout>
-			<h1>Home</h1>
-			<p>Marketing page. User must log in.</p>
-			<Link to="/login" className='btn btn-primary px-4'>Login</Link>
-		</Layout>
+		<section className="bg-light pt-5">
+			<Container>
+				<div
+					style={{
+						height: '35rem',
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						justifyContent: 'center'
+					}}>
+					<h1 className="font-display text-brand display-4 mb-4">
+						Welcome to Sous Chef, try us out
+					</h1>
+					<div className="pt-5">
+						<Link to={ROUTES.REGISTER} className="btn btn-brand btn-lg px-5">
+							Sign Up
+						</Link>
+						<Link to={ROUTES.LOGIN} className="ms-3 btn btn-outline-secondary btn-lg px-5">
+							Sign In
+						</Link>
+					</div>
+				</div>
+			</Container>
+		</section>
 	)
 }
