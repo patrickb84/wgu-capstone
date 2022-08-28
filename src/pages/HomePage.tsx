@@ -6,29 +6,43 @@ export interface IHomePageProps {}
 
 export const HomePage = (props: IHomePageProps) => {
 	return (
-		<section className="bg-light pt-5">
+		<div className="pt-5">
+			<Hero />
+
+			<section className="pt-5">
+				<Container>
+					<div className="text-center">
+						<h1>Welcome to the Home Page</h1>
+					</div>
+				</Container>
+			</section>
+		</div>
+	)
+}
+
+const Hero = () => {
+	return (
+		<header className="bg-light">
 			<Container>
 				<div
-					style={{
-						height: '35rem',
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-						justifyContent: 'center'
-					}}>
-					<h1 className="font-display text-brand display-4 mb-4">
-						Welcome to Sous Chef, try us out
-					</h1>
-					<div className="pt-5">
-						<Link to={ROUTES.REGISTER} className="btn btn-brand btn-lg px-5">
+					className="text-center d-flex align-items-center justify-content-center flex-column pt-3"
+					style={{ height: '30rem' }}>
+					<h1 className="font-display text-brand display-2">Sous Chef!</h1>
+					<p className="fs-1 text-secondary font-hand" style={{ opacity: 0.85 }}>
+						Your meal plan assistant
+					</p>
+					<div className="pt-4">
+						<Link to={ROUTES.REGISTER} className="btn btn-brand btn-lg px-5 mx-1 mx-lg-2">
 							Sign Up
 						</Link>
-						<Link to={ROUTES.LOGIN} className="ms-3 btn btn-outline-secondary btn-lg px-5">
+						<Link
+							to={ROUTES.LOGIN}
+							className="mx-1 mx-lg-2 btn btn-outline-secondary btn-lg px-5">
 							Sign In
 						</Link>
 					</div>
 				</div>
 			</Container>
-		</section>
+		</header>
 	)
 }

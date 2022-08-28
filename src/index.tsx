@@ -1,15 +1,20 @@
-import React from 'react'
+import './styles/index.scss'
 import ReactDOM from 'react-dom/client'
+import { AppProvider } from './providers/AppProvider'
+import { AppRouter } from './routes/AppRouter'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { AppRouter } from './routes/AppRouter'
-import './styles/index.scss'
+import { MealApiProvider } from 'providers/MealApiProvider'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
 	<AppRouter>
-		<App />
+		<AppProvider>
+			<MealApiProvider>
+				<App />
+			</MealApiProvider>
+		</AppProvider>
 	</AppRouter>
 )
 

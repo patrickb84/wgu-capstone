@@ -5,7 +5,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import Overlay from 'react-bootstrap/Overlay'
 import Tooltip from 'react-bootstrap/Tooltip'
 import { UseFormRegister } from 'react-hook-form'
-import { errorClass } from './FormField'
+import { errorClass } from 'components/FormField'
 
 export interface IPasswordInputProps {
 	register: UseFormRegister<any>

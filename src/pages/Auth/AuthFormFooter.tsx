@@ -1,8 +1,7 @@
-import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { ROUTES } from '../routes/AppRouter'
-import { GoogleButton } from './GoogleButton'
-import { SplitText } from './SplitText'
+import { ROUTES } from 'routes/AppRouter'
+import { GoogleButton } from 'pages/Auth/GoogleButton'
+import { SplitText } from 'components/SplitText'
 
 export interface IAuthFormFooterProps {}
 

@@ -1,15 +1,11 @@
-import React from 'react'
 import { Row, Col, Container } from 'react-bootstrap'
-import imgCooking from '../assets/img/chef-hat.png'
-import { SplitText } from '../components/SplitText'
-import { RegisterForm } from '../components/RegisterForm'
-import { ROUTES } from '../routes/AppRouter'
+import imgCooking from 'assets/img/chef-hat.png'
+import { ROUTES } from 'routes/AppRouter'
 import { Link } from 'react-router-dom'
-import { GoogleButton } from '../components/GoogleButton'
-import { LoginForm } from '../components/LoginForm'
-import { MiniLogo } from '../components/MiniLogo'
-import { Spacer } from '../components/Spacer'
-import { AuthFormFooter } from '../components/AuthFormFooter'
+import { LoginForm } from 'pages/Auth/LoginForm'
+import { MiniLogo } from 'components/MiniLogo'
+import { Spacer } from 'components/Spacer'
+import { AuthFormFooter } from 'pages/Auth/AuthFormFooter'
 
 export interface ILoginPageProps {}
 

@@ -18,5 +18,18 @@ h1,
 .navbar-brand {
 	font-family: 'Fredoka One', cursive;
 }
+@import url('https://fonts.googleapis.com/css2?family=Homemade+Apple&family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.font-hand {
+	font-family: 'Homemade Apple', cursive;
+}
+
+.font-serif {
+	font-family: 'Roboto Slab', serif;
+}
+
+.i {
+	font-style: italic;
+}
 
 @import 'custom';
