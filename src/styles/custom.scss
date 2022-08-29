@@ -7,12 +7,17 @@
 
 $primary: #457b9d;
 $brand: #bc4749;
+$red: $brand;
 $secondary: #3d405b;
 $tertiary: #74aa91;
 $light: #d8e2dc;
 
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900');
+
+$font-family-sans-serif: 'Poppins', sans-serif;
 
 $link-color: $brand;
 $link-decoration: none;
@@ -33,6 +38,7 @@ $spacers: (
 $theme-colors: (
 	primary: $primary,
 	brand: $brand,
+	brand-400: $red-400,
 	secondary: $secondary,
 	tertiary: $tertiary,
 	light: $light,
@@ -53,14 +59,12 @@ $body-color: $secondary;
 	border-bottom: 1px solid $gray-300;
 }
 
-button.icon-button {
+.icon-button {
 	all: unset;
 	cursor: pointer;
-
 	&:hover {
 		opacity: 0.75;
 	}
-
 	&:focus {
 		color: var(--bs-btn-hover-color);
 		background-color: var(--bs-btn-hover-bg);
@@ -70,6 +74,9 @@ button.icon-button {
 	&:focus-visible {
 		outline: -webkit-focus-ring-color auto 1px;
 		outline-offset: 1px;
+	}
+	&.icon-button-lg {
+		font-size: 1.3rem;
 	}
 }
 

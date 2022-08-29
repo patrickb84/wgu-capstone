@@ -8,7 +8,7 @@ export interface IRecipe {
 	category?: string
 	tags?: string
 	description?: string
-	instructions?: string | string[]
+	instructions?: string[]
 	imageUrl?: string
 	linkUrl?: string
 	youtubeUrl?: string
@@ -21,7 +21,7 @@ export class Recipe implements IRecipe {
 	area?: string
 	category?: string
 	tags?: string
-	instructions?: string | string[]
+	instructions?: string[]
 	imageUrl?: string
 	linkUrl?: string
 	youtubeUrl?: string
@@ -33,7 +33,7 @@ export class Recipe implements IRecipe {
 		this.area = recipe.strArea
 		this.category = recipe.strCategory
 		this.tags = recipe.strTags
-		this.instructions = recipe.strInstructions
+		this.instructions = recipe.strInstructions?.split('\r\n').filter(e => e)
 		this.imageUrl = recipe.strMealThumb
 		this.linkUrl = recipe.strSource
 		this.youtubeUrl = recipe.strYoutube

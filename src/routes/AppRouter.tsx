@@ -10,4 +10,5 @@ export const ROUTES = {
 	LOGIN: '/login',
 	REGISTER: '/register',
 	RECIPES: '/recipes',
+	RECIPE: '/recipe/:recipeId'
 }

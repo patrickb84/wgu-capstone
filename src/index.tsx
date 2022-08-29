@@ -1,4 +1,5 @@
 import './styles/index.scss'
+import 'tippy.js/dist/tippy.css'
 import ReactDOM from 'react-dom/client'
 import { AppProvider } from './providers/AppProvider'
 import { AppRouter } from './routes/AppRouter'
