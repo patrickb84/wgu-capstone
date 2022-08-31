@@ -15,9 +15,9 @@ $light: #d8e2dc;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
-$font-family-sans-serif: 'Poppins', sans-serif;
+$font-family-sans-serif: 'Noto Sans', sans-serif;
 
 $link-color: $brand;
 $link-decoration: none;
@@ -97,3 +97,12 @@ $body-color: $secondary;
 }
 
 @import '~bootstrap/scss/bootstrap';
+
+.modal-date-picker .react-datepicker__day--selected {
+	background-color: $light;
+	color: $secondary;
+	&:hover {
+		background-color: $secondary;
+		color: white;
+	}
+}
