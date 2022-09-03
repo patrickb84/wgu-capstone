@@ -54,6 +54,39 @@ $theme-colors: (
 
 $body-color: $secondary;
 
+$faded-secondary: rgba($secondary, 0.5);
+
+.no-underline {
+	text-decoration: none;
+	&:hover {
+		text-decoration: none;
+	}
+}
+
+.recipe-card-image {
+	&:hover .recipe-card-image-overlay,
+	.recipe-card-image-overlay.reveal {
+		opacity: 1;
+		background-color: rgba($secondary, 0.7);
+		color: white;
+	}
+	.recipe-card-image-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		opacity: 0;
+		transition: 0.2s ease-out opacity, 0.2s ease-out background-color, 0.2s ease-out color;
+		color: transparent;
+		background-color: transparent;
+	}
+}
+
 .navbar-border {
 	border-top: 5px solid $red-500;
 	border-bottom: 1px solid $gray-300;

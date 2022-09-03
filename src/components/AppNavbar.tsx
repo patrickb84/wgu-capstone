@@ -27,10 +27,10 @@ export const AppNavbar = ({ appUser }: any) => {
 			<Container>
 				<LinkContainer to={ROUTES.HOME}>
 					<Navbar.Brand className="text-brand">
-						<i className="far fa-garlic fa-2x" />
+						Sous Chef
 					</Navbar.Brand>
 				</LinkContainer>
-				<Navbar.Toggle aria-controls="app-nav" />
+				<Navbar.Toggle aria-controls="app-nav" className='border-1' />
 				<Navbar.Collapse id="app-nav">
 					<Nav className="ms-auto">
 						{navbarRoutes.map(({ to, text }) => (

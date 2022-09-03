@@ -1,19 +1,13 @@
 import { Button, Card, Col, Row } from 'react-bootstrap'
 import format from 'date-fns/format'
-import { useNavigate } from 'react-router-dom'
 
 export interface IScheduleDayCardProps {
 	date: Date
-	uid: string | undefined
+	userId: string | undefined
+	meals?: any[]
 }
 
-export function ScheduleDayCard({ date, uid }: IScheduleDayCardProps) {
-	let navigate = useNavigate()
-
-	const addMealToPlan = () => {
-		console.log('add meal to plan')
-	}
-
+export function ScheduleDayCard({ date, userId }: IScheduleDayCardProps) {
 	return (
 		<>
 			<Card className="mb-4">

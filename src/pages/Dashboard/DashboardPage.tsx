@@ -1,4 +1,6 @@
 import { DateRangePicker } from 'components/DateRangePicker'
+import { Spacer } from 'components/Spacer'
+import { addDays } from 'date-fns'
 import { Schedule, Today } from 'pages/Dashboard/Schedule'
 import React, { useState, useContext } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
@@ -19,22 +21,12 @@ export const Dashboard = (props: IDashboardProps) => {
 
 				<section>
 					<Container className="py-5">
-						<Row>
-							<Col lg={4}>
-								<h2>This plan is empty</h2>
-								<h3>{Today()}</h3>
-								<h3>Create a plan, start by choosing a time range</h3>
-								<DateRangePicker
-									callback={dateRange => {
-										console.log(dateRange)
-										setDateRange(dateRange)
-									}}
-								/>
-							</Col>
-							<Col>
-								<Schedule startDate={dateRange[0]} endDate={dateRange[1]} />
-							</Col>
-						</Row>
+						<div className="bg-light p-5 rounded">
+							<h2>Your meal schedule</h2>
+							<p className="lead">The way it works:</p>
+						</div>
+						<Spacer h={3} />
+						<Schedule startDate={new Date()} endDate={addDays(new Date(), 14)} />
 					</Container>
 				</section>
 			</div>

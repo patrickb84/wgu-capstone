@@ -31,7 +31,7 @@ export function Schedule({ startDate, endDate }: IScheduleProps) {
 	return (
 		<>
 			{days.map((date: any) => (
-				<ScheduleDayCard key={date} date={date} uid={appUser?.uid} />
+				<ScheduleDayCard key={date} date={date} userId={appUser?.uid} />
 			))}
 		</>
 	)

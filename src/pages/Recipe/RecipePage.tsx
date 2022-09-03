@@ -6,7 +6,9 @@ import { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { Recipe } from 'types/Recipe'
+import { Recipe, MeasuredIngredient } from 'types/Recipe'
+import { ButtonAddToPlan } from './ButtonAddToPlan'
+import { ButtonBookmark } from './ButtonBookmark'
 
 export interface IRecipePageProps {}
 
@@ -35,73 +37,44 @@ export function RecipePage(props: IRecipePageProps) {
 		<div className="h-100">
 			<header className="pt-6 bg-brand">
 				<Container className="py-4 d-flex flex-column align-items-start h-100">
-					<Link className="text-white" to={''} onClick={() => navigate(-1)}>
-						{'<'} Back
-					</Link>
-					<h1 className="text-white display-4">{recipe.name}</h1>
+					<div className="d-flex w-100 align-items-center justify-content-between">
+						<div>
+							<h1 className="text-white d-flex align-items-start align-items-lg-center flex-lg-row flex-column justify-content-start">
+								<Link className="text-white" to="" onClick={() => navigate(-1)}>
+									<i className="fad fa-circle-arrow-left" />
+								</Link>
+								<Spacer w={0.5} />
+								<span className=" display-4">{recipe.name}</span>
+							</h1>
+						</div>
+						<div className="ms-3 d-flex flex-column justify-content-center align-items-center px-2">
+							<ButtonBookmark iconFaGroup="fal" size="1.6rem" colorVariant="white" />
+							<ButtonAddToPlan
+								recipeId={recipe.id}
+								iconFaGroup="fa"
+								size="1.6rem"
+								colorVariant="white"
+							/>
+						</div>
+					</div>
 				</Container>
 			</header>
 
 			<section className="w-100">
 				<Container>
 					<Row className="my-4">
-						<Col className="d-flex justify-content-between">
-							<div className="small d-flex mb-2">
-								{recipe.area && (
-									<div className="me-3">
-										<span className="text-muted">Area:</span>
-										<Spacer w={0.3} />
-										<span className="text-tertiary">{recipe.area}</span>
-									</div>
-								)}
-								{recipe.category && (
-									<div className="me-3">
-										<span className="text-muted">Category:</span>
-										<Spacer w={0.3} />
-										<span className="text-tertiary">{recipe.category}</span>
-									</div>
-								)}
-
-								{recipe.tags && (
-									<div className="me-3">
-										<span className="text-muted">Tags:</span>
-										<Spacer w={0.3} />
-										<span className="text-tertiary">{recipe.tags.split(',').join(', ')}</span>
-									</div>
-								)}
-							</div>
-
-							{recipe.youtubeUrl && (
-								<Link
-									className="small d-flex align-items-center text-tertiary i"
-									to={recipe.youtubeUrl}>
-									<span>Watch it on YouTube</span> <Spacer w={0.5} />
-									<i className="fab fa-youtube fa-lg" />
-								</Link>
-							)}
+						<Col>
+							<RecipePageMetadata recipe={recipe} />
 						</Col>
 					</Row>
 					<Row>
 						<Col lg={4}>
 							<img src={recipe.imageUrl} alt={recipe.name} className="w-100 rounded mb-4" />
-
-							<div>
-								<h2 className="h1 font-hand text-tertiary" style={{ marginBottom: -20 }}>
-									Ingredients
-								</h2>
-								<div className="border rounded px-3 py-4">
-									{recipe.ingredients.map((ingredient, idx) => (
-										<div key={idx} className="d-flex align-items-end justify-content-between my-1">
-											<span className="fw-semibold">{ingredient.name}</span>
-											<small className="text-brand">{ingredient.measure}</small>
-										</div>
-									))}
-								</div>
-							</div>
+							<RecipePageIngredientsList ingredients={recipe.ingredients} />
 						</Col>
 						<Col>
-							<div>
-								<h2 className="h1 font-hand text-brand d-flex align-items-end justify-content-between">
+							<>
+								<h2 className="display-4 mt-0 font-hand text-brand d-flex align-items-end justify-content-between">
 									Instructions
 								</h2>
 								<ol>
@@ -115,12 +88,12 @@ export function RecipePage(props: IRecipePageProps) {
 									{recipe.linkUrl && (
 										<>
 											<Link className="text-tertiary" to={recipe.linkUrl}>
-												{recipe.linkUrl}
+												Original Source
 											</Link>
 										</>
 									)}
 								</div>
-							</div>
+							</>
 						</Col>
 					</Row>
 				</Container>
@@ -132,3 +105,56 @@ export function RecipePage(props: IRecipePageProps) {
 }
 
 export default RecipePage
+
+const RecipePageIngredientsList = ({ ingredients }: { ingredients: MeasuredIngredient[] }) => {
+	return (
+		<>
+			<h2 className="h1 font-hand text-tertiary mb-0">Ingredients</h2>
+			<div className="border rounded px-5 px-lg-3 py-4">
+				{ingredients.map((ingredient, idx) => (
+					<div key={idx} className="d-flex align-items-end justify-content-between my-1">
+						<span className="fw-semibold">{ingredient.name}</span>
+						<small className="text-brand">{ingredient.measure}</small>
+					</div>
+				))}
+			</div>
+		</>
+	)
+}
+
+const RecipePageMetadata = ({ recipe }: { recipe: Recipe }) => {
+	return (
+		<div className="small d-flex mb-2 w-100 flex-wrap">
+			{recipe.area && (
+				<div className="me-3 py-1">
+					<span className="text-muted">Area:</span>
+					<Spacer w={0.3} />
+					<span className="text-tertiary">{recipe.area}</span>
+				</div>
+			)}
+			{recipe.category && (
+				<div className="me-3 py-1">
+					<span className="text-muted">Category:</span>
+					<Spacer w={0.3} />
+					<span className="text-tertiary">{recipe.category}</span>
+				</div>
+			)}
+			{recipe.tags && (
+				<div className="me-3 py-1">
+					<span className="text-muted">Tags:</span>
+					<Spacer w={0.3} />
+					<span className="text-tertiary">{recipe.tags.split(',').join(', ')}</span>
+				</div>
+			)}
+
+			{recipe.youtubeUrl && (
+				<div className="me-3 ms-lg-auto py-1">
+					<Link className="d-flex align-items-center text-tertiary i" to={recipe.youtubeUrl}>
+						<span>Watch it on YouTube</span> <Spacer w={0.5} />
+						<i className="fab fa-youtube fa-lg" />
+					</Link>
+				</div>
+			)}
+		</div>
+	)
+}

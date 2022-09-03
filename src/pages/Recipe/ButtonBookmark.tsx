@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import Tippy from '@tippyjs/react'
+import { IconButton, IIconButton } from 'components/IconButton'
 
-interface IButtonBookmarkProps {
+interface IButtonBookmarkProps extends IIconButton {
 	// isBookmarked?: boolean
 	recipeId?: string
 }
 
-export const ButtonBookmark = ({ recipeId }: IButtonBookmarkProps) => {
+export const ButtonBookmark = (props: IButtonBookmarkProps) => {
+	const { recipeId, iconFaGroup, colorVariant, size } = props
 	const [isBookmarked, setIsBookmarked] = useState(false)
 
 	const handleClick = () => {
@@ -14,11 +15,19 @@ export const ButtonBookmark = ({ recipeId }: IButtonBookmarkProps) => {
 		setIsBookmarked(!isBookmarked)
 	}
 
+	const iconGroup = !isBookmarked ? (iconFaGroup ? iconFaGroup : 'fa-regular') : 'fa-solid'
+
 	return (
-		<Tippy content={isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'}>
-			<button className="icon-button me-2" onClick={handleClick}>
-				<i className={`${isBookmarked ? 'fas' : 'far'} fa-bookmark`} />
-			</button>
-		</Tippy>
+		<>
+			<IconButton
+				tooltip={isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'}
+				onClick={handleClick}
+				iconFaName="fa-heart"
+				iconFaGroup={iconGroup}
+				colorVariant={colorVariant ? colorVariant : 'secondary'}
+				size={size}
+				className={props.className}
+			/>
+		</>
 	)
 }
