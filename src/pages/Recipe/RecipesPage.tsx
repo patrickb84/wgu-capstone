@@ -13,23 +13,12 @@ export const RecipesPage = (props: IRecipesPageProps) => {
 	const [recipes, setRecipes] = useState<any>([])
 
 	useEffect(() => {
-		// mealdb
-		// 	.fetchRandom10Recipes()
-		// 	.then(data => {
-		// 		data = data.map((recipe: ApiRecipe) => new Recipe(recipe))
-		// 		console.log(data)
-		// 		setRecipes(data)
-		// 	})
-		// 	.catch(err => {
-		// 		console.log(err)
-		// 	})
-
 		setRecipes(RECIPES)
 	}, [])
 
 	return (
 		<>
-			<div className="h-100">
+			<div className="min-h-100 bg-gray-100">
 				<header className="pt-6 bg-secondary">
 					<Container className="py-4 d-flex align-items-center h-100">
 						<h1 className="text-white display-4">Recipes</h1>

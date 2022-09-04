@@ -1,6 +1,8 @@
-import Tippy from '@tippyjs/react'
+import { firestore } from 'api/firebase'
 import { IconButton, IIconButton } from 'components/IconButton'
 import { addDoc, collection } from 'firebase/firestore'
+import { Dashboard } from 'pages/Dashboard/DashboardPage'
+import { Schedule } from 'pages/Dashboard/Schedule'
 import { useAppContext } from 'providers/AppProvider'
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
@@ -13,26 +15,26 @@ export interface IButtonAddToPlanProps extends IIconButton {
 
 export function ButtonAddToPlan(props: IButtonAddToPlanProps) {
 	const { recipeId, iconFaGroup, colorVariant, size } = props
-	const { db, appUser } = useAppContext()
+	const { currentUser } = useAppContext()
 	const [show, setShow] = useState(false)
 	const [selectedDates, setSelectedDates] = useState<Date[]>([])
 
 	const handleClose = () => setShow(false)
 
 	const postToDatabase = async () => {
-		if (!appUser) return
+		if (!currentUser) return
+
 		await Promise.all(
 			selectedDates.map(async date => {
 				const scheduledMeal: IScheduledMeal = {
 					date: date,
 					recipeId: recipeId,
-					userId: appUser.uid,
+					userId: currentUser.uid,
 					dateAdded: new Date()
 				}
-				const docRef = await addDoc(collection(db, 'scheduledMeals'), scheduledMeal)
+				const docRef = await addDoc(collection(firestore, 'scheduledMeals'), scheduledMeal)
 
 				console.log('Document written with ID: ', docRef.id)
-				// TODO: Write to user acct?
 				scheduledMeal.id = docRef.id
 				console.log('scheduledMeal', scheduledMeal)
 			})
@@ -52,12 +54,14 @@ export function ButtonAddToPlan(props: IButtonAddToPlanProps) {
 				className={props.className}
 			/>
 
-			<Modal show={show} onHide={handleClose} centered backdrop>
-				<Modal.Header className="border-0 text-center">
+			<Modal show={show} onHide={handleClose} size="xl" scrollable={true}>
+				<Modal.Header className="border-0 text-center" closeButton>
 					<Modal.Title className="text-center">Add it to your meal plan!</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
-					<ModalDatePicker {...{ selectedDates, setSelectedDates }} />
+				<Modal.Body className='m-0 p-0'>
+					{/* <ModalDatePicker {...{ selectedDates, setSelectedDates }} /> */}
+
+					<Dashboard />
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={handleClose}>

@@ -5,25 +5,10 @@
 	border-radius: 0 !important;
 }
 
-$primary: #457b9d;
-$brand: #bc4749;
-$red: $brand;
-$secondary: #3d405b;
-$tertiary: #74aa91;
-$light: #d8e2dc;
-
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
-
-$font-family-sans-serif: 'Noto Sans', sans-serif;
-
-$link-color: $brand;
-$link-decoration: none;
-$link-shade-percentage: 20%;
-$link-hover-color: shift-color($link-color, $link-shade-percentage);
-$link-hover-decoration: underline;
 
 $spacers: (
 	0: 0,
@@ -35,22 +20,50 @@ $spacers: (
 	6: $spacer * 5
 );
 
+$primary: #457b9d;
+$brand: #bc4749;
+$red: $brand;
+$secondary: #3d405b;
+$tertiary: #74aa91;
+$light: #d8e2dc;
+
+$brand: $red;
+
 $theme-colors: (
 	primary: $primary,
 	brand: $brand,
 	brand-400: $red-400,
 	secondary: $secondary,
+	secondary-gray: $gray-600,
 	tertiary: $tertiary,
-	light: $light,
+	light: $gray-200,
+	lightish: $light,
 	gray-100: $gray-100,
 	gray-200: $gray-200,
 	gray-500: $gray-500,
 	gray-600: $gray-600,
 	gray-700: $gray-700,
 	'white': $white,
-	dark: $black,
+	dark: $gray-900,
 	danger: $red-500
 );
+
+$font-family-sans-serif: 'Noto Sans', sans-serif;
+
+$link-color: $primary;
+$link-decoration: none;
+$link-shade-percentage: 20%;
+$link-hover-color: none;
+$link-hover-decoration: none;
+
+a {
+	transition: 0.25s linear opacity;
+	&:hover {
+		opacity: 0.6;
+	}
+}
+
+$enable-caret: false;
 
 $body-color: $secondary;
 
@@ -138,4 +151,46 @@ $faded-secondary: rgba($secondary, 0.5);
 		background-color: $secondary;
 		color: white;
 	}
+}
+
+.flex-1 {
+	flex: 1;
+}
+
+.nav-drop {
+	&::after {
+		display: none;
+	}
+	.dropdown-menu {
+		right: 0;
+	}
+}
+
+.min-h-100 {
+	min-height: 100%;
+}
+
+.override_drp {
+	.react-datepicker__day--keyboard-selected {
+		background-color: transparent !important;
+		color: $secondary !important;
+		font-weight: bold;
+
+		&.react-datepicker__day--in-range.react-datepicker__day--selected {
+			background-color: $brand !important;
+			color: white !important;
+		}
+	}
+}
+
+.fade-in {
+	opacity: 0;
+	transition: opacity 0.5s ease-in;
+	&.fade-in-active {
+		opacity: 1;
+	}
+}
+
+.nav-icon {
+	font-size: 1.5rem;
 }

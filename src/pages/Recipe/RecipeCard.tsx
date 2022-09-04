@@ -5,26 +5,36 @@ import { Recipe } from 'types/Recipe'
 import { ButtonBookmark } from './ButtonBookmark'
 import { ButtonAddToPlan } from './ButtonAddToPlan'
 import { Link } from 'react-router-dom'
+import { useAppContext } from 'providers/AppProvider'
+import { useEffect } from 'react'
+import NavbarButton from 'components/NavbarButtons'
 
 export interface IRecipeCardProps {
 	recipe: Recipe
 }
 
 export function RecipeCard({ recipe }: IRecipeCardProps) {
+	const { navbar } = useAppContext()
+
+	useEffect(() => {
+		navbar.setContentLeft(<NavbarButton.Back />)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
 	const { name, imageUrl, area, category, id } = recipe
 	return (
 		<Col lg={4} className="d-flex mb-4 recipe-card">
-			<Card className="w-100">
+			<Card className="w-100 shadow-lg">
 				<Card.Header className="bg-brand text-white">
-					<div className="header-text d-flex align-items-center" style={{ marginLeft: -5 }}>
+					<div className="d-flex align-items-center" style={{ marginLeft: -5 }}>
 						<ButtonBookmark
 							recipeId={recipe.id}
 							iconFaGroup="far"
 							colorVariant="white"
-							size={'1.25rem'}
+							size={'1.5rem'}
 						/>
 						<Spacer w={0.4} />
-						{name}
+						<span className="header-text">{name}</span>
 					</div>
 				</Card.Header>
 				<RecipeCardImage imageUrl={imageUrl} name={name} id={id} />
@@ -36,9 +46,7 @@ export function RecipeCard({ recipe }: IRecipeCardProps) {
 					</div>
 
 					<div>
-						<ButtonAddToPlan recipeId={recipe.id} size="1.25rem" iconFaGroup="far" />
-						{/* <Spacer w={0.5} />
-						<ButtonViewDetails recipeId={recipe.id} /> */}
+						<ButtonAddToPlan recipeId={recipe.id} size="1.5rem" iconFaGroup="far" />
 					</div>
 				</Card.Body>
 			</Card>

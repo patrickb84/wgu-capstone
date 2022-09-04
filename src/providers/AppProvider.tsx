@@ -1,17 +1,17 @@
 import { createContext, useContext, useState } from 'react'
-import app, { auth, firestore as db } from '../api/firebase'
+import { auth, firestore as db } from '../api/firebase'
 import { IUser } from 'types'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { User } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useEffect } from 'react'
 import { OverlaySpinner } from 'components/OverlaySpinner'
+import useNavbar from './useNavbar'
 
 export interface IAppContextState {
-	firebase: typeof app
-	auth: typeof auth
-	db: typeof db
-	appUser: IUser | null
+	currentUser: IUser | null
+	userId: string | null
+	navbar: ReturnType<typeof useNavbar>
 }
 
 const AppContext = createContext({} as IAppContextState)
@@ -21,58 +21,61 @@ interface IAppProviderProps {
 }
 
 export const AppProvider = ({ children }: IAppProviderProps) => {
-	const [appUser, setAppUser] = useState<IUser | null>(null)
+	const [currentUser, setCurrentUser] = useState<IUser | null>(null)
+	const navbar = useNavbar()
 
 	const [user, loading, error] = useAuthState(auth, {
 		async onUserChanged(user: User | null) {
-			try {
-				if (user) {
-					const userRef = doc(db, 'users', user.uid)
-					const userSnapshot = await getDoc(userRef)
-					if (!userSnapshot.exists()) {
-						const appUser: IUser = {
-							displayName: user.displayName,
-							email: user.email,
-							photoURL: user.photoURL,
-							uid: user.uid
-						}
-						await setDoc(userRef, appUser)
-					}
-				}
-			} catch (error) {
-				console.error(error)
-			}
+			handleUserChange(user)
 		}
 	})
 
+	const handleUserChange = async (user: User | null) => {
+		if (!user) return
+		try {
+			const userRef = doc(db, 'users', user.uid)
+			const userSnapshot = await getDoc(userRef)
+			if (!userSnapshot.exists()) {
+				const userRecord: IUser = {
+					displayName: user.displayName,
+					email: user.email,
+					photoURL: user.photoURL,
+					uid: user.uid
+				}
+				await setDoc(userRef, userRecord)
+			}
+		} catch (error) {
+			console.error(error)
+		}
+	}
+
 	useEffect(() => {
 		if (user) {
-			let appUser: IUser = {
+			const currentUser: IUser = {
 				displayName: user.displayName || 'Chef!',
 				email: user.email || null,
 				photoURL: user.photoURL || null,
 				uid: user.uid
 			}
-			setAppUser(appUser)
+			setCurrentUser(currentUser)
 		} else {
-			setAppUser(null)
+			setCurrentUser(null)
 		}
 	}, [user])
 
-	console.log('auth providor', { user, loading, error })
+	console.log('auth --', { user, loading, error })
 
 	const context: IAppContextState = {
-		firebase: app,
-		auth: auth,
-		db: db,
-		appUser
+		currentUser,
+		userId: currentUser && currentUser.uid,
+		navbar
 	}
 
-	if (loading) return <OverlaySpinner show />
-
-	return <AppContext.Provider value={context}>{children}</AppContext.Provider>
+	return !loading ? (
+		<AppContext.Provider value={context}>{children}</AppContext.Provider>
+	) : (
+		<OverlaySpinner show />
+	)
 }
 
-export const useAppContext = () => {
-	return useContext(AppContext)
-}
+export const useAppContext = () => useContext(AppContext)

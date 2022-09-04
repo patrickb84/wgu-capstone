@@ -8,6 +8,7 @@ import { useAppContext } from 'providers/AppProvider'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import { OverlaySpinner } from 'components/OverlaySpinner'
 import { Navigate } from 'react-router-dom'
+import { auth } from 'api/firebase'
 
 interface IFormInputs {
 	email: string
@@ -15,7 +16,6 @@ interface IFormInputs {
 }
 
 export function LoginForm() {
-	const { auth } = useAppContext()
 	const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth)
 
 	const {
@@ -62,11 +62,7 @@ export function LoginForm() {
 
 				<Form.Group className="mb-3">
 					<Form.Label className={errorClass(errors.password).text}>Password</Form.Label>
-					<PasswordInput
-						register={register}
-						error={errors.password}
-						value={watch('password')}
-					/>
+					<PasswordInput register={register} error={errors.password} value={watch('password')} />
 				</Form.Group>
 
 				<Spacer h={1} />

@@ -1,3 +1,5 @@
+import { fetchRecipe } from './../api/mealdb/mealdb.api'
+import mealdb from 'api/mealdb'
 import { ApiRecipe } from 'api/mealdb/types/ApiRecipe'
 
 export interface IRecipe {
@@ -49,16 +51,34 @@ export class Recipe implements IRecipe {
 			if (name && index === -1) {
 				const ingredient: MeasuredIngredient = {
 					name,
-					measure
+					measure,
+					recipe: {
+						id: recipe.idMeal,
+						name: recipe.strMeal,
+						imageUrl: recipe.strMealThumb
+					}
 				}
 				_ingredients.push(ingredient)
 			}
 		}
 		return _ingredients
 	}
+
+	static findRecipeById = async (recipeId: string) => {
+		const recipe = await mealdb.fetchRecipe(recipeId)
+		console.log(recipe)
+		return new Recipe(recipe)
+	}
 }
 
 export interface MeasuredIngredient {
 	name: string
 	measure: string
+	recipe: RecipeMetadata
+}
+
+export interface RecipeMetadata {
+	id: string
+	name: string
+	imageUrl: string | null
 }

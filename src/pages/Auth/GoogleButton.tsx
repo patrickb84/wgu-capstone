@@ -6,6 +6,7 @@ import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { Navigate } from 'react-router-dom'
 import { ROUTES } from 'routes/AppRouter'
 import imgGoogleIcon from 'assets/img/google-g.png'
+import { auth } from 'api/firebase'
 
 export interface IGoogleButtonProps {
 	style?: React.CSSProperties
@@ -13,7 +14,6 @@ export interface IGoogleButtonProps {
 }
 
 export const GoogleButton = ({ style, className }: IGoogleButtonProps) => {
-	const { auth } = useAppContext()
 	const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
 
 	console.log('GoogleButton', { user, loading, error })

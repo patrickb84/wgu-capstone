@@ -1,7 +1,9 @@
 import mealdb from 'api/mealdb'
 import { ApiRecipe } from 'api/mealdb/types/ApiRecipe'
+import NavbarButton from 'components/NavbarButtons'
 import { OverlaySpinner } from 'components/OverlaySpinner'
 import { Spacer } from 'components/Spacer'
+import { useAppContext } from 'providers/AppProvider'
 import { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
@@ -15,44 +17,42 @@ export interface IRecipePageProps {}
 export function RecipePage(props: IRecipePageProps) {
 	const [recipe, setRecipe] = useState<Recipe | null>(null)
 	const params = useParams()
-	let navigate = useNavigate()
 	const recipeId = params.recipeId
+	const { navbar } = useAppContext()
 
 	useEffect(() => {
-		if (!recipeId) return
+		navbar.setContentLeft(<NavbarButton.Back />)
+	}, [])
 
-		mealdb
-			.fetchRecipe(recipeId)
-			.then((data: ApiRecipe) => {
-				const r = new Recipe(data)
-				console.log(r)
-				return r
-			})
-			.then(setRecipe)
-	}, [recipeId])
+	useEffect(() => {
+		if (recipeId)
+			mealdb.fetchRecipe(recipeId).then((data: ApiRecipe) => setRecipe(new Recipe(data)))
+	}, [navbar, recipeId])
 
-	if (!recipe) return <OverlaySpinner />
+	if (!recipe)
+		return (
+			<div className="h-100">
+				<OverlaySpinner />
+			</div>
+		)
 
 	return (
-		<div className="h-100">
+		<div className="min-h-100">
 			<header className="pt-6 bg-brand">
 				<Container className="py-4 d-flex flex-column align-items-start h-100">
 					<div className="d-flex w-100 align-items-center justify-content-between">
 						<div>
 							<h1 className="text-white d-flex align-items-start align-items-lg-center flex-lg-row flex-column justify-content-start">
-								<Link className="text-white" to="" onClick={() => navigate(-1)}>
-									<i className="fad fa-circle-arrow-left" />
-								</Link>
 								<Spacer w={0.5} />
 								<span className=" display-4">{recipe.name}</span>
 							</h1>
 						</div>
 						<div className="ms-3 d-flex flex-column justify-content-center align-items-center px-2">
-							<ButtonBookmark iconFaGroup="fal" size="1.6rem" colorVariant="white" />
+							<ButtonBookmark iconFaGroup="fal" size="1.5rem" colorVariant="white" />
 							<ButtonAddToPlan
 								recipeId={recipe.id}
 								iconFaGroup="fa"
-								size="1.6rem"
+								size="1.5rem"
 								colorVariant="white"
 							/>
 						</div>
@@ -60,7 +60,7 @@ export function RecipePage(props: IRecipePageProps) {
 				</Container>
 			</header>
 
-			<section className="w-100">
+			<section className="w-100 min-h-100">
 				<Container>
 					<Row className="my-4">
 						<Col>

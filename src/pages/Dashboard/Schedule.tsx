@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react'
 import { differenceInCalendarDays, addDays } from 'date-fns'
-import format from 'date-fns/format'
 import { useAppContext } from 'providers/AppProvider'
-import { ScheduleDayCard } from './ScheduleDay'
+import { ScheduleDayCard } from './DayPlanCard'
+import { ScheduledMeal } from 'types/ScheduledMeal'
+import { firestore } from 'api/firebase'
+import { formatWithoutTime } from 'utils/dates'
+import { DayPlan } from 'types/DayPlan'
+import { DateRangeType } from 'types/DateRangeType'
 
 export interface IScheduleProps {
-	startDate: Date | null
-	endDate: Date | null
+	dateRange: DateRangeType
+	scheduledMeals: ScheduledMeal[]
+	setScheduledMeals: (scheduledMeals: ScheduledMeal[]) => void
 }
 
-export function Schedule({ startDate, endDate }: IScheduleProps) {
-	const { appUser } = useAppContext()
-	const [days, setDays] = useState<any>([])
+export function Schedule({ dateRange, scheduledMeals, setScheduledMeals }: IScheduleProps) {
+	const { userId } = useAppContext()
+	const [days, setDays] = useState<Date[]>([])
+	const [dayPlans, setDayPlans] = useState<DayPlan[]>([])
+	const [startDate, endDate] = dateRange
 
 	useEffect(() => {
 		if (startDate && endDate) {
@@ -20,23 +27,27 @@ export function Schedule({ startDate, endDate }: IScheduleProps) {
 			for (let i = 0; i < numberOfDays; i++) {
 				days.push(addDays(startDate, i + 1))
 			}
-			setDays(days)
-		} else {
-			setDays([])
+			setDays(days.map(day => formatWithoutTime(day)))
 		}
 	}, [startDate, endDate])
 
-	if (!startDate || !endDate) return null
+	useEffect(() => {
+		ScheduledMeal.findUsersScheduledMeals(firestore, userId).then(setScheduledMeals)
+	}, [setScheduledMeals, userId])
+
+	useEffect(() => {
+		if (days.length && scheduledMeals.length) {
+			setDayPlans(days.map(date => new DayPlan(date, scheduledMeals)))
+		}
+	}, [scheduledMeals, days])
+
+	if (!userId) return <></>
 
 	return (
 		<>
-			{days.map((date: any) => (
-				<ScheduleDayCard key={date} date={date} userId={appUser?.uid} />
+			{dayPlans.map((dayPlan: DayPlan, index: number) => (
+				<ScheduleDayCard key={dayPlan.key} dayPlan={dayPlan} index={index + 1} />
 			))}
 		</>
 	)
-}
-
-export const Today = () => {
-	return format(new Date(), "'Today is a' eeee")
 }

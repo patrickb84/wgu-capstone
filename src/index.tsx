@@ -1,5 +1,6 @@
 import './styles/index.scss'
 import 'tippy.js/dist/tippy.css'
+import './assets/fontawesome/css/all.css'
 import ReactDOM from 'react-dom/client'
 import { AppProvider } from './providers/AppProvider'
 import { AppRouter } from './routes/AppRouter'

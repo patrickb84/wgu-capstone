@@ -7,11 +7,9 @@ import { MiniLogo } from 'components/MiniLogo'
 import { Spacer } from 'components/Spacer'
 import { AuthFormFooter } from 'pages/Auth/AuthFormFooter'
 
-export interface ILoginPageProps {}
-
-export const LoginPage = (props: ILoginPageProps) => {
+export const LoginPage = () => {
 	return (
-		<Container fluid className="h-100">
+		<Container fluid className="h-100 position-absolute">
 			<Row className="h-100">
 				<Col className="bg-brand d-none d-md-block">
 					<div className="d-flex flex-column h-100 align-items-center justify-content-center">
@@ -33,7 +31,7 @@ export const LoginPage = (props: ILoginPageProps) => {
 							<Spacer h={1.5} />
 							<h2 className="font-display mb-1 mb-lg-2">Sign In!</h2>
 							<p className="text-center text-muted">
-								Don't have an account? <Link to={ROUTES.REGISTER}>Sign up</Link>
+								Don't have an account? <Link to={ROUTES.REGISTER} replace>Sign up</Link>
 							</p>
 						</div>
 

@@ -9,6 +9,7 @@ import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import { useAppContext } from 'providers/AppProvider'
 import { OverlaySpinner } from 'components/OverlaySpinner'
 import { Navigate } from 'react-router-dom'
+import { auth } from 'api/firebase'
 
 interface IFormInputs {
 	email: string
@@ -17,7 +18,7 @@ interface IFormInputs {
 }
 
 export function RegisterForm() {
-	const { auth, appUser } = useAppContext()
+	const { currentUser: appUser } = useAppContext()
 
 	const [createUserWithEmailAndPassword, user, loading, error] =
 		useCreateUserWithEmailAndPassword(auth)

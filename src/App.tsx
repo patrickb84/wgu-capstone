@@ -1,5 +1,5 @@
-import { AppNavbar } from 'components/AppNavbar'
-import { Routes, Route } from 'react-router-dom'
+import { Navbar } from 'components/Navbar'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { HomePage } from 'pages/HomePage'
 import { LoginPage } from 'pages/Auth/LoginPage'
 import { RegisterPage } from 'pages/Auth/RegisterPage'
@@ -11,15 +11,19 @@ import { RecipePage } from 'pages/Recipe/RecipePage'
 import { Footer } from 'components/Footer'
 
 export default function App() {
-	const { appUser } = useAppContext()
+	const { currentUser } = useAppContext()
+
+	const location = useLocation()
+
+	const hideFooter = !![ROUTES.LOGIN, ROUTES.REGISTER].find(route => route === location.pathname)
 
 	return (
 		<>
-			<main>
-				<AppNavbar appUser={appUser} />
+			<main className="min-h-100 position-relative">
+				<Navbar />
 
 				<Routes>
-					{appUser ? (
+					{currentUser ? (
 						<Route path={ROUTES.HOME} element={<Dashboard />} />
 					) : (
 						<Route path={ROUTES.HOME} element={<HomePage />} />
@@ -30,7 +34,7 @@ export default function App() {
 					<Route path={ROUTES.REGISTER} element={<RegisterPage />} />
 				</Routes>
 
-				<Footer />
+				<Footer hidden={hideFooter} />
 			</main>
 		</>
 	)
