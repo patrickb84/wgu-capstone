@@ -3,7 +3,7 @@ import { IconButton, IIconButton } from 'components/IconButton'
 import { addDoc, collection } from 'firebase/firestore'
 import { Dashboard } from 'pages/Dashboard/DashboardPage'
 import { Schedule } from 'pages/Dashboard/Schedule'
-import { useAppContext } from 'providers/AppProvider'
+import { useCurrentUser } from 'providers/AuthProvider'
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { IScheduledMeal } from 'types/ScheduledMeal'
@@ -15,7 +15,7 @@ export interface IButtonAddToPlanProps extends IIconButton {
 
 export function ButtonAddToPlan(props: IButtonAddToPlanProps) {
 	const { recipeId, iconFaGroup, colorVariant, size } = props
-	const { currentUser } = useAppContext()
+	const { currentUser } = useCurrentUser()
 	const [show, setShow] = useState(false)
 	const [selectedDates, setSelectedDates] = useState<Date[]>([])
 

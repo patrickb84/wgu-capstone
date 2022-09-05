@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, set } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 
 export const convertTimestampToDate = (timestamp: Timestamp): Date => {
@@ -16,3 +16,6 @@ export const forceTimestampToDate = (date: Date | Timestamp): Date => {
 }
 
 export const Today = () => format(new Date(), "'Today is a' eeee")
+export const formatWithoutTime = (date: Date): Date => {
+	return set(date, { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 })
+}

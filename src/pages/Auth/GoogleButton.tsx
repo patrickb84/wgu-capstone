@@ -1,6 +1,6 @@
 import React from 'react'
 import { OverlaySpinner } from 'components/OverlaySpinner'
-import { useAppContext } from 'providers/AppProvider'
+import { useCurrentUser } from 'providers/AuthProvider'
 import { Button } from 'react-bootstrap'
 import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
 import { Navigate } from 'react-router-dom'

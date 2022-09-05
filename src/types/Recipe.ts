@@ -1,11 +1,10 @@
-import { fetchRecipe } from './../api/mealdb/mealdb.api'
 import mealdb from 'api/mealdb'
 import { ApiRecipe } from 'api/mealdb/types/ApiRecipe'
 
 export interface IRecipe {
 	id: string
 	name: string
-	ingredients: MeasuredIngredient[]
+	ingredients: RecipeIngredient[]
 	area?: string
 	category?: string
 	tags?: string
@@ -19,7 +18,7 @@ export interface IRecipe {
 export class Recipe implements IRecipe {
 	id: string
 	name: string
-	ingredients: MeasuredIngredient[]
+	ingredients: RecipeIngredient[]
 	area?: string
 	category?: string
 	tags?: string
@@ -42,14 +41,14 @@ export class Recipe implements IRecipe {
 	}
 
 	parseIngredients = (recipe: ApiRecipe | any) => {
-		const _ingredients: MeasuredIngredient[] = []
+		const _ingredients: RecipeIngredient[] = []
 
 		for (let i = 1; i <= 20; i++) {
 			const name = recipe[`strIngredient${i}`]
 			const measure = recipe[`strMeasure${i}`]
 			const index = _ingredients.findIndex(ingredient => ingredient.name === name)
 			if (name && index === -1) {
-				const ingredient: MeasuredIngredient = {
+				const ingredient: RecipeIngredient = {
 					name,
 					measure,
 					recipe: {
@@ -71,7 +70,7 @@ export class Recipe implements IRecipe {
 	}
 }
 
-export interface MeasuredIngredient {
+export interface RecipeIngredient {
 	name: string
 	measure: string
 	recipe: RecipeMetadata

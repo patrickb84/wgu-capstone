@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { FormText } from 'react-bootstrap'
 import { errorClass, FormField } from 'components/FormField'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { useAppContext } from 'providers/AppProvider'
+import { useCurrentUser } from 'providers/AuthProvider'
 import { OverlaySpinner } from 'components/OverlaySpinner'
 import { Navigate } from 'react-router-dom'
 import { auth } from 'api/firebase'
@@ -18,7 +18,7 @@ interface IFormInputs {
 }
 
 export function RegisterForm() {
-	const { currentUser: appUser } = useAppContext()
+	const { currentUser: appUser } = useCurrentUser()
 
 	const [createUserWithEmailAndPassword, user, loading, error] =
 		useCreateUserWithEmailAndPassword(auth)

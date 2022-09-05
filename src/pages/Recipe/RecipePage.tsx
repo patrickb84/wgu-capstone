@@ -1,14 +1,12 @@
 import mealdb from 'api/mealdb'
 import { ApiRecipe } from 'api/mealdb/types/ApiRecipe'
-import NavbarButton from 'components/NavbarButtons'
 import { OverlaySpinner } from 'components/OverlaySpinner'
 import { Spacer } from 'components/Spacer'
-import { useAppContext } from 'providers/AppProvider'
 import { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { Recipe, MeasuredIngredient } from 'types/Recipe'
+import { Recipe, RecipeIngredient } from 'types/Recipe'
 import { ButtonAddToPlan } from './ButtonAddToPlan'
 import { ButtonBookmark } from './ButtonBookmark'
 
@@ -18,16 +16,11 @@ export function RecipePage(props: IRecipePageProps) {
 	const [recipe, setRecipe] = useState<Recipe | null>(null)
 	const params = useParams()
 	const recipeId = params.recipeId
-	const { navbar } = useAppContext()
-
-	useEffect(() => {
-		navbar.setContentLeft(<NavbarButton.Back />)
-	}, [])
 
 	useEffect(() => {
 		if (recipeId)
 			mealdb.fetchRecipe(recipeId).then((data: ApiRecipe) => setRecipe(new Recipe(data)))
-	}, [navbar, recipeId])
+	}, [recipeId])
 
 	if (!recipe)
 		return (
@@ -106,7 +99,7 @@ export function RecipePage(props: IRecipePageProps) {
 
 export default RecipePage
 
-const RecipePageIngredientsList = ({ ingredients }: { ingredients: MeasuredIngredient[] }) => {
+const RecipePageIngredientsList = ({ ingredients }: { ingredients: RecipeIngredient[] }) => {
 	return (
 		<>
 			<h2 className="h1 font-hand text-tertiary mb-0">Ingredients</h2>

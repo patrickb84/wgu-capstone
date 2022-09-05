@@ -1,7 +1,7 @@
 import { isEqual } from 'date-fns'
 import { useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
-import { formatWithoutTime } from 'utils/dates'
+import { formatWithoutTime } from 'utils'
 
 export interface IModalDatePickerProps {
 	selectedDates: Date[]

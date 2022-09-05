@@ -1,4 +1,4 @@
-import { RequestConfig } from 'types/RequestConfig'
+import { IRequestOptions } from 'types/RequestOptions'
 import request from './request'
 import { headers } from './config'
 
@@ -67,7 +67,7 @@ export const fetchRecipe = async (id: string | number) => {
 }
 
 const filterRecipes = async (params: any) => {
-	const filterConfig: RequestConfig = {
+	const filterConfig: IRequestOptions = {
 		method: 'GET',
 		url: 'https://themealdb.p.rapidapi.com/filter.php',
 		params,

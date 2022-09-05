@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { differenceInCalendarDays, addDays } from 'date-fns'
-import { useAppContext } from 'providers/AppProvider'
+import { useCurrentUser } from 'providers/AuthProvider'
 import { ScheduleDayCard } from './DayPlanCard'
 import { ScheduledMeal } from 'types/ScheduledMeal'
 import { firestore } from 'api/firebase'
-import { formatWithoutTime } from 'utils/dates'
+import { formatWithoutTime } from 'utils'
 import { DayPlan } from 'types/DayPlan'
 import { DateRangeType } from 'types/DateRangeType'
 
@@ -15,7 +15,7 @@ export interface IScheduleProps {
 }
 
 export function Schedule({ dateRange, scheduledMeals, setScheduledMeals }: IScheduleProps) {
-	const { userId } = useAppContext()
+	const { userId } = useCurrentUser()
 	const [days, setDays] = useState<Date[]>([])
 	const [dayPlans, setDayPlans] = useState<DayPlan[]>([])
 	const [startDate, endDate] = dateRange

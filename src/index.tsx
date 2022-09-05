@@ -2,21 +2,21 @@ import './styles/index.scss'
 import 'tippy.js/dist/tippy.css'
 import './assets/fontawesome/css/all.css'
 import ReactDOM from 'react-dom/client'
-import { AppProvider } from './providers/AppProvider'
+import { UserProvider } from './providers/AuthProvider'
 import { AppRouter } from './routes/AppRouter'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { MealApiProvider } from 'providers/MealApiProvider'
+import { MealApiProvider } from 'providers/MealDataProvider'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
 	<AppRouter>
-		<AppProvider>
+		<UserProvider>
 			<MealApiProvider>
 				<App />
 			</MealApiProvider>
-		</AppProvider>
+		</UserProvider>
 	</AppRouter>
 )
 

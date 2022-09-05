@@ -4,14 +4,14 @@ import { HomePage } from 'pages/HomePage'
 import { LoginPage } from 'pages/Auth/LoginPage'
 import { RegisterPage } from 'pages/Auth/RegisterPage'
 import { ROUTES } from 'routes/AppRouter'
-import { useAppContext } from 'providers/AppProvider'
+import { useCurrentUser } from 'providers/AuthProvider'
 import { Dashboard } from 'pages/Dashboard/DashboardPage'
 import { RecipesPage } from 'pages/Recipe/RecipesPage'
 import { RecipePage } from 'pages/Recipe/RecipePage'
 import { Footer } from 'components/Footer'
 
 export default function App() {
-	const { currentUser } = useAppContext()
+	const { currentUser } = useCurrentUser()
 
 	const location = useLocation()
 

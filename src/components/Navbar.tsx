@@ -4,9 +4,9 @@ import { ROUTES } from '../routes/AppRouter'
 import { signOut } from 'firebase/auth'
 import { Link, useLocation } from 'react-router-dom'
 import { auth } from 'api/firebase'
-import { IUser } from 'types'
-import { useAppContext } from 'providers/AppProvider'
-import { useEffect } from 'react'
+import IUser from 'types/User'
+import { useCurrentUser } from 'providers/AuthProvider'
+import { useEffect, useState } from 'react'
 
 export interface INavbarProps {}
 
@@ -58,7 +58,7 @@ const NavbarCenter = (props: INavbarSectionProps) => {
 
 const NavbarRight = (props: INavbarSectionProps) => {
 	const { children } = props
-	const { currentUser } = useAppContext()
+	const { currentUser } = useCurrentUser()
 
 	return (
 		<Nav className="navbar-right flex-1">
@@ -80,23 +80,11 @@ const NavbarRight = (props: INavbarSectionProps) => {
 }
 
 export const Navbar = () => {
-	const { navbar } = useAppContext()
-	const { contentLeft, contentRight, contentCenter, isHidden } = navbar
 	const location = useLocation()
+	const [isHidden, setIsHidden] = useState(false)
 
 	useEffect(() => {
-		navbar.setIsHidden([ROUTES.LOGIN, ROUTES.REGISTER].includes(location.pathname))
-	}, [location, navbar])
-
-	useEffect(() => {
-		const routes = ['recipes', 'recipe']
-		const path = location.pathname.split('/')[1]
-		if (routes.includes(path)) {
-			console.log('hit')
-			navbar.setContentLeft(<NavbarLeft />)
-		} else {
-			navbar.setContentLeft(null)
-		}
+		setIsHidden([ROUTES.LOGIN, ROUTES.REGISTER].includes(location.pathname))
 	}, [location])
 
 	if (isHidden) return null
@@ -108,9 +96,9 @@ export const Navbar = () => {
 			fixed="top"
 			className="border-brand border-top border-5 shadow-sm">
 			<Container className="d-flex align-items-center justify-content-between">
-				<NavbarLeft>{contentLeft}</NavbarLeft>
-				<NavbarCenter {...contentCenter} />
-				<NavbarRight {...contentRight} />
+				<NavbarLeft />
+				<NavbarCenter />
+				<NavbarRight />
 			</Container>
 		</BootstrapNavbar>
 	)

@@ -1,5 +1,6 @@
 import { isEqual } from 'date-fns'
 import { ScheduledMeal } from 'types/ScheduledMeal'
+
 export interface IDayPlan {
 	date: Date
 	meals: ScheduledMeal[]

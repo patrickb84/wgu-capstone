@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { RequestConfig } from 'types/RequestConfig'
+import { IRequestOptions } from 'types/RequestOptions'
 
-export default async function request(config: RequestConfig) {
+export default async function request(config: IRequestOptions) {
    try {
       const response = await axios.request(config)
       return response.data

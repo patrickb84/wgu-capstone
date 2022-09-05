@@ -1,7 +1,3 @@
-import { Recipe } from 'types/Recipe'
-import { fetchRecipe } from './../api/mealdb/mealdb.api'
-import { ApiRecipe } from 'api/mealdb/types/ApiRecipe'
-import mealdb from 'api/mealdb'
 import { DocumentData, Firestore, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { convertDateToTimestamp, forceTimestampToDate } from 'utils'

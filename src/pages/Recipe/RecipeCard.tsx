@@ -5,22 +5,12 @@ import { Recipe } from 'types/Recipe'
 import { ButtonBookmark } from './ButtonBookmark'
 import { ButtonAddToPlan } from './ButtonAddToPlan'
 import { Link } from 'react-router-dom'
-import { useAppContext } from 'providers/AppProvider'
-import { useEffect } from 'react'
-import NavbarButton from 'components/NavbarButtons'
 
 export interface IRecipeCardProps {
 	recipe: Recipe
 }
 
 export function RecipeCard({ recipe }: IRecipeCardProps) {
-	const { navbar } = useAppContext()
-
-	useEffect(() => {
-		navbar.setContentLeft(<NavbarButton.Back />)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
-
 	const { name, imageUrl, area, category, id } = recipe
 	return (
 		<Col lg={4} className="d-flex mb-4 recipe-card">
