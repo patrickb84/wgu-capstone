@@ -6,7 +6,7 @@ interface IButtonBookmarkProps extends IIconButton {
 	recipeId?: string
 }
 
-export const ButtonBookmark = (props: IButtonBookmarkProps) => {
+const ButtonBookmark = (props: IButtonBookmarkProps) => {
 	const { recipeId, iconFaGroup, colorVariant, size } = props
 	const [isBookmarked, setIsBookmarked] = useState(false)
 
@@ -31,3 +31,5 @@ export const ButtonBookmark = (props: IButtonBookmarkProps) => {
 		</>
 	)
 }
+
+export default ButtonBookmark

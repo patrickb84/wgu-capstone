@@ -6,10 +6,10 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { FormText } from 'react-bootstrap'
 import { errorClass, FormField } from 'components/FormField'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { useCurrentUser } from 'providers/AuthProvider'
-import { OverlaySpinner } from 'components/OverlaySpinner'
+import OverlaySpinner from 'components/OverlaySpinner'
 import { Navigate } from 'react-router-dom'
 import { auth } from 'api/firebase'
+import { useUser } from 'providers/UserProvider'
 
 interface IFormInputs {
 	email: string
@@ -18,7 +18,7 @@ interface IFormInputs {
 }
 
 export function RegisterForm() {
-	const { currentUser: appUser } = useCurrentUser()
+	const currentUser = useUser()
 
 	const [createUserWithEmailAndPassword, user, loading, error] =
 		useCreateUserWithEmailAndPassword(auth)
@@ -63,7 +63,7 @@ export function RegisterForm() {
 		 */
 	}
 
-	console.log('register', { appUser, user, loading, error })
+	console.log('register', { currentUser, user, loading, error })
 
 	if (user) return <Navigate to="/" replace />
 

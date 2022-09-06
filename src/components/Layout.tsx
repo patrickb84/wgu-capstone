@@ -1,13 +1,29 @@
-import React, { useState, useContext } from 'react'
+import * as React from 'react'
+import { Footer } from './Footer'
+import { Navbar } from './Navbar'
 
 export interface ILayoutProps {
 	children: React.ReactNode
 }
 
-export const Layout = ({ children }: ILayoutProps) => {
+export default function Layout({ children }: ILayoutProps) {
+	const navbarRef = React.useRef<HTMLDivElement>(null)
+	const [navbarHeight, setNavbarHeight] = React.useState(0)
+
+	React.useEffect(() => {
+		if (navbarRef.current) {
+			setNavbarHeight(navbarRef.current.offsetHeight)
+		}
+	}, [navbarRef])
+
 	return (
-		<>
-			<div className="container mt-5">{children}</div>
-		</>
+		<main className="min-h-100 position-relative">
+			<Navbar navbarRef={navbarRef} />
+			<div style={{ marginTop: navbarHeight }} />
+
+			<>{children}</>
+
+			<Footer />
+		</main>
 	)
 }

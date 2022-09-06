@@ -1,36 +1,31 @@
 import { createContext, useState, useContext } from 'react'
+import Bookmark from 'types/Bookmark'
 import { ScheduledMeal } from 'types/ScheduledMeal'
 
 export interface IPlanProviderContext {
 	scheduleMeals: ScheduledMeal[]
 	groceryList: any[]
-	setScheduleMeals: (scheduledMeals: ScheduledMeal[]) => void
-	setGroceryList: (groceryList: any[]) => void
-	bookMarkedRecipes: any[]
-   setBookMarkedRecipes: (bookMarkedRecipes: any[]) => void
-   
+	bookmarks: Bookmark[]
 }
 
 const PlanProviderContext = createContext({} as IPlanProviderContext)
 
 interface IPlanProviderProviderProps {
 	children: React.ReactNode
+	userId: string
 }
 
-export const PlanProviderProvider = ({ children }: IPlanProviderProviderProps) => {
+export const PlanProviderProvider = ({ children, userId }: IPlanProviderProviderProps) => {
 	const [scheduleMeals, setScheduleMeals] = useState<ScheduledMeal[]>([])
 	const [groceryList, setGroceryList] = useState<any[]>([])
-	const [bookMarkedRecipes, setBookMarkedRecipes] = useState<any[]>([])
+	const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
 
 	return (
 		<PlanProviderContext.Provider
 			value={{
 				scheduleMeals,
 				groceryList,
-				setScheduleMeals,
-				setGroceryList,
-				bookMarkedRecipes,
-				setBookMarkedRecipes
+				bookmarks
 			}}>
 			{children}
 		</PlanProviderContext.Provider>
@@ -39,4 +34,19 @@ export const PlanProviderProvider = ({ children }: IPlanProviderProviderProps) =
 
 export const usePlanProviderContext = () => {
 	return useContext(PlanProviderContext)
+}
+
+export const useScheduleMeals = () => {
+	const { scheduleMeals } = usePlanProviderContext()
+	return scheduleMeals
+}
+
+export const useGroceryList = () => {
+	const { groceryList } = usePlanProviderContext()
+	return groceryList
+}
+
+export const useBookmarks = () => {
+	const { bookmarks } = usePlanProviderContext()
+	return bookmarks
 }

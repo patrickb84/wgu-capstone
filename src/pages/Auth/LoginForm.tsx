@@ -4,11 +4,11 @@ import { Spacer } from 'components/Spacer'
 import { PasswordInput } from './PasswordInput'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { errorClass, FormField } from 'components/FormField'
-import { useCurrentUser } from 'providers/AuthProvider'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
-import { OverlaySpinner } from 'components/OverlaySpinner'
+import OverlaySpinner from 'components/OverlaySpinner'
 import { Navigate } from 'react-router-dom'
 import { auth } from 'api/firebase'
+import { useUser } from 'providers/UserProvider'
 
 interface IFormInputs {
 	email: string
@@ -16,6 +16,7 @@ interface IFormInputs {
 }
 
 export function LoginForm() {
+	const currentUser = useUser()
 	const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth)
 
 	const {

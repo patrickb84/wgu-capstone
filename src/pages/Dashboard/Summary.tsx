@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Button, Card } from 'react-bootstrap'
 import { DateRangeType } from 'types/DateRangeType'
-import { Recipe, RecipeMetadata } from 'types/Recipe'
+import { Recipe, IMeasuredIngredient } from 'types/Recipe'
 import { ScheduledMeal } from 'types/ScheduledMeal'
 
 interface IMealPlanSummaryProps {
 	dateRange: DateRangeType
 	scheduledMeals: ScheduledMeal[]
 }
-const MealPlanSummary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) => {
+const Summary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) => {
 	const [startDate, endDate] = dateRange
 	const [groceryListItems, setGroceryListItems] = useState<GroceryListItem[]>([])
 
@@ -57,7 +57,9 @@ const MealPlanSummary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) =
 								</div>
 							))} */}
 							<div className="text-brand small">
-								{item.recipeMeasures.map(recipeMeasure => recipeMeasure.measure).join(' || ')}
+								{item.ingredientData
+									.map(recipeMeasure => recipeMeasure.measure)
+									.join(' || ')}
 							</div>
 						</div>
 					))}
@@ -67,21 +69,18 @@ const MealPlanSummary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) =
 	)
 }
 
-export default MealPlanSummary
-
-interface RecipeMeasure extends RecipeMetadata {
-	measure: string
-}
+export default Summary
 
 interface GroceryListItem {
 	ingredient: string
-	recipeMeasures: RecipeMeasure[]
+	ingredientData: Pick<IMeasuredIngredient, 'measure' | 'recipeId'>[]
 }
 
 interface IButtonCreateGroceryListProps {
 	scheduledMeals: ScheduledMeal[]
 	setGroceryListItems: (items: GroceryListItem[]) => void
 }
+
 const ButtonCreateGroceryList = (props: IButtonCreateGroceryListProps) => {
 	const { scheduledMeals, setGroceryListItems } = props
 
@@ -92,13 +91,21 @@ const ButtonCreateGroceryList = (props: IButtonCreateGroceryListProps) => {
 		console.log('ingredients', ingredients)
 
 		const groceryListItems = ingredients.reduce((acc: GroceryListItem[], ingredient) => {
-			const item = acc.find(item => item.ingredient === ingredient.name)
+			const item = acc.find(item => item.ingredient === ingredient.ingredientName)
 			if (item) {
-				item.recipeMeasures.push({ ...ingredient.recipe, measure: ingredient.measure })
+				item.ingredientData.push({
+					measure: ingredient.measure,
+					recipeId: ingredient.recipeId
+				})
 			} else {
 				acc.push({
-					ingredient: ingredient.name,
-					recipeMeasures: [{ ...ingredient.recipe, measure: ingredient.measure }]
+					ingredient: ingredient.ingredientName,
+					ingredientData: [
+						{
+							measure: ingredient.measure,
+							recipeId: ingredient.recipeId
+						}
+					]
 				})
 			}
 			return acc

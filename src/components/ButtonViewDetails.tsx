@@ -5,7 +5,7 @@ export interface IButtonViewDetailsProps {
 	recipeId: string
 }
 
-export function ButtonViewDetails({ recipeId }: IButtonViewDetailsProps) {
+export default function ButtonViewDetails({ recipeId }: IButtonViewDetailsProps) {
 	return (
 		<Tippy content="View recipe details">
 			<Link to={`/recipe/${recipeId}`} className="icon-button icon-button-lg text-secondary">

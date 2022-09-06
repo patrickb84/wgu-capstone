@@ -1,14 +1,15 @@
 import mealdb from 'api/mealdb'
-import { ApiRecipe } from 'api/mealdb/types/ApiRecipe'
-import { OverlaySpinner } from 'components/OverlaySpinner'
+import ApiRecipe from 'api/mealdb/types/ApiRecipe'
+import ButtonAddToPlan from 'components/ButtonAddToPlan'
+import ButtonBookmark from 'components/ButtonBookmark'
+import Layout from 'components/Layout'
+import OverlaySpinner from 'components/OverlaySpinner'
 import { Spacer } from 'components/Spacer'
 import { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { Recipe, RecipeIngredient } from 'types/Recipe'
-import { ButtonAddToPlan } from './ButtonAddToPlan'
-import { ButtonBookmark } from './ButtonBookmark'
+import { Recipe, IMeasuredIngredient } from 'types/Recipe'
 
 export interface IRecipePageProps {}
 
@@ -30,7 +31,7 @@ export function RecipePage(props: IRecipePageProps) {
 		)
 
 	return (
-		<div className="min-h-100">
+		<Layout>
 			<header className="pt-6 bg-brand">
 				<Container className="py-4 d-flex flex-column align-items-start h-100">
 					<div className="d-flex w-100 align-items-center justify-content-between">
@@ -93,20 +94,20 @@ export function RecipePage(props: IRecipePageProps) {
 			</section>
 
 			<Spacer h={5} />
-		</div>
+		</Layout>
 	)
 }
 
 export default RecipePage
 
-const RecipePageIngredientsList = ({ ingredients }: { ingredients: RecipeIngredient[] }) => {
+const RecipePageIngredientsList = ({ ingredients }: { ingredients: IMeasuredIngredient[] }) => {
 	return (
 		<>
 			<h2 className="h1 font-hand text-tertiary mb-0">Ingredients</h2>
 			<div className="border rounded px-5 px-lg-3 py-4">
 				{ingredients.map((ingredient, idx) => (
 					<div key={idx} className="d-flex align-items-end justify-content-between my-1">
-						<span className="fw-semibold">{ingredient.name}</span>
+						<span className="fw-semibold">{ingredient.ingredientName}</span>
 						<small className="text-brand">{ingredient.measure}</small>
 					</div>
 				))}

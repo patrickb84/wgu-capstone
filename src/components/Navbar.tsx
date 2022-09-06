@@ -5,10 +5,8 @@ import { signOut } from 'firebase/auth'
 import { Link, useLocation } from 'react-router-dom'
 import { auth } from 'api/firebase'
 import IUser from 'types/User'
-import { useCurrentUser } from 'providers/AuthProvider'
 import { useEffect, useState } from 'react'
-
-export interface INavbarProps {}
+import { useUser } from 'providers/UserProvider'
 
 export interface INavbarSectionProps {
 	children?: React.ReactNode
@@ -58,7 +56,7 @@ const NavbarCenter = (props: INavbarSectionProps) => {
 
 const NavbarRight = (props: INavbarSectionProps) => {
 	const { children } = props
-	const { currentUser } = useCurrentUser()
+	const currentUser = useUser()
 
 	return (
 		<Nav className="navbar-right flex-1">
@@ -79,7 +77,12 @@ const NavbarRight = (props: INavbarSectionProps) => {
 	)
 }
 
-export const Navbar = () => {
+interface INavbarProps {
+	children?: React.ReactNode
+	navbarRef?: React.RefObject<HTMLDivElement>
+}
+
+export const Navbar = ({ navbarRef }: INavbarProps) => {
 	const location = useLocation()
 	const [isHidden, setIsHidden] = useState(false)
 
@@ -91,6 +94,7 @@ export const Navbar = () => {
 
 	return (
 		<BootstrapNavbar
+			ref={navbarRef}
 			bg="white"
 			expand="lg"
 			fixed="top"

@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap'
 
 export interface IDashboardHeaderProps {}
 
-export function DashboardHeader(props: IDashboardHeaderProps) {
+export default function DashboardHeader(props: IDashboardHeaderProps) {
 	return (
 		<header className="py-3 bg-tertiary">
 			<Container className="py-5 d-flex align-items-center h-100 justify-content-between">

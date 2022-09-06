@@ -1,15 +1,14 @@
 import { createContext, useContext, useState } from 'react'
-import { auth, firestore as db } from '../api/firebase'
+import { auth, firestore as db } from 'api/firebase'
 import IUser from 'types/User'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { User } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useEffect } from 'react'
-import { OverlaySpinner } from 'components/OverlaySpinner'
+import OverlaySpinner from 'components/OverlaySpinner'
 
 export interface IUserContextState {
 	currentUser: IUser | null
-	userId: string | null
 }
 
 const UserContext = createContext({} as IUserContextState)
@@ -26,6 +25,10 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 			handleUserChange(user)
 		}
 	})
+
+	if (firebaseUserError) {
+		console.error('firebaseUserError', firebaseUserError)
+	}
 
 	const handleUserChange = async (user: User | null) => {
 		if (!user) return
@@ -63,8 +66,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 	return !firebaseUserLoading ? (
 		<UserContext.Provider
 			value={{
-				currentUser,
-				userId: currentUser && currentUser.uid
+				currentUser
 			}}>
 			{children}
 		</UserContext.Provider>
@@ -73,4 +75,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 	)
 }
 
-export const useCurrentUser = () => useContext(UserContext)
+export const useUser = () => {
+	const { currentUser } = useContext(UserContext)
+	return currentUser
+}

@@ -2,9 +2,9 @@ import './RecipeCard.scss'
 import { Spacer } from 'components/Spacer'
 import { Badge, Card, Col } from 'react-bootstrap'
 import { Recipe } from 'types/Recipe'
-import { ButtonBookmark } from './ButtonBookmark'
-import { ButtonAddToPlan } from './ButtonAddToPlan'
 import { Link } from 'react-router-dom'
+import ButtonBookmark from './ButtonBookmark'
+import ButtonAddToPlan from './ButtonAddToPlan'
 
 export interface IRecipeCardProps {
 	recipe: Recipe

@@ -2,8 +2,7 @@ import { firestore } from 'api/firebase'
 import { IconButton, IIconButton } from 'components/IconButton'
 import { addDoc, collection } from 'firebase/firestore'
 import { Dashboard } from 'pages/Dashboard/DashboardPage'
-import { Schedule } from 'pages/Dashboard/Schedule'
-import { useCurrentUser } from 'providers/AuthProvider'
+import { useUser } from 'providers/UserProvider'
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { IScheduledMeal } from 'types/ScheduledMeal'
@@ -13,9 +12,9 @@ export interface IButtonAddToPlanProps extends IIconButton {
 	recipeId: string
 }
 
-export function ButtonAddToPlan(props: IButtonAddToPlanProps) {
+export default function ButtonAddToPlan(props: IButtonAddToPlanProps) {
 	const { recipeId, iconFaGroup, colorVariant, size } = props
-	const { currentUser } = useCurrentUser()
+	const currentUser = useUser()
 	const [show, setShow] = useState(false)
 	const [selectedDates, setSelectedDates] = useState<Date[]>([])
 
@@ -58,7 +57,7 @@ export function ButtonAddToPlan(props: IButtonAddToPlanProps) {
 				<Modal.Header className="border-0 text-center" closeButton>
 					<Modal.Title className="text-center">Add it to your meal plan!</Modal.Title>
 				</Modal.Header>
-				<Modal.Body className='m-0 p-0'>
+				<Modal.Body className="m-0 p-0">
 					{/* <ModalDatePicker {...{ selectedDates, setSelectedDates }} /> */}
 
 					<Dashboard />

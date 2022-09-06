@@ -1,10 +1,10 @@
 import mealdb from 'api/mealdb'
-import { ApiRecipe } from 'api/mealdb/types/ApiRecipe'
+import ApiRecipe from 'api/mealdb/types/ApiRecipe'
 
 export interface IRecipe {
 	id: string
 	name: string
-	ingredients: RecipeIngredient[]
+	ingredients: IMeasuredIngredient[]
 	area?: string
 	category?: string
 	tags?: string
@@ -18,7 +18,7 @@ export interface IRecipe {
 export class Recipe implements IRecipe {
 	id: string
 	name: string
-	ingredients: RecipeIngredient[]
+	ingredients: IMeasuredIngredient[]
 	area?: string
 	category?: string
 	tags?: string
@@ -41,21 +41,17 @@ export class Recipe implements IRecipe {
 	}
 
 	parseIngredients = (recipe: ApiRecipe | any) => {
-		const _ingredients: RecipeIngredient[] = []
+		const _ingredients: IMeasuredIngredient[] = []
 
 		for (let i = 1; i <= 20; i++) {
 			const name = recipe[`strIngredient${i}`]
 			const measure = recipe[`strMeasure${i}`]
-			const index = _ingredients.findIndex(ingredient => ingredient.name === name)
+			const index = _ingredients.findIndex(ingredient => ingredient.ingredientName === name)
 			if (name && index === -1) {
-				const ingredient: RecipeIngredient = {
-					name,
+				const ingredient: IMeasuredIngredient = {
+					ingredientName: name,
 					measure,
-					recipe: {
-						id: recipe.idMeal,
-						name: recipe.strMeal,
-						imageUrl: recipe.strMealThumb
-					}
+					recipeId: recipe.idMeal
 				}
 				_ingredients.push(ingredient)
 			}
@@ -68,16 +64,41 @@ export class Recipe implements IRecipe {
 		console.log(recipe)
 		return new Recipe(recipe)
 	}
+
+	static findRecipesByIds = async (recipeIds: string[]) => {
+		const recipes = await Promise.all(recipeIds.map(id => mealdb.fetchRecipe(id)))
+		return recipes.map(recipe => new Recipe(recipe))
+	}
+
+	static findRecipesByCategory = async (categoryName: string) => {
+		const recipes: ApiRecipe[] = await mealdb.fetchRecipesByCategory(categoryName)
+		return recipes.map(recipe => new Recipe(recipe))
+	}
+
+	static findRecipesByIngredient = async (ingredientNames: string[]) => {
+		const recipes: ApiRecipe[] = await mealdb.fetchRecipesByIngredients(ingredientNames.join(','))
+		return recipes.map(recipe => new Recipe(recipe))
+	}
+
+	static findRecipesByArea = async (areaName: string) => {
+		const recipes: ApiRecipe[] = await mealdb.fetchRecipesByArea(areaName)
+		return recipes.map(recipe => new Recipe(recipe))
+	}
+
+	static findRandomRecipe = async () => {
+		const recipe: ApiRecipe = await mealdb.fetchRandomRecipe()
+		return new Recipe(recipe)
+	}
+
+	static findRandom10Recipes = async () => {
+		const recipes: ApiRecipe[] = await mealdb.fetchRandom10Recipes()
+		return recipes.map(recipe => new Recipe(recipe))
+	}
+
 }
 
-export interface RecipeIngredient {
-	name: string
+export interface IMeasuredIngredient {
+	ingredientName: string
 	measure: string
-	recipe: RecipeMetadata
-}
-
-export interface RecipeMetadata {
-	id: string
-	name: string
-	imageUrl: string | null
+	recipeId: string
 }

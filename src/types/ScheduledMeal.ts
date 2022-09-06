@@ -1,6 +1,15 @@
-import { DocumentData, Firestore, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore'
+import {
+	addDoc,
+	deleteDoc,
+	doc,
+	DocumentData,
+	Firestore,
+	QueryDocumentSnapshot,
+	Timestamp
+} from 'firebase/firestore'
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { convertDateToTimestamp, forceTimestampToDate } from 'utils'
+import { firestore as db } from 'api/firebase'
 
 export interface IScheduledMeal {
 	id?: string
@@ -32,14 +41,26 @@ export class ScheduledMeal implements IScheduledMeal {
 		this.recipeId = scheduledMeal.recipeId
 	}
 
-	static findUsersScheduledMeals = async (db: Firestore, uid: any) => {
+	static add = async (scheduledMeal: ScheduledMeal) => {
+		const docRef = await addDoc(collection(db, 'scheduledMeals'), scheduledMeal)
+		scheduledMeal.id = docRef.id
+		return scheduledMeal
+	}
+
+	static remove = async (scheduledMeal: ScheduledMeal) => {
+		if (scheduledMeal.id) {
+			await deleteDoc(doc(db, 'scheduledMeals', scheduledMeal.id))
+		}
+	}
+
+	static findUsersScheduledMeals = async (uid: any) => {
 		const q = query(collection(db, 'scheduledMeals'), where('userId', '==', uid))
 		const querySnapshot = await getDocs(q)
 		const scheduledMeals: ScheduledMeal[] = querySnapshot.docs.map(mapDocToScheduledMeal)
 		return scheduledMeals
 	}
 
-	static findUsersScheduledMealsByDate = async (db: Firestore, uid: any, date: Date) => {
+	static findUsersScheduledMealsByDate = async (uid: any, date: Date) => {
 		const q = query(
 			collection(db, 'scheduledMeals'),
 			where('userId', '==', uid),
@@ -50,12 +71,7 @@ export class ScheduledMeal implements IScheduledMeal {
 		return scheduledMeals
 	}
 
-	static findUsersScheduledMealsByDateRange = async (
-		db: Firestore,
-		uid: any,
-		startDate: Date,
-		endDate: Date
-	) => {
+	static findUsersScheduledMealsByDateRange = async (uid: any, startDate: Date, endDate: Date) => {
 		const q = query(
 			collection(db, 'scheduledMeals'),
 			where('userId', '==', uid),
@@ -67,7 +83,7 @@ export class ScheduledMeal implements IScheduledMeal {
 		return scheduledMeals
 	}
 
-	static findUsersScheduledMealsByRecipeId = async (db: Firestore, uid: any, recipeId: string) => {
+	static findUsersScheduledMealsByRecipeId = async (uid: any, recipeId: string) => {
 		const q = query(
 			collection(db, 'scheduledMeals'),
 			where('userId', '==', uid),

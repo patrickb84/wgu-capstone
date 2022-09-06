@@ -77,9 +77,10 @@ const filterRecipes = async (params: any) => {
 	return data.meals
 }
 
-export const filterByIngredients = async (ingredients: string) =>
+export const fetchRecipesByIngredients = async (ingredients: string) =>
 	await filterRecipes({ i: ingredients })
 
-export const filterByCategory = async (category: string) => await filterRecipes({ c: category })
+export const fetchRecipesByCategory = async (category: string) =>
+	await filterRecipes({ c: category })
 
-export const filterByArea = async (area: string) => await filterRecipes({ a: area })
+export const fetchRecipesByArea = async (area: string) => await filterRecipes({ a: area })

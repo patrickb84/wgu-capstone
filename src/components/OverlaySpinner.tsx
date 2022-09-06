@@ -6,7 +6,7 @@ export interface IOverlaySpinnerProps {
 	show?: boolean
 }
 
-export function OverlaySpinner(props: IOverlaySpinnerProps) {
+export default function OverlaySpinner(props: IOverlaySpinnerProps) {
 	return props.show ? (
 		<>
 			<div
