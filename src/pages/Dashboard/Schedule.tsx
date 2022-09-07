@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react'
 import { differenceInCalendarDays, addDays } from 'date-fns'
 import { ScheduleDayCard } from './DayPlanCard'
-import { ScheduledMeal } from 'types/ScheduledMeal'
 import { formatWithoutTime } from 'utils'
 import { DayPlan } from 'types/DayPlan'
 import { DateRangeType } from 'types/DateRangeType'
 import { useUser } from 'providers/UserProvider'
+import { useScheduleMeals } from 'providers/MealPlanProvider'
 
 export interface IScheduleProps {
 	dateRange: DateRangeType
-	scheduledMeals: ScheduledMeal[]
-	setScheduledMeals: (scheduledMeals: ScheduledMeal[]) => void
 }
 
-export function Schedule({ dateRange, scheduledMeals, setScheduledMeals }: IScheduleProps) {
+export function Schedule({ dateRange }: IScheduleProps) {
 	const user = useUser()
+	const scheduledMeals = useScheduleMeals()
 	const [days, setDays] = useState<Date[]>([])
 	const [dayPlans, setDayPlans] = useState<DayPlan[]>([])
 	const [startDate, endDate] = dateRange
@@ -29,10 +28,6 @@ export function Schedule({ dateRange, scheduledMeals, setScheduledMeals }: ISche
 			setDays(days.map(day => formatWithoutTime(day)))
 		}
 	}, [startDate, endDate])
-
-	useEffect(() => {
-		ScheduledMeal.findUsersScheduledMeals(user?.uid).then(setScheduledMeals)
-	}, [setScheduledMeals, user?.uid])
 
 	useEffect(() => {
 		if (days.length && scheduledMeals.length) {

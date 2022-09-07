@@ -51,7 +51,8 @@ export class Recipe implements IRecipe {
 				const ingredient: IMeasuredIngredient = {
 					ingredientName: name,
 					measure,
-					recipeId: recipe.idMeal
+					recipeId: recipe.idMeal,
+					recipeName: recipe.strMeal
 				}
 				_ingredients.push(ingredient)
 			}
@@ -101,4 +102,5 @@ export interface IMeasuredIngredient {
 	ingredientName: string
 	measure: string
 	recipeId: string
+	recipeName: string
 }

@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { Recipe } from 'types/Recipe'
 import { RecipeCard } from '../components/RecipeCard'
 import ApiRecipe from 'api/mealdb/types/ApiRecipe'
-import { Spacer } from 'components/Spacer'
+import Spacer from 'components/Spacer'
 import Layout from 'components/Layout'
 
 export interface IHomePageProps {}
@@ -29,72 +29,69 @@ export const HomePage = (props: IHomePageProps) => {
 
 	return (
 		<Layout>
-			<div className="pt-5">
-				<Hero />
+			<Hero />
 
-				<section className="py-5">
-					<Container className="py-5">
-						<h1 className="text-center mb-5 display-4">Plan your menu like a master!</h1>
-						<Row>
-							<Col lg={4}>
-								<Card className="border-0">
-									<img src={img_1} alt="plan" className="w-100 mb-2" />
-									<Card.Body>
-										<Card.Title>Plan your meals</Card.Title>
-										<Card.Text>
-											Plan your meals for the week and get a shopping list for the
-											weekend.
-										</Card.Text>
-										<Link to={''}>Plan your meals</Link>
-									</Card.Body>
-								</Card>
-							</Col>
-							<Col lg={4}>
-								<Card className="border-0">
-									<img src={img_2} alt="find" className="w-100 mb-2" />
-									<Card.Body>
-										<Card.Title>Find recipes</Card.Title>
-										<Card.Text>
-											Find recipes based on your preferences and ingredients you have at
-											home.
-										</Card.Text>
-										<Link to={''}>Find recipes</Link>
-									</Card.Body>
-								</Card>
-							</Col>
-							<Col lg={4}>
-								<Card className="border-0">
-									<img src={img_3} alt="save" className="w-100 mb-2" />
-									<Card.Body>
-										<Card.Title>Save your favorites</Card.Title>
-										<Card.Text>
-											Save your favorite recipes and plan them for the week.
-										</Card.Text>
-										<Link to={''}>View recipes</Link>
-									</Card.Body>
-								</Card>
-							</Col>
-						</Row>
-					</Container>
-				</section>
+			<section className="py-5">
+				<Container className="py-5">
+					<h1 className="text-center mb-5 display-4">Plan your menu like a master!</h1>
+					<Row>
+						<Col lg={4}>
+							<Card className="border-0">
+								<img src={img_1} alt="plan" className="w-100 mb-2" />
+								<Card.Body>
+									<Card.Title>Plan your meals</Card.Title>
+									<Card.Text>
+										Plan your meals for the week and get a shopping list for the weekend.
+									</Card.Text>
+									<Link to={''}>Plan your meals</Link>
+								</Card.Body>
+							</Card>
+						</Col>
+						<Col lg={4}>
+							<Card className="border-0">
+								<img src={img_2} alt="find" className="w-100 mb-2" />
+								<Card.Body>
+									<Card.Title>Find recipes</Card.Title>
+									<Card.Text>
+										Find recipes based on your preferences and ingredients you have at
+										home.
+									</Card.Text>
+									<Link to={''}>Find recipes</Link>
+								</Card.Body>
+							</Card>
+						</Col>
+						<Col lg={4}>
+							<Card className="border-0">
+								<img src={img_3} alt="save" className="w-100 mb-2" />
+								<Card.Body>
+									<Card.Title>Save your favorites</Card.Title>
+									<Card.Text>
+										Save your favorite recipes and plan them for the week.
+									</Card.Text>
+									<Link to={''}>View recipes</Link>
+								</Card.Body>
+							</Card>
+						</Col>
+					</Row>
+				</Container>
+			</section>
 
-				<section className="py-5 bg-gray-200">
-					<Container className="py-5">
-						<h2 className="display-4 font-display text-tertiary text-center mb-5">
-							Such Recipes!
-						</h2>
-						<p className="font-hand h1 text-center mb-5">
-							Choose from an ever-growing cookbook.
-						</p>
-						<Spacer h={1} />
-						<Row>
-							{recipes.slice(0, 9).map(recipe => {
-								return <RecipeCard key={recipe.id} recipe={recipe} />
-							})}
-						</Row>
-					</Container>
-				</section>
-			</div>
+			<section className="py-5 bg-gray-200">
+				<Container className="py-5">
+					<h2 className="display-4 font-display text-tertiary text-center mb-5">
+						Such Recipes!
+					</h2>
+					<p className="font-hand h1 text-center mb-5">
+						Choose from an ever-growing cookbook.
+					</p>
+					<Spacer h={1} />
+					<Row>
+						{recipes.slice(0, 9).map(recipe => {
+							return <RecipeCard key={recipe.id} recipe={recipe} />
+						})}
+					</Row>
+				</Container>
+			</section>
 		</Layout>
 	)
 }

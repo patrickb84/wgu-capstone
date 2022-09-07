@@ -19,7 +19,7 @@ export interface IScheduledMeal {
 	dateAdded: Date | Timestamp
 }
 
-const mapDocToScheduledMeal = (doc: QueryDocumentSnapshot<DocumentData>): ScheduledMeal => {
+export const mapDocToScheduledMeal = (doc: QueryDocumentSnapshot<DocumentData>): ScheduledMeal => {
 	return new ScheduledMeal({
 		id: doc.id,
 		...(doc.data() as IScheduledMeal)
@@ -52,6 +52,9 @@ export class ScheduledMeal implements IScheduledMeal {
 			await deleteDoc(doc(db, 'scheduledMeals', scheduledMeal.id))
 		}
 	}
+
+	static queryUserScheduledMeals = (userId: string) =>
+		query(collection(db, 'scheduledMeals'), where('userId', '==', userId))
 
 	static findUsersScheduledMeals = async (uid: any) => {
 		const q = query(collection(db, 'scheduledMeals'), where('userId', '==', uid))

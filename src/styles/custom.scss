@@ -56,7 +56,7 @@ $link-shade-percentage: 20%;
 $link-hover-color: none;
 $link-hover-decoration: none;
 
-a {
+a:not(.no-custom) {
 	transition: 0.25s linear opacity;
 	&:hover {
 		opacity: 0.6;
@@ -157,12 +157,14 @@ $faded-secondary: rgba($secondary, 0.5);
 	flex: 1;
 }
 
-.nav-drop {
+.nav-drop,
+#nav-dropdwon {
 	&::after {
 		display: none;
 	}
 	.dropdown-menu {
 		right: 0;
+		left: auto;
 	}
 }
 
@@ -193,4 +195,19 @@ $faded-secondary: rgba($secondary, 0.5);
 
 .nav-icon {
 	font-size: 1.5rem;
+}
+
+// scss-docs-start breadcrumb-variables
+$breadcrumb-divider-color: 'white';
+$breadcrumb-active-color: $gray-600;
+// scss-docs-end breadcrumb-variables
+
+.breadcrumb-item {
+	+ .breadcrumb-item::before {
+		// content: '>' !important;
+		color: #fff !important;
+	}
+	&.active {
+		color: $light;
+	}
 }

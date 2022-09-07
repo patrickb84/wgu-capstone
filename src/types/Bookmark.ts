@@ -17,10 +17,10 @@ export interface IBookmark {
 	id?: string
 	recipeId: string
 	userId: string
-	dateAdded: Date | Timestamp
+	dateCreated: Date | Timestamp
 }
 
-const mapDocToBookmark = (doc: QueryDocumentSnapshot<DocumentData>): Bookmark => {
+export const mapDocToBookmark = (doc: QueryDocumentSnapshot<DocumentData>): Bookmark => {
 	return new Bookmark({
 		id: doc.id,
 		...(doc.data() as IBookmark)
@@ -31,25 +31,46 @@ export default class Bookmark implements IBookmark {
 	id?: string
 	recipeId: string
 	userId: string
-	dateAdded: Date
+	dateCreated: Date
 
 	constructor(bookmark: IBookmark) {
 		this.id = bookmark.id
 		this.recipeId = bookmark.recipeId
 		this.userId = bookmark.userId
-		this.dateAdded = forceTimestampToDate(bookmark.dateAdded)
+		this.dateCreated = forceTimestampToDate(bookmark.dateCreated)
 	}
 
-	addBookmark = async () => {
-		const docRef = await addDoc(collection(db, 'bookmarks'), this)
-		this.id = docRef.id
-	}
-
-	removeBookmark = async () => {
-		if (this.id) {
-			await deleteDoc(doc(db, 'bookmarks', this.id))
+	static addBookmark = async (bookmark: IBookmark): Promise<Bookmark | undefined> => {
+		try {
+			const docRef = await addDoc(collection(db, 'bookmarks'), bookmark)
+			return new Bookmark({ id: docRef.id, ...bookmark })
+		} catch (error) {
+			console.error(error)
+			return undefined
 		}
 	}
+
+	static removeBookmark = async (bookmarkId?: string) => {
+		if (!bookmarkId) return true
+		try {
+			await deleteDoc(doc(db, 'bookmarks', bookmarkId))
+			return true
+		} catch (error) {
+			console.error(error)
+			return false
+		}
+	}
+
+	// addBookmark = async () => {
+	// 	const docRef = await addDoc(collection(db, 'bookmarks'), this)
+	// 	this.id = docRef.id
+	// }
+
+	// removeBookmark = async () => {
+	// 	if (this.id) {
+	// 		await deleteDoc(doc(db, 'bookmarks', this.id))
+	// 	}
+	// }
 
 	static findUsersBookmarks = async (uid: any) => {
 		const q = query(collection(db, 'bookmarks'), where('userId', '==', uid))

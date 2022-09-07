@@ -3,7 +3,7 @@ import format from 'date-fns/format'
 import { useEffect, useState } from 'react'
 import { DayPlan } from 'types/DayPlan'
 import { Recipe } from 'types/Recipe'
-import { Spacer } from 'components/Spacer'
+import Spacer from 'components/Spacer'
 import { Link, useNavigate } from 'react-router-dom'
 import DisplayCardDate from './DayPlanDateDisplay'
 import ScheduleDayButtonAddRecipe from './DayPlanButtonAddRecipe'
@@ -45,11 +45,9 @@ export function ScheduleDayCard(props: IScheduleDayCardProps) {
 				<Card.Body>
 					<Row>
 						<Col lg={3}>
-							<>
-								<DisplayCardDate date={date} />
-								<Spacer h={0.5} />
-								<ScheduleDayButtonAddRecipe date={date} />
-							</>
+							<DisplayCardDate date={date} />
+							<Spacer h={0.5} />
+							<ScheduleDayButtonAddRecipe date={date} />
 						</Col>
 						<Col>
 							<div className="border border-gray bg-gray-100 h-100 py-3 px-4">

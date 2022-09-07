@@ -1,28 +1,45 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IconButton, IIconButton } from 'components/IconButton'
+import Bookmark from 'types/Bookmark'
+import { useUser } from 'providers/UserProvider'
+import { useBookmarks } from 'providers/MealPlanProvider'
 
 interface IButtonBookmarkProps extends IIconButton {
-	// isBookmarked?: boolean
-	recipeId?: string
+	recipeId: string
 }
 
 const ButtonBookmark = (props: IButtonBookmarkProps) => {
+	const { findBookmark } = useBookmarks()
+	const [bookmark, setBookmark] = useState<Bookmark | undefined>(undefined)
 	const { recipeId, iconFaGroup, colorVariant, size } = props
-	const [isBookmarked, setIsBookmarked] = useState(false)
+	const user = useUser()
 
 	const handleClick = () => {
-		console.log('bookmark clicked', recipeId)
-		setIsBookmarked(!isBookmarked)
+		if (user && recipeId) {
+			if (!bookmark) {
+				Bookmark.addBookmark({ recipeId, userId: user.uid, dateCreated: new Date() }).then(
+					bookmark => setBookmark(bookmark)
+				)
+			} else {
+				Bookmark.removeBookmark(bookmark?.id).then(success => success && setBookmark(undefined))
+			}
+		}
 	}
 
-	const iconGroup = !isBookmarked ? (iconFaGroup ? iconFaGroup : 'fa-regular') : 'fa-solid'
+	useEffect(() => {
+		if (user && recipeId) {
+			setBookmark(findBookmark(recipeId))
+		}
+	}, [findBookmark, recipeId, user])
+
+	const iconGroup = !bookmark ? (iconFaGroup ? iconFaGroup : 'fa-regular') : 'fa-solid'
 
 	return (
 		<>
 			<IconButton
-				tooltip={isBookmarked ? 'Remove from bookmarks' : 'Add to bookmarks'}
+				tooltip={!!bookmark ? 'Remove bookmark' : 'Add bookmark'}
 				onClick={handleClick}
-				iconFaName="fa-heart"
+				iconFaName="fa-bookmark"
 				iconFaGroup={iconGroup}
 				colorVariant={colorVariant ? colorVariant : 'secondary'}
 				size={size}

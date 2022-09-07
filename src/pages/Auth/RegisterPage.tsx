@@ -4,7 +4,7 @@ import RegisterForm from 'pages/Auth/RegisterForm'
 import { ROUTES } from 'routes/AppRouter'
 import { Link } from 'react-router-dom'
 import { AuthFormFooter } from 'pages/Auth/AuthFormFooter'
-import { MiniLogo } from 'components/MiniLogo'
+import { MiniLogo } from 'components/Logo'
 
 export interface IRegisterPageProps {}
 

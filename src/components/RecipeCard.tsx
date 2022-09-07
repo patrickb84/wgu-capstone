@@ -1,5 +1,5 @@
 import './RecipeCard.scss'
-import { Spacer } from 'components/Spacer'
+import Spacer from 'components/Spacer'
 import { Badge, Card, Col } from 'react-bootstrap'
 import { Recipe } from 'types/Recipe'
 import { Link } from 'react-router-dom'
@@ -36,7 +36,12 @@ export function RecipeCard({ recipe }: IRecipeCardProps) {
 					</div>
 
 					<div>
-						<ButtonAddToPlan recipeId={recipe.id} size="1.5rem" iconFaGroup="far" />
+						<ButtonAddToPlan
+							recipeId={recipe.id}
+							size="1.5rem"
+							iconFaGroup="far"
+							recipeName={recipe.name}
+						/>
 					</div>
 				</Card.Body>
 			</Card>

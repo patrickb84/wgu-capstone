@@ -1,20 +1,23 @@
+import { useScheduleMeals } from 'providers/MealPlanProvider'
 import { useState } from 'react'
 import { Button, Card } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { ROUTES } from 'routes/AppRouter'
 import { DateRangeType } from 'types/DateRangeType'
 import { Recipe, IMeasuredIngredient } from 'types/Recipe'
 import { ScheduledMeal } from 'types/ScheduledMeal'
 
 interface IMealPlanSummaryProps {
 	dateRange: DateRangeType
-	scheduledMeals: ScheduledMeal[]
 }
-const Summary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) => {
+
+const Summary = ({ dateRange }: IMealPlanSummaryProps) => {
+	const scheduledMeals = useScheduleMeals()
 	const [startDate, endDate] = dateRange
-	const [groceryListItems, setGroceryListItems] = useState<GroceryListItem[]>([])
 
 	return (
 		<>
-			<Card>
+			<Card className="mb-4">
 				<Card.Body>
 					<Card.Title className="font-display text-brand">Plan Summary</Card.Title>
 					<div className="my-4">
@@ -33,7 +36,7 @@ const Summary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) => {
 								</div>
 
 								<div>
-									<strong>Meals:</strong> -1
+									<strong>Meals:</strong> {scheduledMeals?.length}
 								</div>
 							</>
 						)}
@@ -41,28 +44,9 @@ const Summary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) => {
 					<Button variant="outline-dark" size="sm" className="w-100 my-1">
 						Save Plan
 					</Button>
-					<ButtonCreateGroceryList {...{ scheduledMeals, setGroceryListItems }} />
-				</Card.Body>
-			</Card>
-
-			<Card>
-				<Card.Body>
-					<Card.Title className="font-display text-brand">Grocery List</Card.Title>
-					{groceryListItems.map(item => (
-						<div key={item.ingredient} className="mb-3">
-							<div>{item.ingredient}</div>
-							{/* {item.recipeMeasures.map(recipeMeasure => (
-								<div className="small text-primary" key={recipeMeasure.id}>
-									{recipeMeasure.name} - {recipeMeasure.measure}
-								</div>
-							))} */}
-							<div className="text-brand small">
-								{item.ingredientData
-									.map(recipeMeasure => recipeMeasure.measure)
-									.join(' || ')}
-							</div>
-						</div>
-					))}
+					<Link className="btn btn-primary btn-sm w-100 my-1" to={ROUTES.GROCERYLIST}>
+						Grocery List
+					</Link>
 				</Card.Body>
 			</Card>
 		</>
@@ -70,59 +54,3 @@ const Summary = ({ dateRange, scheduledMeals }: IMealPlanSummaryProps) => {
 }
 
 export default Summary
-
-interface GroceryListItem {
-	ingredient: string
-	ingredientData: Pick<IMeasuredIngredient, 'measure' | 'recipeId'>[]
-}
-
-interface IButtonCreateGroceryListProps {
-	scheduledMeals: ScheduledMeal[]
-	setGroceryListItems: (items: GroceryListItem[]) => void
-}
-
-const ButtonCreateGroceryList = (props: IButtonCreateGroceryListProps) => {
-	const { scheduledMeals, setGroceryListItems } = props
-
-	const handleCreateGroceryList = async (meals: ScheduledMeal[]) => {
-		const promiseRecipes = meals.map(meal => Recipe.findRecipeById(meal.recipeId))
-		const recipes = await Promise.all(promiseRecipes)
-		const ingredients = recipes.map(recipe => recipe.ingredients).flat(1)
-		console.log('ingredients', ingredients)
-
-		const groceryListItems = ingredients.reduce((acc: GroceryListItem[], ingredient) => {
-			const item = acc.find(item => item.ingredient === ingredient.ingredientName)
-			if (item) {
-				item.ingredientData.push({
-					measure: ingredient.measure,
-					recipeId: ingredient.recipeId
-				})
-			} else {
-				acc.push({
-					ingredient: ingredient.ingredientName,
-					ingredientData: [
-						{
-							measure: ingredient.measure,
-							recipeId: ingredient.recipeId
-						}
-					]
-				})
-			}
-			return acc
-		}, [])
-
-		console.log('groceryListItems', groceryListItems)
-		groceryListItems.sort((a, b) => a.ingredient.localeCompare(b.ingredient))
-		setGroceryListItems(groceryListItems)
-	}
-
-	return (
-		<Button
-			variant="secondary-gray"
-			size="sm"
-			className="w-100 my-1"
-			onClick={() => handleCreateGroceryList(scheduledMeals)}>
-			Create Grocery List
-		</Button>
-	)
-}

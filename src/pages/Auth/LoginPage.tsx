@@ -3,8 +3,8 @@ import imgCooking from 'assets/img/chef-hat.png'
 import { ROUTES } from 'routes/AppRouter'
 import { Link } from 'react-router-dom'
 import { LoginForm } from 'pages/Auth/LoginForm'
-import { MiniLogo } from 'components/MiniLogo'
-import { Spacer } from 'components/Spacer'
+import { MiniLogo } from 'components/Logo'
+import Spacer from 'components/Spacer'
 import { AuthFormFooter } from 'pages/Auth/AuthFormFooter'
 
 export const LoginPage = () => {

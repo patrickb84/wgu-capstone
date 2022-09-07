@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ClockLoader } from 'react-spinners'
-import { MiniLogo } from './MiniLogo'
+import { MiniLogo } from './Logo'
 
 export interface IOverlaySpinnerProps {
 	show?: boolean

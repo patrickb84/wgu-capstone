@@ -10,5 +10,7 @@ export const ROUTES = {
 	LOGIN: '/login',
 	REGISTER: '/register',
 	RECIPES: '/recipes',
-	RECIPE: '/recipe/:recipeId'
+	RECIPE: '/recipe/:recipeId',
+	MEALPLAN: '/meal-plan',
+	GROCERYLIST: '/grocery-list',
 }

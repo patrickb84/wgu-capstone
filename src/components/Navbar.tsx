@@ -7,6 +7,8 @@ import { auth } from 'api/firebase'
 import IUser from 'types/User'
 import { useEffect, useState } from 'react'
 import { useUser } from 'providers/UserProvider'
+import { NavLink } from 'react-router-dom'
+import { NavLinkIcon } from './NavLinkIcon'
 
 export interface INavbarSectionProps {
 	children?: React.ReactNode
@@ -15,25 +17,7 @@ export interface INavbarSectionProps {
 const NavbarLeft = (props: INavbarSectionProps) => {
 	const { children } = props
 
-	return (
-		<Nav className="me-auto navbar-left flex-1">
-			{children ? (
-				children
-			) : (
-				<>
-					{/* <LinkContainer to={ROUTES.HOME}>
-						<Nav.Link>Home</Nav.Link>
-					</LinkContainer>
-					<LinkContainer to={ROUTES.HOME}>
-						<Nav.Link>About</Nav.Link>
-					</LinkContainer>
-					<LinkContainer to={ROUTES.HOME}>
-						<Nav.Link>Contact</Nav.Link>
-					</LinkContainer> */}
-				</>
-			)}
-		</Nav>
-	)
+	return <Nav className="me-auto navbar-left flex-1"></Nav>
 }
 
 const NavbarCenter = (props: INavbarSectionProps) => {
@@ -45,7 +29,7 @@ const NavbarCenter = (props: INavbarSectionProps) => {
 				content
 			) : (
 				<div className="py-2 text-center w-100">
-					<Link to={ROUTES.HOME} className="font-display fs-5 no-underline">
+					<Link to={ROUTES.HOME} className="font-display fs-5 no-underline text-brand">
 						Sous Chef!
 					</Link>
 				</div>
@@ -85,6 +69,7 @@ interface INavbarProps {
 export const Navbar = ({ navbarRef }: INavbarProps) => {
 	const location = useLocation()
 	const [isHidden, setIsHidden] = useState(false)
+	const user = useUser()
 
 	useEffect(() => {
 		setIsHidden([ROUTES.LOGIN, ROUTES.REGISTER].includes(location.pathname))
@@ -99,10 +84,26 @@ export const Navbar = ({ navbarRef }: INavbarProps) => {
 			expand="lg"
 			fixed="top"
 			className="border-brand border-top border-5 shadow-sm">
-			<Container className="d-flex align-items-center justify-content-between">
-				<NavbarLeft />
+			<Container fluid className="d-flex align-items-center justify-content-between">
+				<Nav className="me-auto navbar-left flex-1">
+					<NavLinkIcon to={ROUTES.HOME} faIcon="fas fa-home" label="Home" />
+					<NavLinkIcon
+						to={ROUTES.MEALPLAN}
+						faIcon="fad fa-calendar-days"
+						label="My Meal Plan"
+					/>
+					<NavLinkIcon to={ROUTES.RECIPES} faIcon="fad fa-plate-utensils" label="Recipes" />
+				</Nav>
 				<NavbarCenter />
-				<NavbarRight />
+				<Nav className="flex-1 d-flex align-items-center justify-content-end">
+					{!user ? (
+						<SignInSignUpButtons />
+					) : (
+						<>
+							<UserDropdown user={user} />
+						</>
+					)}
+				</Nav>
 			</Container>
 		</BootstrapNavbar>
 	)
@@ -125,7 +126,7 @@ const UserDropdown = ({ user }: { user: IUser }) => {
 	return (
 		<NavDropdown
 			className="nav-drop"
-			title={<i className="fad fa-circle-user text-brand nav-icon" />}
+			title={<i className="far fa-circle-user text-secondary nav-icon" />}
 			id="nav-dropdown">
 			<LinkContainer to={'/account'}>
 				<NavDropdown.Item>My Account</NavDropdown.Item>

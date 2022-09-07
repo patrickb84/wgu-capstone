@@ -11,7 +11,6 @@ import Summary from './Summary'
 
 export const Dashboard = () => {
 	const [dateRange, setDateRange] = useState<DateRangeType>([new Date(), addDays(new Date(), 14)])
-	const [scheduledMeals, setScheduledMeals] = useState<ScheduledMeal[]>([])
 
 	return (
 		<>
@@ -24,10 +23,10 @@ export const Dashboard = () => {
 							<DashboardDatepicker dateRange={dateRange} setDateRange={setDateRange} />
 						</Col>
 						<Col className="ps-lg-5 ps-xl-0">
-							<Schedule {...{ dateRange, scheduledMeals, setScheduledMeals }} />
+							<Schedule {...{ dateRange }} />
 						</Col>
 						<Col lg={3}>
-							<Summary {...{ dateRange, scheduledMeals }} />
+							<Summary {...{ dateRange }} />
 						</Col>
 					</Row>
 				</Container>

@@ -1,6 +1,6 @@
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { Spacer } from 'components/Spacer'
+import Spacer from 'components/Spacer'
 import { PasswordInput } from './PasswordInput'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { errorClass, FormField } from 'components/FormField'
