@@ -4,9 +4,8 @@ import { Schedule } from 'pages/Dashboard/Schedule'
 import { useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { DateRangeType } from 'types/DateRangeType'
-import { ScheduledMeal } from 'types/ScheduledMeal'
 import DashboardDatepicker from './DashboardDatepicker'
-import DashboardHeader from './DashboardHeader'
+import PageHeader from 'components/PageHeader'
 import Summary from './Summary'
 
 export const Dashboard = () => {
@@ -15,7 +14,7 @@ export const Dashboard = () => {
 	return (
 		<>
 			<Layout>
-				<DashboardHeader />
+				<PageHeader title="My Meal Plan" bgColor="tertiary" />
 
 				<Container className="py-5">
 					<Row>

@@ -1,114 +1,80 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore"
-import { firestore as db } from "api/firebase"
+import { IMeasuredIngredient, Recipe } from './Recipe'
+import { ScheduledMeal } from './ScheduledMeal'
 
-export interface IShoppingList {
-   id?: string
-   name: string
-   userId: string
-   dateAdded: Date
-   dateUpdated: Date
-   items: IShoppingListItem[]
+export interface IGroceryListItemData
+	extends Pick<IMeasuredIngredient, 'measure' | 'recipeId' | 'recipeName'> {
+	recipeCount: number
 }
 
-export class ShoppingList implements IShoppingList {
-   id?: string
-   name: string
-   userId: string
-   dateAdded: Date
-   dateUpdated: Date
-   items: IShoppingListItem[]
-
-   constructor(groceryList: IShoppingList) {
-      this.id = groceryList.id
-      this.name = groceryList.name
-      this.userId = groceryList.userId
-      this.dateAdded = groceryList.dateAdded
-      this.dateUpdated = groceryList.dateUpdated
-      this.items = groceryList.items
-   }
-
-   static save = async (groceryList: IShoppingList) => {
-      const docRef = await addDoc(collection(db, 'groceryLists'), groceryList)
-      groceryList.id = docRef.id
-      return groceryList
-   }
-
-   static delete = async (groceryList: IShoppingList) => {
-      if (groceryList.id) {
-         await deleteDoc(doc(db, 'groceryLists', groceryList.id))
-      }
-   }
-
-   static findUsersGroceryLists = async (uid: any) => {
-      const q = query(collection(db, 'groceryLists'), where('userId', '==', uid))
-      const querySnapshot = await getDocs(q)
-      const groceryLists: IShoppingList[] = querySnapshot.docs.map(mapDocToGroceryList)
-      return groceryLists
-   }
+export interface IGroceryListItem {
+	itemName: string
+	itemData: IGroceryListItemData[]
+	exclude?: boolean
+	checkedOff?: boolean
 }
 
-export interface IShoppingListItem {
-   id?: string
-   name: string
-   quantity: number
-   unit: string
-   checked: boolean
+export interface IGroceryList {
+	userId: string
+	items: IGroceryListItem[]
+	scheduledMeals: ScheduledMeal[]
+	dateCreated?: Date
 }
 
-export class ShoppingListItem implements IShoppingListItem {
-   id?: string
-   name: string
-   quantity: number
-   unit: string
-   checked: boolean
+export class GroceryList implements IGroceryList {
+	userId: string
+	items: IGroceryListItem[]
+	scheduledMeals: ScheduledMeal[]
+	dateCreated?: Date
 
-   constructor(groceryListItem: IShoppingListItem) {
-      this.id = groceryListItem.id
-      this.name = groceryListItem.name
-      this.quantity = groceryListItem.quantity
-      this.unit = groceryListItem.unit
-      this.checked = groceryListItem.checked
-   }
+	constructor(groceryList: IGroceryList) {
+		this.userId = groceryList.userId
+		this.items = groceryList.items
+		this.scheduledMeals = groceryList.scheduledMeals
+		this.dateCreated = groceryList.dateCreated
+	}
 
-   static add = async (groceryListItem: IShoppingListItem) => {
-      const docRef = await addDoc(collection(db, 'groceryListItems'), groceryListItem)
-      groceryListItem.id = docRef.id
-      return groceryListItem
-   }
+	static generateGroceryList = async (meals: ScheduledMeal[], userId: string) => {
+		return new GroceryList({
+			userId,
+			items: await GroceryList.createListFromMeals(meals),
+			scheduledMeals: meals,
+			dateCreated: new Date()
+		})
+	}
 
-   static remove = async (groceryListItem: IShoppingListItem) => {
-      if (groceryListItem.id) {
-         await deleteDoc(doc(db, 'groceryListItems', groceryListItem.id))
-      }
-   }
+	static createListFromMeals = async (meals: ScheduledMeal[]): Promise<IGroceryListItem[]> => {
+		const _recipes = [...new Set(meals.map(meal => meal.recipeId))]
+		const recipes = await Promise.all(_recipes.map(id => Recipe.findRecipeById(id)))
+		const ingredients = recipes.map(recipe => recipe.ingredients).flat(1)
+		const groceryListItems = ingredients.reduce((acc: IGroceryListItem[], ingredient) => {
+			const { measure, recipeId, ingredientName, recipeName } = ingredient
+			const item = acc.find(item => item.itemName === ingredientName)
+			const recipeCount = meals.filter(meal => meal.recipeId === recipeId).length
+			if (item) {
+				item.itemData.push({
+					measure,
+					recipeId,
+					recipeCount,
+					recipeName
+				})
+			} else {
+				acc.push({
+					itemName: ingredientName,
+					itemData: [
+						{
+							measure,
+							recipeId,
+							recipeCount,
+							recipeName
+						}
+					]
+				})
+			}
+			return acc
+		}, [])
 
-   static findUsersGroceryListItems = async (uid: any) => {
-      const q = query(collection(db, 'groceryListItems'), where('userId', '==', uid))
-      const querySnapshot = await getDocs(q)
-      const groceryListItems: IShoppingListItem[] = querySnapshot.docs.map(mapDocToGroceryListItem)
-      return groceryListItems
-   }
-}
+		groceryListItems.sort((a, b) => a.itemName.localeCompare(b.itemName))
 
-export const mapDocToGroceryList = (doc: any) => {
-   const data = doc.data()
-   return new ShoppingList({
-      id: doc.id,
-      name: data.name,
-      userId: data.userId,
-      dateAdded: data.dateAdded,
-      dateUpdated: data.dateUpdated,
-      items: data.items
-   })
-}
-
-export const mapDocToGroceryListItem = (doc: any) => {
-   const data = doc.data()
-   return new ShoppingListItem({
-      id: doc.id,
-      name: data.name,
-      quantity: data.quantity,
-      unit: data.unit,
-      checked: data.checked
-   })
+		return groceryListItems
+	}
 }
