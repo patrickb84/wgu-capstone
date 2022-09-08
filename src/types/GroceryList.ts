@@ -9,8 +9,7 @@ export interface IGroceryListItemData
 export interface IGroceryListItem {
 	itemName: string
 	itemData: IGroceryListItemData[]
-	exclude?: boolean
-	checkedOff?: boolean
+	included?: boolean
 }
 
 export interface IGroceryList {
@@ -18,19 +17,30 @@ export interface IGroceryList {
 	items: IGroceryListItem[]
 	scheduledMeals: ScheduledMeal[]
 	dateCreated?: Date
+	excludedItems?: IGroceryListItem[]
 }
 
 export class GroceryList implements IGroceryList {
 	userId: string
-	items: IGroceryListItem[]
-	scheduledMeals: ScheduledMeal[]
+	items: IGroceryListItem[] = []
+	scheduledMeals: ScheduledMeal[] = []
 	dateCreated?: Date
+	excludedItems?: IGroceryListItem[] = []
 
 	constructor(groceryList: IGroceryList) {
 		this.userId = groceryList.userId
 		this.items = groceryList.items
 		this.scheduledMeals = groceryList.scheduledMeals
 		this.dateCreated = groceryList.dateCreated
+		this.excludedItems = groceryList.excludedItems
+	}
+
+	excludeItem(item: IGroceryListItem) {
+		if (!this.excludedItems) {
+			this.excludedItems = []
+		}
+		this.excludedItems.push(item)
+		this.items = this.items.filter(groceryListItem => groceryListItem.itemName !== item.itemName)
 	}
 
 	static generateGroceryList = async (meals: ScheduledMeal[], userId: string) => {
@@ -74,7 +84,6 @@ export class GroceryList implements IGroceryList {
 		}, [])
 
 		groceryListItems.sort((a, b) => a.itemName.localeCompare(b.itemName))
-
 		return groceryListItems
 	}
 }
