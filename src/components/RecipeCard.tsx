@@ -36,12 +36,7 @@ export function RecipeCard({ recipe }: IRecipeCardProps) {
 					</div>
 
 					<div>
-						<ButtonAddToPlan
-							recipeId={recipe.id}
-							size="1.5rem"
-							iconFaGroup="far"
-							recipeName={recipe.name}
-						/>
+						<ButtonAddToPlan recipe={recipe} size="1.5rem" iconFaGroup="far" />
 					</div>
 				</Card.Body>
 			</Card>

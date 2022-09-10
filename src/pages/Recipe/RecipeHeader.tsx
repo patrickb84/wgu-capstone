@@ -4,7 +4,7 @@ import ButtonBookmark from 'components/ButtonBookmark'
 import { IIconButton } from 'components/IconButton'
 import Container from 'react-bootstrap/Container'
 import { ROUTES } from 'routes/AppRouter'
-import { IRecipe } from 'types/Recipe'
+import { Recipe } from 'types/Recipe'
 
 const iconProps: Pick<IIconButton, 'size' | 'className' | 'colorVariant'> = {
 	size: '1.5em',
@@ -12,7 +12,7 @@ const iconProps: Pick<IIconButton, 'size' | 'className' | 'colorVariant'> = {
 	colorVariant: 'white'
 }
 
-export function RecipeHeader(recipe: IRecipe) {
+export function RecipeHeader(recipe: Recipe) {
 	const breadcrumbs = [
 		{ label: 'Meal Plan', to: ROUTES.MEALPLAN },
 		{ label: 'Recipes', to: ROUTES.RECIPES },
@@ -29,12 +29,7 @@ export function RecipeHeader(recipe: IRecipe) {
 						</div>
 						<div className="d-flex flex-lg-row flex-column justify-content-center align-items-lg-end align-items-center">
 							<ButtonBookmark iconFaGroup="fal" {...iconProps} recipeId={recipe.id} />
-							<ButtonAddToPlan
-								recipeId={recipe.id}
-								iconFaGroup="fas"
-								{...iconProps}
-								recipeName={recipe.name}
-							/>
+							<ButtonAddToPlan iconFaGroup="fas" {...iconProps} recipe={recipe} />
 							{/* <IconButton iconFaName="fa-youtube" iconFaGroup="fa-brands" {...iconProps} /> */}
 						</div>
 					</div>

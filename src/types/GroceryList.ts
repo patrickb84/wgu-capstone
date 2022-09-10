@@ -53,13 +53,13 @@ export class GroceryList implements IGroceryList {
 	}
 
 	static createListFromMeals = async (meals: ScheduledMeal[]): Promise<IGroceryListItem[]> => {
-		const _recipes = [...new Set(meals.map(meal => meal.recipeId))]
-		const recipes = await Promise.all(_recipes.map(id => Recipe.findRecipeById(id)))
+		const $recipes = [...new Set(meals.map(meal => meal.$recipe.id))]
+		const recipes = await Promise.all($recipes.map(id => Recipe.findRecipeById(id)))
 		const ingredients = recipes.map(recipe => recipe.ingredients).flat(1)
 		const groceryListItems = ingredients.reduce((acc: IGroceryListItem[], ingredient) => {
 			const { measure, recipeId, ingredientName, recipeName } = ingredient
 			const item = acc.find(item => item.itemName === ingredientName)
-			const recipeCount = meals.filter(meal => meal.recipeId === recipeId).length
+			const recipeCount = meals.filter(meal => meal.$recipe.id === recipeId).length
 			if (item) {
 				item.itemData.push({
 					measure,

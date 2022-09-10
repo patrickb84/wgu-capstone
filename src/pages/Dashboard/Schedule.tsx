@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { differenceInCalendarDays, addDays } from 'date-fns'
 import { ScheduleDayCard } from './DayPlanCard'
-import { formatWithoutTime } from 'utils'
+import { stripTime } from 'utils'
 import { DayPlan } from 'types/DayPlan'
 import { DateRangeType } from 'types/DateRangeType'
 import { useUser } from 'providers/UserProvider'
@@ -25,7 +25,7 @@ export function Schedule({ dateRange }: IScheduleProps) {
 			for (let i = 0; i < numberOfDays; i++) {
 				days.push(addDays(startDate, i + 1))
 			}
-			setDays(days.map(day => formatWithoutTime(day)))
+			setDays(days.map(day => stripTime(day)))
 		}
 	}, [startDate, endDate])
 

@@ -32,7 +32,7 @@ export function ScheduleDayCard(props: IScheduleDayCardProps) {
 
 	useEffect(() => {
 		if (meals.length) {
-			const recipes = meals.map(meal => Recipe.findRecipeById(meal.recipeId))
+			const recipes = meals.map(meal => Recipe.findRecipeById(meal.$recipe.id))
 			Promise.all(recipes).then(recipes => {
 				setRecipes(recipes)
 			})

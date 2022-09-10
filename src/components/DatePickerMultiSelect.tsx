@@ -1,7 +1,7 @@
-import { addMonths, isEqual } from 'date-fns'
-import { useState } from 'react'
+import { addMonths, isEqual, isSameDay } from 'date-fns'
+import { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
-import { formatWithoutTime } from 'utils'
+import { stripTime } from 'utils'
 
 export interface IDatePickerMultiSelectProps {
 	selectedDates: Date[]
@@ -13,15 +13,15 @@ export default function DatePickerMultiSelect(props: IDatePickerMultiSelectProps
 	const { selectedDates, setSelectedDates, datePickerRef } = props
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
 
-	const handleChange = (unformattedDate: Date) => {
-		setSelectedDate(unformattedDate)
-		const formattedDate = formatWithoutTime(unformattedDate)
-		const index = selectedDates.findIndex(d => isEqual(d, formattedDate))
+	useEffect(() => setSelectedDate(undefined), [selectedDates])
+
+	const handleChange = (date: Date) => {
+		setSelectedDate(date)
+		const index = selectedDates.findIndex(d => isSameDay(d, date))
 		if (index === -1) {
-			setSelectedDates([...selectedDates, formattedDate])
-			setSelectedDate(undefined)
+			setSelectedDates([...selectedDates, date])
 		} else {
-			setSelectedDates(selectedDates.filter(d => !isEqual(d, formattedDate)))
+			setSelectedDates(selectedDates.filter(d => !isSameDay(d, date)))
 		}
 	}
 

@@ -10,13 +10,17 @@ import {
 import { collection, query, where, getDocs } from 'firebase/firestore'
 import { convertDateToTimestamp, forceTimestampToDate } from 'utils'
 import { firestore as db } from 'api/firebase'
+import { Recipe } from './Recipe'
+
+type ScheduledMealRecipeData = Pick<Recipe, 'id' | 'name' | 'imageUrl'>
 
 export interface IScheduledMeal {
 	id?: string
-	date: Date | Timestamp
-	recipeId: string
 	userId: string
-	dateAdded: Date | Timestamp
+	date: Date | Timestamp
+	dateAdded?: Date | Timestamp
+	$recipe: ScheduledMealRecipeData | string
+	recipeJson?: string
 }
 
 export const mapDocToScheduledMeal = (doc: QueryDocumentSnapshot<DocumentData>): ScheduledMeal => {
@@ -29,19 +33,23 @@ export const mapDocToScheduledMeal = (doc: QueryDocumentSnapshot<DocumentData>):
 export class ScheduledMeal implements IScheduledMeal {
 	id?: string
 	date: Date
-	recipeId: string
 	userId: string
-	dateAdded: Date
+	dateAdded?: Date = new Date()
+	$recipe: ScheduledMealRecipeData
 
 	constructor(scheduledMeal: IScheduledMeal) {
-		this.id = scheduledMeal.id
-		this.date = forceTimestampToDate(scheduledMeal.date)
-		this.userId = scheduledMeal.userId
-		this.dateAdded = forceTimestampToDate(scheduledMeal.dateAdded)
-		this.recipeId = scheduledMeal.recipeId
+		const { id, date, userId, dateAdded, $recipe } = scheduledMeal
+		this.id = id
+		this.date = forceTimestampToDate(date)
+		this.userId = userId
+		this.dateAdded = dateAdded && forceTimestampToDate(dateAdded)
+		this.$recipe = $recipe
 	}
 
-	static add = async (scheduledMeal: ScheduledMeal) => {
+	static add = async (scheduledMeal: IScheduledMeal) => {
+		scheduledMeal.dateAdded = new Date()
+		scheduledMeal.recipeJson = JSON.stringify(scheduledMeal.$recipe)
+
 		const docRef = await addDoc(collection(db, 'scheduledMeals'), scheduledMeal)
 		scheduledMeal.id = docRef.id
 		return scheduledMeal
