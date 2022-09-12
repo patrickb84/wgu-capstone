@@ -1,31 +1,25 @@
+import { ErrorPage } from 'pages/Error/ErrorPage'
+import { HomePage } from 'pages/Home/HomePage'
+import { LoginPage } from 'pages/Login/LoginPage'
+import MealPlanTable from 'pages/MealPlans/MealPlan.Table'
+import { MealPlanView } from 'pages/MealPlans/MealPlan.View'
+import { RecipesMain } from 'pages/Recipes/Recipes.Main'
+import { RegisterPage } from 'pages/Register/RegisterPage'
 import { Routes, Route } from 'react-router-dom'
-import { HomePage } from 'pages/HomePage'
-import { LoginPage } from 'pages/Auth/LoginPage'
-import { RegisterPage } from 'pages/Auth/RegisterPage'
-import { ROUTES } from 'routes/AppRouter'
-import { Dashboard } from 'pages/Dashboard/DashboardPage'
-import { RecipesPage } from 'pages/Recipes/RecipesPage'
-import { RecipePage } from 'pages/Recipe/RecipePage'
-import { useUser } from 'providers/UserProvider'
-import { MealPlanProvider } from 'providers/MealPlanProvider'
-import { GroceryListPage } from 'pages/GroceryList/GroceryListPage'
+import ROUTES from 'routes/routes'
 
 export default function App() {
-	const user = useUser()
-
 	return (
 		<>
-			<MealPlanProvider user={user}>
-				<Routes>
-					<Route path={ROUTES.HOME} element={<HomePage />} />
-					<Route path={ROUTES.MEALPLAN} element={<Dashboard />} />
-					<Route path={ROUTES.RECIPES} element={<RecipesPage />} />
-					<Route path={ROUTES.RECIPE} element={<RecipePage />} />
-					<Route path={ROUTES.LOGIN} element={<LoginPage />} />
-					<Route path={ROUTES.REGISTER} element={<RegisterPage />} />
-					<Route path={ROUTES.GROCERYLIST} element={<GroceryListPage />} />
-				</Routes>
-			</MealPlanProvider>
+			<Routes>
+				<Route path={ROUTES.HOME} element={<HomePage />} />
+				<Route path={ROUTES.LOGIN} element={<LoginPage />} />
+				<Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+				<Route path={ROUTES.MEAL_PLANS} element={<MealPlanTable />} />
+				<Route path={ROUTES.MEAL_PLAN} element={<MealPlanView />} />
+				<Route path={ROUTES.RECIPES} element={<RecipesMain />} />
+				<Route path={'*'} element={<ErrorPage />} />
+			</Routes>
 		</>
 	)
 }

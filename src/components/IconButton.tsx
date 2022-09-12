@@ -1,7 +1,7 @@
 import Tippy from '@tippyjs/react'
 import * as React from 'react'
 
-interface IIconButtonProps {
+interface IconButtonProps {
 	onClick?: () => void
 	className?: string
 	style?: React.CSSProperties
@@ -12,9 +12,10 @@ interface IIconButtonProps {
 	tooltip?: string
 }
 
-export interface IIconButton extends Omit<IIconButtonProps, 'iconFaName' | 'onClick' | 'tooltip'> {}
+export interface GenericIconButtonProps
+	extends Omit<IconButtonProps, 'iconFaName' | 'onClick' | 'tooltip'> {}
 
-const RenderButton = React.forwardRef((props: IIconButtonProps, ref) => {
+const RenderButton = React.forwardRef((props: IconButtonProps, ref) => {
 	const { onClick, iconFaName, iconFaGroup, colorVariant, size } = props
 	return (
 		<button
@@ -27,7 +28,7 @@ const RenderButton = React.forwardRef((props: IIconButtonProps, ref) => {
 	)
 })
 
-export function IconButton(props: IIconButtonProps) {
+export function IconButton(props: IconButtonProps) {
 	const { tooltip } = props
 
 	return tooltip ? (

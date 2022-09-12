@@ -51,17 +51,17 @@ $theme-colors: (
 $font-family-sans-serif: 'Noto Sans', sans-serif;
 
 $link-color: $primary;
-$link-decoration: none;
+$link-decoration: underline;
 $link-shade-percentage: 20%;
 $link-hover-color: none;
 $link-hover-decoration: none;
 
-a:not(.no-custom) {
-	transition: 0.25s linear opacity;
-	&:hover {
-		opacity: 0.6;
-	}
-}
+// a:not(.no-custom) {
+// 	transition: 0.25s linear opacity;
+// 	&:hover {
+// 		opacity: 0.6;
+// 	}
+// }
 
 $enable-caret: false;
 
@@ -158,13 +158,14 @@ $faded-secondary: rgba($secondary, 0.5);
 }
 
 .nav-drop,
-#nav-dropdwon {
+#nav-dropdown {
 	&::after {
 		display: none;
 	}
 	.dropdown-menu {
 		right: 0;
-		left: auto;
+		position: absolute;
+		left: inherit !important;
 	}
 }
 
@@ -209,5 +210,34 @@ $breadcrumb-active-color: $gray-600;
 	}
 	&.active {
 		color: $light;
+	}
+}
+
+// $grid-breakpoints: (
+//   xs: 0,
+//   sm: 576px,
+//   md: 768px,
+//   lg: 992px,
+//   xl: 1200px,
+//   xxl: 1400px
+// ) !default;
+
+.navbar-ref-height {
+	margin-top: 63px;
+}
+
+@media only screen and (min-width: 768px) {
+	.navbar-ref-height {
+		margin-top: 67.5px;
+	}
+}
+
+.recipe-card {
+	.header-text {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		font-weight: 600;
+		width: 100%;
 	}
 }

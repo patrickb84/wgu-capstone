@@ -1,10 +1,10 @@
-import { IconButton, IIconButton } from 'components/IconButton'
+import { IconButton, GenericIconButtonProps } from 'components/IconButton'
 import { useState } from 'react'
-import { Recipe } from 'types/Recipe'
+import { Recipezzz } from 'types/ZZZRecipe'
 import AddRecipeModal from './AddRecipeModal'
 
-export interface IButtonAddToPlanProps extends IIconButton {
-	recipe: Recipe
+export interface IButtonAddToPlanProps extends GenericIconButtonProps {
+	recipe: Recipezzz
 }
 
 export default function ButtonAddToPlan(props: IButtonAddToPlanProps) {

@@ -1,13 +1,13 @@
 import './RecipeCard.scss'
 import Spacer from 'components/Spacer'
 import { Badge, Card, Col } from 'react-bootstrap'
-import { Recipe } from 'types/Recipe'
+import { Recipezzz } from 'types/ZZZRecipe'
 import { Link } from 'react-router-dom'
 import ButtonBookmark from './ButtonBookmark'
 import ButtonAddToPlan from './ButtonAddToPlan'
 
 export interface IRecipeCardProps {
-	recipe: Recipe
+	recipe: Recipezzz
 }
 
 export function RecipeCard({ recipe }: IRecipeCardProps) {
@@ -44,7 +44,7 @@ export function RecipeCard({ recipe }: IRecipeCardProps) {
 	)
 }
 
-type IRecipeCardImageProps = Pick<Recipe, 'imageUrl' | 'name' | 'id'>
+type IRecipeCardImageProps = Pick<Recipezzz, 'imageUrl' | 'name' | 'id'>
 
 function RecipeCardImage({ imageUrl, name, id }: IRecipeCardImageProps) {
 	return (

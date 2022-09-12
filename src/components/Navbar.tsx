@@ -1,72 +1,28 @@
-import { Container, Nav, Navbar as BootstrapNavbar, NavDropdown } from 'react-bootstrap'
+import {
+	Container,
+	Nav,
+	Navbar as BootstrapNavbar,
+	NavbarBrand,
+	NavDropdown
+} from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
-import { ROUTES } from '../routes/AppRouter'
+import ROUTES from 'routes/routes'
 import { signOut } from 'firebase/auth'
 import { Link, useLocation } from 'react-router-dom'
-import { auth } from 'api/firebase'
+import { auth } from 'api/firebase/app'
 import IUser from 'types/User'
 import { useEffect, useState } from 'react'
-import { useUser } from 'providers/UserProvider'
-import { NavLink } from 'react-router-dom'
-import { NavLinkIcon } from './NavLinkIcon'
+import { useUser } from 'hooks/UserProvider'
 
 export interface INavbarSectionProps {
 	children?: React.ReactNode
 }
 
-const NavbarLeft = (props: INavbarSectionProps) => {
-	const { children } = props
-
-	return <Nav className="me-auto navbar-left flex-1"></Nav>
-}
-
-const NavbarCenter = (props: INavbarSectionProps) => {
-	const { children: content } = props
-
-	return (
-		<Nav className="navbar-center flex-1">
-			{content ? (
-				content
-			) : (
-				<div className="py-2 text-center w-100">
-					<Link to={ROUTES.HOME} className="font-display fs-5 no-underline text-brand">
-						Sous Chef!
-					</Link>
-				</div>
-			)}
-		</Nav>
-	)
-}
-
-const NavbarRight = (props: INavbarSectionProps) => {
-	const { children } = props
-	const currentUser = useUser()
-
-	return (
-		<Nav className="navbar-right flex-1">
-			{children ? (
-				children
-			) : (
-				<div className="flex-1 d-flex align-items-center justify-content-end">
-					{!currentUser ? (
-						<SignInSignUpButtons />
-					) : (
-						<>
-							<UserDropdown user={currentUser} />
-						</>
-					)}
-				</div>
-			)}
-		</Nav>
-	)
-}
-
 interface INavbarProps {
 	children?: React.ReactNode
-	navbarRef?: React.RefObject<HTMLDivElement>
 }
 
-export const Navbar = ({ navbarRef }: INavbarProps) => {
+export const Navbar = (props: INavbarProps) => {
 	const location = useLocation()
 	const [isHidden, setIsHidden] = useState(false)
 	const user = useUser()
@@ -75,34 +31,46 @@ export const Navbar = ({ navbarRef }: INavbarProps) => {
 		setIsHidden([ROUTES.LOGIN, ROUTES.REGISTER].includes(location.pathname))
 	}, [location])
 
-	if (isHidden) return null
+	if (isHidden) return <></>
 
 	return (
 		<BootstrapNavbar
-			ref={navbarRef}
 			bg="white"
 			expand="lg"
 			fixed="top"
 			className="border-brand border-top border-5 shadow-sm">
-			<Container fluid className="d-flex align-items-center justify-content-between">
-				<Nav className="me-auto navbar-left flex-1">
-					<NavLinkIcon to={ROUTES.HOME} faIcon="fas fa-home" label="Home" />
-					<NavLinkIcon
-						to={ROUTES.MEALPLAN}
-						faIcon="fad fa-calendar-days"
-						label="My Meal Plan"
-					/>
-					<NavLinkIcon to={ROUTES.RECIPES} faIcon="fad fa-plate-utensils" label="Recipes" />
-				</Nav>
-				<NavbarCenter />
-				<Nav className="flex-1 d-flex align-items-center justify-content-end">
-					{!user ? (
-						<SignInSignUpButtons />
-					) : (
-						<>
-							<UserDropdown user={user} />
-						</>
-					)}
+			<Container fluid className="justify-content-start align-items-center">
+				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
+					<Nav className="mb-3 mb-lg-0">
+						<LinkContainer to={ROUTES.HOME}>
+							<Nav.Link className="mx-2">Home</Nav.Link>
+						</LinkContainer>
+						<LinkContainer to={ROUTES.MEAL_PLANS}>
+							<Nav.Link className="mx-2">Meal Plans</Nav.Link>
+						</LinkContainer>
+
+						<LinkContainer to={ROUTES.RECIPES}>
+							<Nav.Link className="mx-2">Recipes</Nav.Link>
+						</LinkContainer>
+					</Nav>
+				</BootstrapNavbar.Collapse>
+				<BootstrapNavbar.Toggle as="span" className="border-2 py-2">
+					<i className="far fa-bars" />
+				</BootstrapNavbar.Toggle>
+
+				<LinkContainer to={ROUTES.HOME} className="order-0 ms-2 ms-lg-0">
+					<NavbarBrand className="font-display fs-5 no-underline text-brand">
+						Sous Chef!
+					</NavbarBrand>
+				</LinkContainer>
+
+				<Nav className="ms-auto order-3 d-flex align-items-center flex-row">
+					<LinkContainer to={'/search'}>
+						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
+							<i className="far fa-search text-secondary fs-3" />
+						</Nav.Link>
+					</LinkContainer>
+					{!user ? <SignInSignUpButtons /> : <UserDropdown user={user} />}
 				</Nav>
 			</Container>
 		</BootstrapNavbar>
@@ -126,7 +94,11 @@ const UserDropdown = ({ user }: { user: IUser }) => {
 	return (
 		<NavDropdown
 			className="nav-drop"
-			title={<i className="far fa-circle-user text-secondary nav-icon" />}
+			title={
+				<div className="mx-1 mx-lg-0">
+					<i className="far fa-circle-user text-secondary fs-3" />
+				</div>
+			}
 			id="nav-dropdown">
 			<LinkContainer to={'/account'}>
 				<NavDropdown.Item>My Account</NavDropdown.Item>

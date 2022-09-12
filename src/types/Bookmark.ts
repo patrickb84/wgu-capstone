@@ -1,59 +1,56 @@
-import {
-	addDoc,
-	collection,
-	deleteDoc,
-	doc,
-	DocumentData,
-	getDocs,
-	query,
-	QueryDocumentSnapshot,
-	Timestamp,
-	where
-} from 'firebase/firestore'
-import { forceTimestampToDate } from 'utils'
-import { firestore as db } from 'api/firebase'
+import { convertTimestamp } from 'utils/time.utils'
+import Database from 'api/firebase/database.api'
+import { query, Timestamp, where } from 'firebase/firestore'
+import { IAppResourceModel, DatabaseCollection } from './DatabaseDocument'
 
-export interface IBookmark {
-	id?: string
+export interface IBookmark extends IAppResourceModel {
 	recipeId: string
 	userId: string
-	dateCreated: Date | Timestamp
 }
 
-export const mapDocToBookmark = (doc: QueryDocumentSnapshot<DocumentData>): Bookmark => {
-	return new Bookmark({
-		id: doc.id,
-		...(doc.data() as IBookmark)
-	})
-}
-
-export default class Bookmark implements IBookmark {
-	id?: string
+export default class Bookmark extends DatabaseCollection implements IBookmark {
 	recipeId: string
 	userId: string
-	dateCreated: Date
+	createdDate?: Timestamp | Date | undefined
+	createdBy?: string | undefined
+	id?: string | undefined
 
 	constructor(bookmark: IBookmark) {
-		this.id = bookmark.id
-		this.recipeId = bookmark.recipeId
-		this.userId = bookmark.userId
-		this.dateCreated = forceTimestampToDate(bookmark.dateCreated)
+		super()
+		const { recipeId, userId, createdDate, createdBy, id } = bookmark
+		this.recipeId = recipeId
+		this.userId = userId
+		this.createdDate = createdDate && convertTimestamp(createdDate)
+		this.createdBy = createdBy
+		this.id = id
 	}
 
-	static addBookmark = async (bookmark: IBookmark): Promise<Bookmark | undefined> => {
-		try {
-			const docRef = await addDoc(collection(db, 'bookmarks'), bookmark)
-			return new Bookmark({ id: docRef.id, ...bookmark })
-		} catch (error) {
-			console.error(error)
-			return undefined
-		}
+	static collectionName = 'bookmarks'
+	static get collectionRef() {
+		return Database.getCollectionRef(this.collectionName)
 	}
 
-	static removeBookmark = async (bookmarkId?: string) => {
-		if (!bookmarkId) return true
+	static mapCollectionDocs = (doc: any) => {
+		return new Bookmark({
+			id: doc.id,
+			...(doc.data() as IBookmark)
+		})
+	}
+
+	public static get = async (id: string) => {
+		const doc = (await Database.get(Bookmark.collectionName, id)) as IBookmark
+		const bookmark = new Bookmark(doc)
+		return bookmark
+	}
+
+	static add = async (bookmark: Bookmark) => {
+		return Database.add(this.collectionName, bookmark)
+	}
+
+	static remove = async (id?: string) => {
+		if (!id) return true
 		try {
-			await deleteDoc(doc(db, 'bookmarks', bookmarkId))
+			await Database.delete(this.collectionName, id)
 			return true
 		} catch (error) {
 			console.error(error)
@@ -61,55 +58,28 @@ export default class Bookmark implements IBookmark {
 		}
 	}
 
-	// addBookmark = async () => {
-	// 	const docRef = await addDoc(collection(db, 'bookmarks'), this)
-	// 	this.id = docRef.id
-	// }
-
-	// removeBookmark = async () => {
-	// 	if (this.id) {
-	// 		await deleteDoc(doc(db, 'bookmarks', this.id))
-	// 	}
-	// }
-
-	static findUsersBookmarks = async (uid: any) => {
-		const q = query(collection(db, 'bookmarks'), where('userId', '==', uid))
-		const querySnapshot = await getDocs(q)
-		const bookmarks: Bookmark[] = querySnapshot.docs.map(mapDocToBookmark)
+	static getAll = async (userId: string) => {
+		const q = query(this.collectionRef)
+		const docs = (await Database.getAll(q)) as IBookmark[]
+		const bookmarks = docs.map(doc => new Bookmark(doc))
 		return bookmarks
 	}
 
-	static findUsersBookmarksByRecipeId = async (uid: any, recipeId: string) => {
+	static getUserBookmarks = async (userId: any) => {
+		const q = query(this.collectionRef, where('userId', '==', userId))
+		const docs = (await Database.getAll(q)) as IBookmark[]
+		const bookmarks = docs.map(doc => new Bookmark(doc))
+		return bookmarks
+	}
+
+	static getUserBookmarksByRecipeId = async (userId: any, recipeId: string) => {
 		const q = query(
-			collection(db, 'bookmarks'),
-			where('userId', '==', uid),
+			this.collectionRef,
+			where('userId', '==', userId),
 			where('recipeId', '==', recipeId)
 		)
-		const querySnapshot = await getDocs(q)
-		const bookmarks: Bookmark[] = querySnapshot.docs.map(mapDocToBookmark)
-		return bookmarks
-	}
-
-	static findUsersBookmarksByRecipeIds = async (uid: any, recipeIds: string[]) => {
-		const q = query(
-			collection(db, 'bookmarks'),
-			where('userId', '==', uid),
-			where('recipeId', 'in', recipeIds)
-		)
-		const querySnapshot = await getDocs(q)
-		const bookmarks: Bookmark[] = querySnapshot.docs.map(mapDocToBookmark)
-		return bookmarks
-	}
-
-	static findUsersBookmarksByDateRange = async (uid: any, startDate: Date, endDate: Date) => {
-		const q = query(
-			collection(db, 'bookmarks'),
-			where('userId', '==', uid),
-			where('dateAdded', '>=', startDate),
-			where('dateAdded', '<=', endDate)
-		)
-		const querySnapshot = await getDocs(q)
-		const bookmarks: Bookmark[] = querySnapshot.docs.map(mapDocToBookmark)
+		const docs = (await Database.getAll(q)) as IBookmark[]
+		const bookmarks = docs.map(doc => new Bookmark(doc))
 		return bookmarks
 	}
 }

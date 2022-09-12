@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import { ROUTES } from 'routes/AppRouter'
+import ROUTES from 'routes/routes'
 
 function NavbarBack() {
 	const navigate = useNavigate()

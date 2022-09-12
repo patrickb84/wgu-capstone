@@ -7,23 +7,11 @@ export interface ILayoutProps {
 }
 
 export default function Layout({ children }: ILayoutProps) {
-	const navbarRef = React.useRef<HTMLDivElement>(null)
-	const [navbarHeight, setNavbarHeight] = React.useState(0)
-
-	React.useEffect(() => {
-		if (navbarRef.current) {
-			setNavbarHeight(navbarRef.current.offsetHeight)
-		}
-	}, [navbarRef])
-
 	return (
-		<main className="min-h-100 position-relative">
-			<Navbar navbarRef={navbarRef} />
-			<div style={{ marginTop: navbarHeight }} />
-
+		<>
+			<Navbar />
+			<div className="navbar-ref-height" />
 			<>{children}</>
-
-			<Footer />
-		</main>
+		</>
 	)
 }

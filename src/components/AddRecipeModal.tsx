@@ -1,19 +1,19 @@
-import { useUser } from 'providers/UserProvider'
+import { useUser } from 'hooks/UserProvider'
 import React, { useEffect, useRef, useState } from 'react'
 import { Button, Col, Container, Modal, Row } from 'react-bootstrap'
 import DatePickerMultiSelect from './DatePickerMultiSelect'
 import { Planner } from './Planner'
-import { firestore } from 'api/firebase'
+import { firestore } from 'api/firebase/app'
 import { addDoc, collection } from 'firebase/firestore'
-import { IScheduledMeal } from 'types/ScheduledMeal'
-import { Recipe } from 'types/Recipe'
+import { IScheduledMealzzz } from 'types/ScheduledMeal'
+import { Recipezzz } from 'types/ZZZRecipe'
 import { isSameDay } from 'date-fns'
 
 interface IAddRecipeModalFormProps {
 	selectedDates: Date[]
 	setSelectedDates: React.Dispatch<React.SetStateAction<Date[]>>
 	handleClose: () => void
-	recipe: Recipe
+	recipe: Recipezzz
 }
 
 function AddRecipeModalForm(props: IAddRecipeModalFormProps) {
@@ -67,7 +67,7 @@ function AddRecipeModalForm(props: IAddRecipeModalFormProps) {
 interface IAddRecipeModalProps {
 	show: boolean
 	handleClose: () => void
-	recipe: Recipe
+	recipe: Recipezzz
 }
 export default function AddRecipeModal(props: IAddRecipeModalProps) {
 	const { show, handleClose, recipe } = props
@@ -78,10 +78,10 @@ export default function AddRecipeModal(props: IAddRecipeModalProps) {
 		if (user) {
 			await Promise.all(
 				selectedDates.map(async date => {
-					const scheduledMeal: IScheduledMeal = {
+					const scheduledMeal: IScheduledMealzzz = {
 						date: date,
 						$recipe: recipe,
-						userId: user.uid,
+						userId: user.id,
 						dateAdded: new Date()
 					}
 					const docRef = await addDoc(collection(firestore, 'scheduledMeals'), scheduledMeal)

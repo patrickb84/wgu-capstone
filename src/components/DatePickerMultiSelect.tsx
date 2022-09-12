@@ -1,7 +1,7 @@
 import { addMonths, isEqual, isSameDay } from 'date-fns'
 import { useEffect, useState } from 'react'
 import ReactDatePicker from 'react-datepicker'
-import { stripTime } from 'utils'
+import { stripTime } from 'utils/time.utils'
 
 export interface IDatePickerMultiSelectProps {
 	selectedDates: Date[]
