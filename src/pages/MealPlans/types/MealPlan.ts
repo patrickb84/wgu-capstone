@@ -28,8 +28,6 @@ export interface IMealPlan extends IAppModel {
 	planEndDate: Date | Timestamp
 }
 
-const dbCollectionName = 'userPlan'
-
 export default class MealPlan implements IMealPlan {
 	userId: string
 	id?: string
@@ -67,11 +65,11 @@ export default class MealPlan implements IMealPlan {
 	}
 
 	static add = async (userPlan: Partial<IMealPlan>, userId: string) => {
-		console.log(dbCollectionName, userPlan)
+		console.log(this.collectionName, userPlan)
 		try {
 			userPlan.userId = userId
 			userPlan.createdOn = new Date()
-			const docRef = await addDoc(collection(firestore, dbCollectionName), userPlan)
+			const docRef = await addDoc(collection(firestore, this.collectionName), userPlan)
 			return docRef.id
 		} catch (error) {
 			console.error(error)
@@ -80,7 +78,7 @@ export default class MealPlan implements IMealPlan {
 
 	static update = async (values: Partial<IMealPlan>, id: string) => {
 		try {
-			const docRef = doc(firestore, dbCollectionName, id)
+			const docRef = doc(firestore, this.collectionName, id)
 			await updateDoc(docRef, values)
 		} catch (error) {
 			console.error(error)
@@ -88,11 +86,11 @@ export default class MealPlan implements IMealPlan {
 	}
 
 	static delete = async (userPlanId: string) => {
-		await deleteDoc(doc(firestore, dbCollectionName, userPlanId))
+		await deleteDoc(doc(firestore, this.collectionName, userPlanId))
 	}
 
 	static getUserMealPlans = async (userId: string) => {
-		const queryDocs = await DB.getCollectionByUserId(dbCollectionName, userId)
+		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
 		const plans: IMealPlan[] = queryDocs.map(this.mapIterator)
 		console.log('🚀 ~ MealPlan ~ getUserMealPlans= ~ plans', plans)
 		return plans
@@ -105,7 +103,7 @@ export default class MealPlan implements IMealPlan {
 	}
 
 	static get = async (planId: string) => {
-		const plan = (await DB.get(dbCollectionName, planId)) as IMealPlan
+		const plan = (await DB.get(this.collectionName, planId)) as IMealPlan
 		return new MealPlan(plan)
 	}
 

@@ -66,6 +66,28 @@ export const fetchRecipe = async (id: string | number) => {
 	return data.meals[0]
 }
 
+export const fetchRecipesByFirstLetter = async (letter: string) => {
+	const data = await request({
+		method: 'GET',
+		url: `https://themealdb.p.rapidapi.com/search.php`,
+		params: { f: letter },
+		headers
+	})
+	return data.meals
+}
+
+export const fetchAllRecipes = async () => {
+	// String.fromCharCode(97 + n)
+
+	const data = await request({
+		method: 'GET',
+		url: `https://themealdb.p.rapidapi.com/search.php`,
+		params: { s: '' },
+		headers
+	})
+	return data.meals
+}
+
 const filterRecipes = async (params: any) => {
 	const filterConfig: IRequestOptions = {
 		method: 'GET',
@@ -74,6 +96,7 @@ const filterRecipes = async (params: any) => {
 		headers
 	}
 	const data = await request(filterConfig)
+	console.log("🚀 ~ filterRecipes ~ data", data.meals)
 	return data.meals
 }
 

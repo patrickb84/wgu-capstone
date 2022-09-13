@@ -4,9 +4,11 @@ import { PlannerView } from 'pages/ScheduledMeals/PlannerView'
 import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { Container } from 'react-bootstrap'
+import { Button, Card, Col, Container, Row } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import MealPlan from './types/MealPlan'
+import { Link } from 'react-router-dom'
+import ROUTES from 'routes/routes'
 
 export interface IMealPlanViewProps {}
 
@@ -27,10 +29,10 @@ export function MealPlanView(props: IMealPlanViewProps) {
 	return (
 		<Layout>
 			{loading ? (
-				<OverlaySpinner show />
+				<OverlaySpinner />
 			) : (
 				<>
-					<PageHeader>
+					<PageHeader variant="tertiary">
 						<div>
 							<PageTitle>{mealPlan?.planName || 'View Meal Plan'}</PageTitle>
 							{mealPlan && (
@@ -40,10 +42,36 @@ export function MealPlanView(props: IMealPlanViewProps) {
 								</PageSubtitle>
 							)}
 						</div>
+						<Link to={ROUTES.RECIPES} className="btn btn-brand">
+							Find Recipes
+						</Link>
 					</PageHeader>
 
 					<Container className="py-3">
-						<PlannerView mealPlanId={mealPlan?.id as string} />
+						<Row>
+							<Col xs={12} md={4} lg={3}>
+								<Card className="mb-3">
+									<Card.Header>
+										Meal Plan Actions
+									</Card.Header>
+									<Card.Body>
+										<Button variant="secondary" className="mb-2 w-100">
+											Generate Grocery List
+										</Button>
+										<hr />
+										<Button variant="secondary-gray" className="mb-2 w-100">
+											Edit Meal Plan
+										</Button>
+										<Button variant="outline-danger" className="mb-2 w-100">
+											Delete Meal Plan
+										</Button>
+									</Card.Body>
+								</Card>
+							</Col>
+							<Col xs={12} md={8} lg={9}>
+								<PlannerView mealPlanId={mealPlan?.id as string} />
+							</Col>
+						</Row>
 					</Container>
 				</>
 			)}

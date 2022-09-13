@@ -29,7 +29,6 @@ export function PlannerView(props: IMealPlanViewProps) {
 			const meals = scheduledMeals.map(scheduledMeal => {
 				return new ScheduledMeal(scheduledMeal)
 			})
-
 			mapScheduledMealsToAndRecipes(meals, mealPlan).then(setDaysWithMeals)
 		})
 	}, [mealPlan, mealPlanId])

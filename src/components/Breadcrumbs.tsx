@@ -3,14 +3,14 @@ import BootstrapBreadcrumb from 'react-bootstrap/Breadcrumb'
 import BootstrapBreadcrumbItem from 'react-bootstrap/BreadcrumbItem'
 import { LinkContainer } from 'react-router-bootstrap'
 
-export interface IBootstrapBreadcrumbItemProps {
-	active?: boolean
-	href?: string
-	title?: string
-	target?: string
-	onClick?: (event: React.MouseEvent<HTMLElement>) => void
-	children?: React.ReactNode
-}
+// export interface IBootstrapBreadcrumbItemProps {
+// 	active?: boolean
+// 	href?: string
+// 	title?: string
+// 	target?: string
+// 	onClick?: (event: React.MouseEvent<HTMLElement>) => void
+// 	children?: React.ReactNode
+// }
 
 export interface IBreadcrumbItemProps {
 	active?: boolean

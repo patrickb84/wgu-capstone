@@ -1,3 +1,4 @@
+import mealdb from 'api/mealdb'
 import Layout from 'components/Layout'
 import { differenceInDays } from 'date-fns'
 import { useActiveMealPlan, useUserMealPlans } from 'hooks/MealPlanProvider'
@@ -102,7 +103,8 @@ const MealPlanTable = () => {
 													<Button
 														variant="outline-secondary"
 														onClick={() =>
-															user && plan.id &&
+															user &&
+															plan.id &&
 															MealPlan.populateNewMealPlan(
 																plan.planStartDate,
 																plan.planEndDate,

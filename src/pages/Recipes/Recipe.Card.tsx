@@ -2,6 +2,7 @@ import Spacer from 'components/Spacer'
 import { useActiveMealPlan } from 'hooks/MealPlanProvider'
 import { Badge, Card, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import ROUTES from 'routes/routes'
 import { ButtonAddRecipeToPlan } from './ButtonAddRecipeToPlan'
 import { Recipe } from './types/Recipe'
 
@@ -39,7 +40,7 @@ function RecipeCardImage({ imageUrl, name, id }: IRecipeCardImageProps) {
 	return (
 		<div className="w-100 position-relative recipe-card-image">
 			<div className="recipe-card-image-overlay">
-				<Link to={`/recipe/${id}`} className="text-center no-underline text-white">
+				<Link to={ROUTES.TO_RECIPE(id)} className="text-center no-underline text-white">
 					<i className="fat fa-book fa-3x" />
 					<Spacer h={1} />
 					<span className="font-hand fs-4">View Recipe Details</span>

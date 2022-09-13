@@ -6,22 +6,22 @@ import img_2 from 'styles/img/arch_cooks/016-cooking.png'
 import img_3 from 'styles/img/arch_cooks/013-cooking.png'
 import mealdb from 'api/mealdb'
 import { useEffect, useState } from 'react'
-import { Recipezzz } from 'types/ZZZRecipe'
-import { RecipeCard } from 'components/RecipeCard'
 import ApiRecipe from 'api/mealdb/types/ApiRecipe'
 import Spacer from 'components/Spacer'
 import Layout from 'components/Layout'
 import ROUTES from 'routes/routes'
+import { Recipe } from 'pages/Recipes/types/Recipe'
+import { RecipeCard } from 'pages/Recipes/Recipe.Card'
 
 export interface IHomePageProps {}
 
 export const HomePage = (props: IHomePageProps) => {
-	const [recipes, setRecipes] = useState<Recipezzz[]>([])
+	const [recipes, setRecipes] = useState<Recipe[]>([])
 
 	useEffect(() => {
 		mealdb
 			.fetchRandom10Recipes()
-			.then(recipes => recipes.map((r: ApiRecipe) => new Recipezzz(r)))
+			.then(recipes => recipes.map((r: ApiRecipe) => new Recipe(r)))
 			.then(setRecipes)
 	}, [])
 

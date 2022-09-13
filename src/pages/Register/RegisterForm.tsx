@@ -67,7 +67,7 @@ export function RegisterForm() {
 
 	if (user) return <Navigate to="/" replace />
 
-	if (loading) return <OverlaySpinner show />
+	if (loading) return <OverlaySpinner />
 
 	return (
 		<>

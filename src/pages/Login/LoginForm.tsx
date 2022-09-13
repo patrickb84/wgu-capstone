@@ -44,7 +44,7 @@ export function LoginForm() {
 
 	if (user) return <Navigate to="/" replace />
 
-	if (loading) return <OverlaySpinner show />
+	if (loading) return <OverlaySpinner />
 
 	console.log('login', { user, loading, error })
 

@@ -3,12 +3,14 @@ import DB from 'db/Database'
 import MealPlan, { IMealPlan } from 'pages/MealPlans/types/MealPlan'
 import { createContext, useState, useContext, useEffect } from 'react'
 import { updateUser } from 'types/User'
+import { UserRecipe } from 'types/UserRecipe'
 import { useUser } from './UserProvider'
 
 export interface IMealPlanContext {
 	activeMealPlan: string | null
 	setActiveMealPlan: (id: string | null) => void
 	userMealPlans: MealPlan[]
+	userRecipes: UserRecipe[]
 }
 
 const MealPlanContext = createContext({} as IMealPlanContext)
@@ -21,6 +23,7 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 	const user = useUser()
 	const [activeMealPlan, setActiveMealPlan] = useState<string | null>(null)
 	const [userMealPlans, setUserMealPlans] = useState<MealPlan[]>([])
+	const [userRecipes, setUserRecipes] = useState<UserRecipe[]>([])
 
 	useEffect(() => {
 		if (!user) return
@@ -29,8 +32,8 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 	}, [user])
 
 	useEffect(() => {
-      if (user) {
-         console.log(user)
+		if (user) {
+			console.log(user)
 			const activePlan = user.activeMealPlanId
 
 			if (activePlan) {
@@ -43,17 +46,24 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 
 	useEffect(() => {
 		if (user && activeMealPlan) {
-         updateUser(user, { activeMealPlanId: activeMealPlan })
-         console.log('activated')
+			updateUser(user, { activeMealPlanId: activeMealPlan })
+			console.log('activated')
 		}
 	}, [activeMealPlan, user])
+
+	useEffect(() => {
+		if (!user) return
+		const unsubscribe = UserRecipe.subscribeToUser(user.id, setUserRecipes)
+		return () => unsubscribe()
+	}, [user])
 
 	return (
 		<MealPlanContext.Provider
 			value={{
 				activeMealPlan,
 				setActiveMealPlan,
-				userMealPlans
+				userMealPlans,
+				userRecipes
 			}}>
 			{children}
 		</MealPlanContext.Provider>
@@ -72,4 +82,9 @@ export const useActiveMealPlan = () => {
 export const useUserMealPlans = () => {
 	const { userMealPlans } = useMealPlanContext()
 	return userMealPlans
+}
+
+export const useUserRecipes = () => {
+	const { userRecipes } = useMealPlanContext()
+	return userRecipes
 }

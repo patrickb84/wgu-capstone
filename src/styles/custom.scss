@@ -211,6 +211,9 @@ $breadcrumb-active-color: $gray-600;
 	&.active {
 		color: $light;
 	}
+	& a {
+		text-decoration: none !important;
+	}
 }
 
 // $grid-breakpoints: (

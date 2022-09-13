@@ -70,7 +70,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 	return !firebaseUserLoading ? (
 		<UserContext.Provider value={{ currentUser }}>{children}</UserContext.Provider>
 	) : (
-		<OverlaySpinner show />
+		<OverlaySpinner />
 	)
 }
 

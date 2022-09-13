@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Footer } from './Footer'
 import { Navbar } from './Navbar'
 
 export interface ILayoutProps {

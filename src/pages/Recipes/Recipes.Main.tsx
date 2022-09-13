@@ -6,6 +6,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap'
 import { Recipe } from './types/Recipe'
 import { RECIPES } from '__stubs__/recipes'
 import { RecipeCard } from './Recipe.Card'
+import Searchbox from 'components/Searchbox'
 
 export interface IRecipesMainProps {}
 
@@ -29,6 +30,10 @@ export function RecipesMain(props: IRecipesMainProps) {
 						<PageTitle>Recipes!</PageTitle>
 					</div>
 				</PageHeader>
+
+				<Container className="py-3">
+					<Searchbox />
+				</Container>
 
 				<Container className="py-5">
 					<Row>

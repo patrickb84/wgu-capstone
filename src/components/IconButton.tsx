@@ -8,6 +8,7 @@ interface IconButtonProps {
 	iconFaName: string
 	iconFaGroup?: string
 	colorVariant?: string
+	/** size = fontSize */
 	size?: number | string
 	tooltip?: string
 }
