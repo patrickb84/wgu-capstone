@@ -40,12 +40,15 @@ $theme-colors: (
 	lightish: $light,
 	gray-100: $gray-100,
 	gray-200: $gray-200,
+	gray-300: $gray-300,
+	gray-400: $gray-400,
 	gray-500: $gray-500,
 	gray-600: $gray-600,
 	gray-700: $gray-700,
 	'white': $white,
 	dark: $gray-900,
-	danger: $red-500
+	danger: $red-500,
+	success: $green-500,
 );
 
 $font-family-sans-serif: 'Noto Sans', sans-serif;

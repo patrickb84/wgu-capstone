@@ -1,3 +1,4 @@
+import { deleteObject, getStorage, ref, StorageReference } from 'firebase/storage'
 import { Ingredient } from './Ingredient'
 import { IMeasuredIngredient } from 'pages/Recipes/types/Recipe'
 import { IRecipe } from 'pages/Recipes/types/Recipe'
@@ -19,12 +20,11 @@ import {
 	where
 } from 'firebase/firestore'
 import IAppModel from 'pages/shared/types/AppModel'
-import { convertTimestamp } from 'utils/time.utils'
 import { Dispatch, SetStateAction } from 'react'
 
 export type UserRecipeIngredient = {
 	ingredient: string
-	measure: string
+	measure?: string
 }
 
 export interface IUserRecipe extends IAppModel {
@@ -36,6 +36,7 @@ export interface IUserRecipe extends IAppModel {
 	category?: string
 	instructions?: string
 	imageUrl?: string
+	imageFilename?: string
 }
 
 export class UserRecipe implements IUserRecipe {
@@ -47,6 +48,7 @@ export class UserRecipe implements IUserRecipe {
 	category?: string
 	instructions?: string
 	imageUrl?: string
+	imageFilename?: string
 
 	constructor(recipe: IUserRecipe) {
 		this.id = recipe.id
@@ -57,6 +59,7 @@ export class UserRecipe implements IUserRecipe {
 		this.category = recipe.category
 		this.instructions = recipe.instructions
 		this.imageUrl = recipe.imageUrl
+		this.imageFilename = recipe.imageFilename
 	}
 
 	static collectionName = 'userRecipes'
@@ -69,6 +72,7 @@ export class UserRecipe implements IUserRecipe {
 	}
 
 	static add = async (recipe: Partial<IUserRecipe>, userId: string) => {
+		console.log('add', recipe)
 		const docRefId = await DB.add(this.collectionName, { ...recipe, userId })
 		return docRefId
 	}
@@ -82,11 +86,18 @@ export class UserRecipe implements IUserRecipe {
 		}
 	}
 
-	static delete = async (id: string) => {
-		try {
-			await deleteDoc(doc(firestore, this.collectionName, id))
-		} catch (err) {
-			console.error(err)
+	static delete = async (userRecipeId: string) => {
+		const userRecipe = await this.get(userRecipeId)
+		if (!userRecipe) return
+
+		if (userRecipe.imageFilename) {
+			try {
+				const fbStorage = getStorage()
+				const imageRef = ref(fbStorage, userRecipe.imageFilename)
+				await deleteObject(imageRef)
+			} catch (err) {
+				console.error(err)
+			}
 		}
 	}
 

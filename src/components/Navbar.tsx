@@ -56,6 +56,10 @@ export const Navbar = (props: INavbarProps) => {
 						<LinkContainer to={ROUTES.CUSTOM_RECIPES}>
 							<Nav.Link className="mx-2">Create Recipes</Nav.Link>
 						</LinkContainer>
+
+						<LinkContainer to={ROUTES.GROCERY_LIST}>
+							<Nav.Link className="mx-2">Shopping List</Nav.Link>
+						</LinkContainer>
 					</Nav>
 				</BootstrapNavbar.Collapse>
 				<BootstrapNavbar.Toggle as="span" className="border-2 py-2">

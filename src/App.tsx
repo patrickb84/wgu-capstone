@@ -1,4 +1,5 @@
 import { ErrorPage } from 'pages/Error/ErrorPage'
+import GroceryListTable from 'pages/GroceryList/GroceryList.Table'
 import { HomePage } from 'pages/Home/HomePage'
 import { LoginPage } from 'pages/Login/LoginPage'
 import MealPlanTable from 'pages/MealPlans/MealPlan.Table'
@@ -26,6 +27,7 @@ export default function App() {
 				<Route path={ROUTES.CUSTOM_RECIPES} element={<UserRecipesTable />} />
 				<Route path={ROUTES.SEARCH} element={<SearchResults />} />
 				<Route path={ROUTES.RECIPE_TYPE_VIEW} element={<RecipeTypeResults />} />
+				<Route path={ROUTES.GROCERY_LIST} element={<GroceryListTable />} />
 
 				<Route path={'*'} element={<ErrorPage />} />
 			</Routes>

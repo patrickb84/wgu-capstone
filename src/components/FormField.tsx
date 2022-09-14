@@ -10,6 +10,7 @@ export interface IFormFieldProps {
 	type?: 'text' | 'password' | 'email' | 'number' | 'date' | 'textarea'
 	onChange?: (e: any) => void
 	value?: any
+	rows?: number
 }
 
 export const FormField = ({
@@ -19,7 +20,8 @@ export const FormField = ({
 	placeholder,
 	type,
 	onChange,
-	value
+	value,
+	rows
 }: IFormFieldProps) => {
 	return (
 		<Form.Group className="mb-3">
@@ -32,6 +34,7 @@ export const FormField = ({
 				as={type === 'textarea' ? 'textarea' : 'input'}
 				onChange={onChange}
 				value={value}
+				rows={rows}
 			/>
 			{error && <FormText className="text-danger">{error.message}</FormText>}
 		</Form.Group>

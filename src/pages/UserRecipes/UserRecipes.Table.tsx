@@ -1,19 +1,19 @@
 import Layout from 'components/Layout'
 import { useUserRecipes } from 'hooks/MealPlanProvider'
 import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
-import * as React from 'react'
 import { Container, Table } from 'react-bootstrap'
-import { UserRecipe } from 'types/UserRecipe'
 import { UserRecipeCreateButton } from './UserRecipe.Create'
 import { UserRecipeDeleteButton } from './UserRecipe.Delete'
 import { UserRecipeEditButton } from './UserRecipe.Edit'
 
 export interface IUserRecipesTableProps {}
 
+const buttonProps = {
+	className: 'mx-1'
+}
+
 export function UserRecipesTable(props: IUserRecipesTableProps) {
 	const userRecipes = useUserRecipes()
-
-	console.log(userRecipes)
 
 	return (
 		<Layout>
@@ -26,6 +26,7 @@ export function UserRecipesTable(props: IUserRecipesTableProps) {
 				<Table striped responsive className="border border-light">
 					<thead className="bg-secondary text-white">
 						<tr>
+							<th>Image</th>
 							<th>Recipe Name</th>
 							<th>Instructions</th>
 							<th>Area</th>
@@ -37,6 +38,18 @@ export function UserRecipesTable(props: IUserRecipesTableProps) {
 						{userRecipes.map(userRecipe => {
 							return (
 								<tr key={userRecipe.id}>
+									<td>
+										{userRecipe.imageUrl ? (
+											<img
+												src={userRecipe.imageUrl}
+												alt={userRecipe.name}
+												className="img-fluid"
+												style={{ maxWidth: 100 }}
+											/>
+										) : (
+											<></>
+										)}
+									</td>
 									<td>{userRecipe.name}</td>
 									<td>
 										{userRecipe.instructions
@@ -49,10 +62,13 @@ export function UserRecipesTable(props: IUserRecipesTableProps) {
 									<td>{userRecipe.area}</td>
 									<td>{userRecipe.category}</td>
 									<td>
-										<UserRecipeEditButton userRecipe={userRecipe}>
+										<UserRecipeEditButton {...buttonProps} userRecipe={userRecipe}>
 											Edit
 										</UserRecipeEditButton>
-										<UserRecipeDeleteButton userRecipeId={userRecipe.id as string}>
+										<UserRecipeDeleteButton
+											{...buttonProps}
+											variant="danger"
+											userRecipeId={userRecipe.id as string}>
 											Delete
 										</UserRecipeDeleteButton>
 									</td>
