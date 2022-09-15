@@ -5,10 +5,11 @@ import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Button, Card, Col, Container, Row } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import MealPlan from './types/MealPlan'
 import { Link } from 'react-router-dom'
 import ROUTES from 'routes/routes'
+import { useUser } from 'hooks/UserProvider'
 
 export interface IMealPlanViewProps {}
 
@@ -16,6 +17,7 @@ export function MealPlanView(props: IMealPlanViewProps) {
 	const { id } = useParams()
 	const [mealPlan, setMealPlan] = useState<MealPlan | null>(null)
 	const [loading, setLoading] = useState(true)
+	const user = useUser()
 
 	useEffect(() => {
 		if (id) {
@@ -25,6 +27,8 @@ export function MealPlanView(props: IMealPlanViewProps) {
 			})
 		}
 	}, [id])
+
+	if (!user) return <Navigate to="/" replace />
 
 	return (
 		<Layout>
@@ -50,7 +54,7 @@ export function MealPlanView(props: IMealPlanViewProps) {
 					<Container className="py-3">
 						<Row>
 							<Col xs={12} md={4} lg={3}>
-								<Card className="mb-3">
+								{/* <Card className="mb-3">
 									<Card.Header>
 										Meal Plan Actions
 									</Card.Header>
@@ -66,7 +70,7 @@ export function MealPlanView(props: IMealPlanViewProps) {
 											Delete Meal Plan
 										</Button>
 									</Card.Body>
-								</Card>
+								</Card> */}
 							</Col>
 							<Col xs={12} md={8} lg={9}>
 								<PlannerView mealPlanId={mealPlan?.id as string} />

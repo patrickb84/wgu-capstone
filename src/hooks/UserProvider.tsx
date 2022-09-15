@@ -6,6 +6,7 @@ import { User } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useEffect } from 'react'
 import OverlaySpinner from 'components/OverlaySpinner'
+import { useNavigate } from 'react-router-dom'
 
 export interface IUserContextState {
 	currentUser: IUser | null
@@ -77,4 +78,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 export const useUser = () => {
 	const { currentUser } = useContext(UserContext)
 	return currentUser
+}
+
+export const useIfNoUser = () => {
+	const { currentUser } = useContext(UserContext)
+	const navigate = useNavigate()
+
+	if (!currentUser) navigate('/', { replace: true })
 }

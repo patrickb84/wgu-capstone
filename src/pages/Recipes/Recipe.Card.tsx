@@ -1,5 +1,6 @@
 import Spacer from 'components/Spacer'
 import { useActiveMealPlan } from 'hooks/MealPlanProvider'
+import { useUser } from 'hooks/UserProvider'
 import { Badge, Card, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ROUTES from 'routes/routes'
@@ -13,6 +14,7 @@ export interface IRecipeCardProps {
 export function RecipeCard({ recipe }: IRecipeCardProps) {
 	const { name, imageUrl, area, category, id } = recipe
 	const { activeMealPlan } = useActiveMealPlan()
+	const user = useUser()
 
 	return (
 		<Card className="w-100 shadow-lg recipe-card">
@@ -26,9 +28,7 @@ export function RecipeCard({ recipe }: IRecipeCardProps) {
 					{area && category && <Spacer w={0.2} />}
 					{category && <Badge className="bg-gray-500">{category}</Badge>}
 				</div>
-				<div>
-					<ButtonAddRecipeToPlan recipe={recipe} planId={activeMealPlan as string} size={28} />
-				</div>
+				<div>{user && <ButtonAddRecipeToPlan recipe={recipe} planId={activeMealPlan as string} size={28} />}</div>
 			</Card.Body>
 		</Card>
 	)

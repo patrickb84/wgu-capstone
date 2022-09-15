@@ -6,6 +6,7 @@ import Layout from 'components/Layout'
 import OverlaySpinner from 'components/OverlaySpinner'
 import Spacer from 'components/Spacer'
 import { useActiveMealPlan } from 'hooks/MealPlanProvider'
+import { useUser } from 'hooks/UserProvider'
 import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
 import { useEffect, useState } from 'react'
 import { Breadcrumb, Col, Container, Row } from 'react-bootstrap'
@@ -28,6 +29,7 @@ export default function RecipeDetails(props: IRecipePageProps) {
 	const { recipeId } = useParams()
 	const { activeMealPlan } = useActiveMealPlan()
 	const navigate = useNavigate()
+	const user = useUser()
 
 	useEffect(() => {
 		if (recipeId)
@@ -36,7 +38,6 @@ export default function RecipeDetails(props: IRecipePageProps) {
 				.then((data: ApiRecipe) => setRecipe(new Recipe(data)))
 				.catch(() => navigate(ROUTES.ERROR))
 	}, [navigate, recipeId])
-
 
 	if (!recipe) return <OverlaySpinner />
 
@@ -54,12 +55,14 @@ export default function RecipeDetails(props: IRecipePageProps) {
 					<PageTitle>{recipe.name}</PageTitle>
 				</div>
 				<div className="d-flex flex-lg-row flex-column justify-content-center align-items-lg-end align-items-center">
-					<ButtonAddRecipeToPlan
-						iconFaGroup="fas"
-						{...iconProps}
-						recipe={recipe}
-						planId={activeMealPlan as string}
-					/>
+					{user && (
+						<ButtonAddRecipeToPlan
+							iconFaGroup="fas"
+							{...iconProps}
+							recipe={recipe}
+							planId={activeMealPlan as string}
+						/>
+					)}
 					{/* <IconButton iconFaName="fa-youtube" iconFaGroup="fa-brands" {...iconProps} /> */}
 				</div>
 			</PageHeader>

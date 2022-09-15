@@ -96,8 +96,10 @@ export class UserRecipe implements IUserRecipe {
 				const imageRef = ref(fbStorage, userRecipe.imageFilename)
 				await deleteObject(imageRef)
 			} catch (err) {
-				console.error(err)
+				console.warn(err)
 			}
+			await DB.delete(this.collectionName, userRecipeId)
+			console.log('deleted', userRecipeId)
 		}
 	}
 

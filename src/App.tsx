@@ -1,3 +1,4 @@
+import { useUser } from 'hooks/UserProvider'
 import { ErrorPage } from 'pages/Error/ErrorPage'
 import GroceryListTable from 'pages/GroceryList/GroceryList.Table'
 import { HomePage } from 'pages/Home/HomePage'
@@ -20,6 +21,7 @@ export default function App() {
 				<Route path={ROUTES.HOME} element={<HomePage />} />
 				<Route path={ROUTES.LOGIN} element={<LoginPage />} />
 				<Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+
 				<Route path={ROUTES.MEAL_PLANS} element={<MealPlanTable />} />
 				<Route path={ROUTES.MEAL_PLAN} element={<MealPlanView />} />
 				<Route path={ROUTES.RECIPES} element={<RecipesMain />} />
@@ -28,6 +30,8 @@ export default function App() {
 				<Route path={ROUTES.SEARCH} element={<SearchResults />} />
 				<Route path={ROUTES.RECIPE_TYPE_VIEW} element={<RecipeTypeResults />} />
 				<Route path={ROUTES.GROCERY_LIST} element={<GroceryListTable />} />
+
+
 				<Route path={ROUTES.ERROR} element={<ErrorPage />} />
 
 				<Route path={'*'} element={<ErrorPage />} />

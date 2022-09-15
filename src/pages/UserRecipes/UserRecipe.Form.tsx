@@ -189,7 +189,7 @@ export default function UserRepiceForm(props: IUserRepiceFormProps) {
 							</Col>
 						</Row>
 
-						<Row>
+						{/* <Row>
 							<Col>
 								<FormGroup className="mb-3">
 									<ComboBoxSelector
@@ -214,7 +214,7 @@ export default function UserRepiceForm(props: IUserRepiceFormProps) {
 									/>
 								</FormGroup>
 							</Col>
-						</Row>
+						</Row> */}
 					</Form>
 				</Container>
 			</Modal.Body>

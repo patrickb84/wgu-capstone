@@ -5,6 +5,7 @@ import Layout from 'components/Layout'
 import Spacer from 'components/Spacer'
 import { compareAsc, getDayOfYear } from 'date-fns'
 import { useActiveMealPlan } from 'hooks/MealPlanProvider'
+import { useUser } from 'hooks/UserProvider'
 import { IMeasuredIngredient, IRecipe, Recipe } from 'pages/Recipes/types/Recipe'
 import ScheduledMeal, { IScheduledMeal } from 'pages/ScheduledMeals/types/ScheduledMeal'
 import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
@@ -23,6 +24,7 @@ import {
 	Tab,
 	Table
 } from 'react-bootstrap'
+import { Navigate } from 'react-router-dom'
 import bonsole from 'utils/exceptions'
 
 export interface IGroceryListTableProps {}
@@ -39,6 +41,7 @@ type GroceryItem = {
 
 export default function GroceryListTable(props: IGroceryListTableProps) {
 	const { activeMealPlan } = useActiveMealPlan()
+	const user = useUser()
 
 	// const [scheduledMeals, setScheduledMeals] = React.useState<ScheduledMeal[]>([])
 	// const [recipes, setRecipes] = React.useState<(IRecipe & { count: number })[]>([])
@@ -107,9 +110,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 				const getUniqueIngredients = (ingredients: IngredientPlus[]) => {
 					const unique: string[] = []
 					ingredients.forEach(({ ingredientName }) => {
-						const uniqueIndex = unique.findIndex(
-							u => u.toLowerCase() === ingredientName.toLowerCase()
-						)
+						const uniqueIndex = unique.findIndex(u => u.toLowerCase() === ingredientName.toLowerCase())
 						if (uniqueIndex === -1) {
 							unique.push(ingredientName)
 						}
@@ -164,12 +165,12 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 	const dataFeed = () => {
 		let items = groceryItems
 		if (searchTerm) {
-			items = items.filter(item =>
-				item.ingredientName.toLowerCase().includes(searchTerm.toLowerCase())
-			)
+			items = items.filter(item => item.ingredientName.toLowerCase().includes(searchTerm.toLowerCase()))
 		}
 		return items.sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
 	}
+
+	if (!user) return <Navigate to="/" replace />
 
 	return (
 		<>
@@ -244,18 +245,12 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 														<Tippy content="Check/Uncheck all">
 															<Form.Check
 																type="checkbox"
-																checked={
-																	includedItems.length === groceryItems.length
-																}
+																checked={includedItems.length === groceryItems.length}
 																onChange={() => {
-																	if (
-																		includedItems.length === groceryItems.length
-																	) {
+																	if (includedItems.length === groceryItems.length) {
 																		setIncludedItems([])
 																	} else {
-																		setIncludedItems(
-																			groceryItems.map(ig => ig.ingredientName)
-																		)
+																		setIncludedItems(groceryItems.map(ig => ig.ingredientName))
 																	}
 																}}
 															/>
@@ -274,9 +269,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 													<React.Fragment key={index}>
 														{gi.metadata.map((m, i) => {
 															const showCount = m.recipeCount > 1 && (
-																<span className="text-danger">
-																	({m.recipeCount})
-																</span>
+																<span className="text-danger">({m.recipeCount})</span>
 															)
 															if (i === 0) {
 																return (
@@ -285,14 +278,8 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 																			<div className="px-1">
 																				<Form.Check
 																					type="checkbox"
-																					checked={isItemIncluded(
-																						gi.ingredientName
-																					)}
-																					onChange={() =>
-																						handleToggleIncluded(
-																							gi.ingredientName
-																						)
-																					}
+																					checked={isItemIncluded(gi.ingredientName)}
+																					onChange={() => handleToggleIncluded(gi.ingredientName)}
 																				/>
 																			</div>
 																		</td>
@@ -379,16 +366,8 @@ const Collapsible = ({ children, title, defaultOpen }: ICollapsible) => {
 			<Container className="my-3">
 				<Card>
 					<Card.Header className="d-flex align-items-center justify-content-start">
-						<Button
-							onClick={() => setOpen(!open)}
-							variant="primary"
-							size="sm"
-							className="me-2">
-							{open ? (
-								<i className="fas fa-chevron-down" />
-							) : (
-								<i className="fas fa-chevron-right" />
-							)}
+						<Button onClick={() => setOpen(!open)} variant="primary" size="sm" className="me-2">
+							{open ? <i className="fas fa-chevron-down" /> : <i className="fas fa-chevron-right" />}
 						</Button>{' '}
 						<span className="">{title}</span>
 					</Card.Header>
@@ -426,8 +405,7 @@ export const ScheduledMealsCollapsible = ({ scheduledMeals, recipes }: IGroceryL
 					{scheduledMeals
 						.sort((a, b) => a.mealDate.getTime() - b.mealDate.getTime())
 						.map((scheduledMeal, index) => {
-							const rowColor =
-								getDayOfYear(scheduledMeal.mealDate) % 2 === 0 ? 'bg-gray-200' : 'bg-white'
+							const rowColor = getDayOfYear(scheduledMeal.mealDate) % 2 === 0 ? 'bg-gray-200' : 'bg-white'
 							const recipe = recipes.find(recipe => recipe.id === scheduledMeal.recipeId)
 							return (
 								<tr key={index} className={rowColor}>

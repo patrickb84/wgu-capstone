@@ -1,10 +1,4 @@
-import {
-	Container,
-	Nav,
-	Navbar as BootstrapNavbar,
-	NavbarBrand,
-	NavDropdown
-} from 'react-bootstrap'
+import { Container, Nav, Navbar as BootstrapNavbar, NavbarBrand, NavDropdown } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import ROUTES from 'routes/routes'
 import { signOut } from 'firebase/auth'
@@ -34,32 +28,34 @@ export const Navbar = (props: INavbarProps) => {
 	if (isHidden) return <></>
 
 	return (
-		<BootstrapNavbar
-			bg="white"
-			expand="lg"
-			fixed="top"
-			className="border-brand border-top border-5 shadow-sm">
+		<BootstrapNavbar bg="white" expand="lg" fixed="top" className="border-brand border-top border-5 shadow-sm">
 			<Container fluid className="justify-content-start align-items-center">
 				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
 					<Nav className="mb-3 mb-lg-0">
 						<LinkContainer to={ROUTES.HOME} replace>
 							<Nav.Link className="mx-2">Home</Nav.Link>
 						</LinkContainer>
-						<LinkContainer to={ROUTES.MEAL_PLANS} replace>
-							<Nav.Link className="mx-2">Meal Plans</Nav.Link>
-						</LinkContainer>
+						{user && (
+							<LinkContainer to={ROUTES.MEAL_PLANS} replace>
+								<Nav.Link className="mx-2">Meal Plans</Nav.Link>
+							</LinkContainer>
+						)}
 
 						<LinkContainer to={ROUTES.RECIPES} replace>
 							<Nav.Link className="mx-2">Recipes</Nav.Link>
 						</LinkContainer>
 
-						<LinkContainer to={ROUTES.CUSTOM_RECIPES} replace>
-							<Nav.Link className="mx-2">Create Recipes</Nav.Link>
-						</LinkContainer>
+						{user && (
+							<LinkContainer to={ROUTES.CUSTOM_RECIPES} replace>
+								<Nav.Link className="mx-2">Create Recipes</Nav.Link>
+							</LinkContainer>
+						)}
 
-						<LinkContainer to={ROUTES.GROCERY_LIST} replace>
-							<Nav.Link className="mx-2">Shopping List</Nav.Link>
-						</LinkContainer>
+						{user && (
+							<LinkContainer to={ROUTES.GROCERY_LIST} replace>
+								<Nav.Link className="mx-2">Shopping List</Nav.Link>
+							</LinkContainer>
+						)}
 					</Nav>
 				</BootstrapNavbar.Collapse>
 				<BootstrapNavbar.Toggle as="span" className="border-2 py-2">
@@ -67,9 +63,7 @@ export const Navbar = (props: INavbarProps) => {
 				</BootstrapNavbar.Toggle>
 
 				<LinkContainer to={ROUTES.HOME} className="order-0 ms-2 ms-lg-0" replace>
-					<NavbarBrand className="font-display fs-5 no-underline text-brand">
-						Sous Chef!
-					</NavbarBrand>
+					<NavbarBrand className="font-display fs-5 no-underline text-brand">Sous Chef!</NavbarBrand>
 				</LinkContainer>
 
 				<Nav className="ms-auto order-3 d-flex align-items-center flex-row">
@@ -108,10 +102,10 @@ const UserDropdown = ({ user }: { user: IUser }) => {
 				</div>
 			}
 			id="nav-dropdown">
-			<LinkContainer to={'/account'} replace>
+			{/* <LinkContainer to={'/account'} replace>
 				<NavDropdown.Item>My Account</NavDropdown.Item>
 			</LinkContainer>
-			<NavDropdown.Divider />
+			<NavDropdown.Divider /> */}
 			<NavDropdown.Item onClick={() => signOut(auth)}>
 				<div className="d-flex justify-content-between align-items-center">
 					<span>Sign Out</span>

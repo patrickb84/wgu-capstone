@@ -7,6 +7,10 @@ import { GenericIconButtonProps, IconButton } from 'components/IconButton'
 import { DayWithMeals, PlannerView } from 'pages/ScheduledMeals/PlannerView'
 import ScheduledMeal from 'pages/ScheduledMeals/types/ScheduledMeal'
 import MidSpinner from 'components/MidSpinner'
+import { useActiveMealPlan } from 'hooks/MealPlanProvider'
+import { RECIPES } from '__stubs__/recipes'
+import { Link } from 'react-router-dom'
+import ROUTES from 'routes/routes'
 
 export interface IButtonAddToPlanProps extends GenericIconButtonProps {
 	planId: string
@@ -16,6 +20,7 @@ export interface IButtonAddToPlanProps extends GenericIconButtonProps {
 export function ButtonAddRecipeToPlan(props: IButtonAddToPlanProps) {
 	const { iconFaGroup, colorVariant, size, className, recipe, planId } = props
 	const [selectedDates, setSelectedDates] = React.useState<Date[]>([])
+	const activePlan = useActiveMealPlan()
 
 	const user = useUser()
 	const [show, setShow] = React.useState(false)
@@ -90,20 +95,28 @@ export function ButtonAddRecipeToPlan(props: IButtonAddToPlanProps) {
 					<Modal.Title>Add to Meal Plan</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<Container fluid>
+					{!activePlan ? (
+						<Container fluid>
+							<div className="bg-light p-3 mb-3">
+								<h5>{recipe.name}</h5>
+								<p className="mb-0">
+									Add <strong>{recipe.name}</strong> to your plan by selecting dates below. When you're done
+									selecting dates, click <strong>Save Changes</strong> at the bottom.
+								</p>
+							</div>
+							<PlannerView
+								mealPlanId={planId}
+								mode="adding"
+								cardExtension={(props: DayWithMeals) => <CardExtension {...props} />}
+							/>
+						</Container>
+					) : (
 						<div className="bg-light p-3 mb-3">
-							<h5>{recipe.name}</h5>
-							<p className="mb-0">
-								Add <strong>{recipe.name}</strong> to your plan by selecting dates below. When you're done
-								selecting dates, click <strong>Save Changes</strong> at the bottom.
-							</p>
+							<h5>You don't have a plan yet!</h5>
+							<p className="mb-0">First create or activate a meal plan before adding recipes to it.</p>
+							<Link to={ROUTES.MEAL_PLANS}>Go to Meal Plans</Link>
 						</div>
-						<PlannerView
-							mealPlanId={planId}
-							mode="adding"
-							cardExtension={(props: DayWithMeals) => <CardExtension {...props} />}
-						/>
-					</Container>
+					)}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={handleHide}>
