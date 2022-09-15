@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import ReactPaginate from 'react-paginate'
 import { useLocation, useParams } from 'react-router-dom'
+import bonsole from 'utils/exceptions'
 import { RecipeCard } from './Recipe.Card'
 import { Recipe } from './types/Recipe'
 
@@ -31,14 +32,13 @@ export function RecipeTypeResults(props: IRecipeTypeResultsProps) {
 				interimRecipes = await mealdb.fetchRecipesByCategory(qValue)
 			}
 			if (recipeType === 'ingredient') {
+				bonsole.info('fetchRecipesByIngredient', qValue)
 				interimRecipes = await mealdb.fetchRecipesByIngredients(qValue)
 			}
 			if (recipeType === 'area') {
 				interimRecipes = await mealdb.fetchRecipesByArea(qValue)
 			}
-			const res = await Promise.all(
-				interimRecipes.map(recipe$ => mealdb.fetchRecipe(recipe$.idMeal))
-			)
+			const res = await Promise.all(interimRecipes.map(recipe$ => mealdb.fetchRecipe(recipe$.idMeal)))
 			const recipes: Recipe[] = res.map((recipe: ApiRecipe) => new Recipe(recipe))
 			setRecipes(recipes)
 		}
@@ -51,15 +51,16 @@ export function RecipeTypeResults(props: IRecipeTypeResultsProps) {
 		<Layout>
 			<PageHeader variant="secondary">
 				<div>
-					<PageTitle>
-						<span style={{ textTransform: 'capitalize' }}>{recipeType}</span>:{' '}
-						{qTitle || 'Nothing here!'}
-					</PageTitle>
-					<PageSubtitle>{qValue && `Results for "${qValue}"`}</PageSubtitle>
+					<PageTitle>{qTitle || 'Nothing here!'}</PageTitle>
+					<PageSubtitle>{qValue && `${recipes.length} Results for "${qTitle}" as ${recipeType}`}</PageSubtitle>
 				</div>
 			</PageHeader>
 			<Container className="py-4">
-				<PaginatedItems itemsPerPage={12} items={recipes} />
+				{!recipes.length ? (
+					<div className="bg-light p-3">No recipes found.</div>
+				) : (
+					<PaginatedItems itemsPerPage={12} items={recipes} />
+				)}
 			</Container>
 		</Layout>
 	)

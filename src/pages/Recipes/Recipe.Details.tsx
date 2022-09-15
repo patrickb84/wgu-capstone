@@ -9,7 +9,7 @@ import { useActiveMealPlan } from 'hooks/MealPlanProvider'
 import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
 import { useEffect, useState } from 'react'
 import { Breadcrumb, Col, Container, Row } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import ROUTES from 'routes/routes'
 import { ButtonAddRecipeToPlan } from './ButtonAddRecipeToPlan'
@@ -27,13 +27,16 @@ export default function RecipeDetails(props: IRecipePageProps) {
 	const [recipe, setRecipe] = useState<Recipe | null>(null)
 	const { recipeId } = useParams()
 	const { activeMealPlan } = useActiveMealPlan()
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		if (recipeId)
-			mealdb.fetchRecipe(recipeId).then((data: ApiRecipe) => setRecipe(new Recipe(data)))
-	}, [recipeId])
+			mealdb
+				.fetchRecipe(recipeId)
+				.then((data: ApiRecipe) => setRecipe(new Recipe(data)))
+				.catch(() => navigate(ROUTES.ERROR))
+	}, [navigate, recipeId])
 
-	console.log(recipe && recipe.linkUrl)
 
 	if (!recipe) return <OverlaySpinner />
 
@@ -138,7 +141,7 @@ function RecipeLink(props: Pick<Recipe, 'linkUrl'>) {
 		<>
 			<div className="pt-4 text-end pe-2 small i">
 				Source:{' '}
-				<Link className="text-tertiary" to={props.linkUrl}>
+				<Link className="text-tertiary" to={props.linkUrl} replace>
 					{props.linkUrl}
 				</Link>
 			</div>

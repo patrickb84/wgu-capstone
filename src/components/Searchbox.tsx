@@ -4,6 +4,7 @@ import { useCombobox } from 'downshift'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSearchData } from 'hooks/RecipeDataProvider'
 import ROUTES from 'routes/routes'
+import bonsole from 'utils/exceptions'
 
 export type SearchItemType = 'Category' | 'Ingredient' | 'Area' | 'Recipe' | 'Separator'
 
@@ -16,11 +17,7 @@ export interface ISearchItem {
 
 function getFilter(inputValue: string) {
 	return function regularFilter(item: ISearchItem) {
-		return (
-			!inputValue ||
-			item.text.toLowerCase().includes(inputValue) ||
-			item.type.toLowerCase().includes(inputValue)
-		)
+		return !inputValue || item.text.toLowerCase().includes(inputValue) || item.type.toLowerCase().includes(inputValue)
 	}
 }
 
@@ -51,25 +48,18 @@ const Searchbox = () => {
 	const [inputValue, setInputValue] = useState('')
 	const navigate = useNavigate()
 
-	const {
-		isOpen,
-		getMenuProps,
-		getInputProps,
-		getComboboxProps,
-		highlightedIndex,
-		getItemProps,
-		selectedItem
-	} = useCombobox({
-		onInputValueChange({ inputValue }: any) {
-			console.log('inputValue', inputValue)
-			setInputValue(inputValue)
-			setResultItems(searchData.filter(getFilter(inputValue.toLowerCase())))
-		},
-		items: resultItems,
-		itemToString(item: any) {
-			return item ? item.name : ''
-		}
-	})
+	const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps, selectedItem } =
+		useCombobox({
+			onInputValueChange({ inputValue }: any) {
+				console.log('inputValue', inputValue)
+				setInputValue(inputValue)
+				setResultItems(searchData.filter(getFilter(inputValue.toLowerCase())))
+			},
+			items: resultItems,
+			itemToString(item: any) {
+				return item ? item.name : ''
+			}
+		})
 
 	const handleDisplayResults = () => {
 		const resultSlice = resultItems.slice(0, 8)
@@ -116,27 +106,24 @@ const Searchbox = () => {
 			displayResults = displayResults.concat(ingredients)
 		}
 
+		bonsole.fire('ingredients', ingredients)
+
 		return displayResults
 	}
 
 	return (
 		<>
-			<div className="autocomplete-searchbox">
+			<div className="autocomplete-searchbox position-relative">
 				<InputGroup className="mb-1" {...getComboboxProps()}>
-					<InputGroup.Text id="inputGroup-sizing-default">
-						<i className="fa-duotone fa-magnifying-glass" />
+					<InputGroup.Text className='bg-brand border-0 text-white'>
+						<i className="fas fa-magnifying-glass" />
 					</InputGroup.Text>
-					<Form.Control
-						aria-label="Default"
-						aria-describedby="inputGroup-sizing-default"
-						placeholder="Find a recipe"
-						{...getInputProps()}
-					/>
+					<Form.Control placeholder="Find a recipe, category, area or ingredient" {...getInputProps()} />
 				</InputGroup>
 
 				{/* Dropdown */}
-				<div {...getMenuProps()}>
-					{isOpen && (
+				<div {...getMenuProps()} className="w-100 position-absolute" style={{ zIndex: 1000 }}>
+					{isOpen && resultItems.length > 0 && (
 						<ListGroup>
 							{handleDisplayResults().map((item, index) => {
 								const { text, type, url } = item
@@ -158,16 +145,10 @@ const Searchbox = () => {
 										replace>
 										<ListGroup.Item
 											className={`d-flex justify-content-start align-items-center ${
-												highlightedIndex === index &&
-												selectedItem !== item &&
-												'bg-gray-200'
-											} ${
-												selectedItem === item && 'active bg-secondary border-secondary'
-											}`}
+												highlightedIndex === index && selectedItem !== item && 'bg-gray-200'
+											} ${selectedItem === item && 'active bg-secondary border-secondary'}`}
 											style={{ lineHeight: 0.95 }}>
-											<div
-												className="ms-1 text-center"
-												style={{ width: 32, fontSize: '1.25rem' }}>
+											<div className="ms-1 text-center" style={{ width: 32, fontSize: '1.25rem' }}>
 												<i className={`fad ${getTypeIcon(type)}`} />
 											</div>
 											<div className="ms-2 me-auto">

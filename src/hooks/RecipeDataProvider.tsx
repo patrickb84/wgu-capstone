@@ -61,7 +61,8 @@ export const RecipeDataProvider = ({ children }: IProviderProps) => {
 			data.push({
 				text: ingredient.strIngredient || '',
 				type: 'Ingredient',
-				id: ingredient.strIngredient?.toLowerCase().split(' ').join('_') || ''
+				id: ingredient.strIngredient?.toLowerCase().split(' ').join('_') || '',
+				url: ROUTES.TO_RECIPE_TYPE_VIEW('ingredient', ingredient.strIngredient?.toLowerCase().split(' ').join('_') || '', ingredient.strIngredient || '')
 			})
 		})
 		// console.log('data', data)

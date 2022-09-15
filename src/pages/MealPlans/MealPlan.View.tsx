@@ -42,7 +42,7 @@ export function MealPlanView(props: IMealPlanViewProps) {
 								</PageSubtitle>
 							)}
 						</div>
-						<Link to={ROUTES.RECIPES} className="btn btn-brand">
+						<Link to={ROUTES.RECIPES} className="btn btn-brand" replace>
 							Find Recipes
 						</Link>
 					</PageHeader>

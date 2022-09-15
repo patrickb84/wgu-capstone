@@ -27,7 +27,7 @@ export default function Breadcrumbs({ items }: IBreadcrumbProps) {
 		<>
 			<BootstrapBreadcrumb className='small'>
 				{items.map((item, index) => (
-					<LinkContainer key={index} to={item.to}>
+					<LinkContainer key={index} to={item.to} replace>
 						<BootstrapBreadcrumbItem key={index}>
 							<span className="text-white">{item.label}</span>
 						</BootstrapBreadcrumbItem>

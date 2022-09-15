@@ -32,7 +32,7 @@ export const RegisterPage = (props: IRegisterPageProps) => {
 								<MiniLogo />
 								<h1 className="font-display mb-1 mb-lg-2">Register Now!</h1>
 								<p className="text-center text-muted text-lg fs-6">
-									Already have an account? <Link to={ROUTES.LOGIN}>Sign in</Link>
+									Already have an account? <Link to={ROUTES.LOGIN} replace>Sign in</Link>
 								</p>
 							</div>
 

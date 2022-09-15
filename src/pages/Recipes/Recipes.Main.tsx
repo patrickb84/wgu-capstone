@@ -10,11 +10,6 @@ import Searchbox from 'components/Searchbox'
 
 export interface IRecipesMainProps {}
 
-const buttonProps = {
-	className: 'mx-2',
-	size: 'sm' as const
-}
-
 export function RecipesMain(props: IRecipesMainProps) {
 	const [recipes, setRecipes] = React.useState<any[]>([])
 
@@ -25,15 +20,17 @@ export function RecipesMain(props: IRecipesMainProps) {
 	return (
 		<>
 			<Layout>
-				<PageHeader>
+				<PageHeader variant="brand">
 					<div>
 						<PageTitle>Recipes!</PageTitle>
 					</div>
 				</PageHeader>
 
-				<Container className="py-3">
-					<Searchbox />
-				</Container>
+				<section className="bg-light">
+					<Container className="py-5">
+						<Searchbox />
+					</Container>
+				</section>
 
 				<Container className="py-5">
 					<Row>

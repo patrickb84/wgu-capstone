@@ -18,7 +18,8 @@ const ROUTES = {
 	TO_RECIPE_TYPE_VIEW: (recipeType: RecipeType, query: string, title: string) =>
 		`/recipe-filter/${recipeType.toLowerCase()}?q=${query}&t=${title}`,
 	CUSTOM_RECIPES: '/custom-recipes',
-	GROCERY_LIST: '/grocery-list'
+	GROCERY_LIST: '/grocery-list',
+	ERROR: '/error'
 }
 
 export default ROUTES

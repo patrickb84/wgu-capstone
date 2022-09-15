@@ -6,6 +6,7 @@ import { IRecipe } from './types/Recipe'
 import { GenericIconButtonProps, IconButton } from 'components/IconButton'
 import { DayWithMeals, PlannerView } from 'pages/ScheduledMeals/PlannerView'
 import ScheduledMeal from 'pages/ScheduledMeals/types/ScheduledMeal'
+import MidSpinner from 'components/MidSpinner'
 
 export interface IButtonAddToPlanProps extends GenericIconButtonProps {
 	planId: string
@@ -93,9 +94,8 @@ export function ButtonAddRecipeToPlan(props: IButtonAddToPlanProps) {
 						<div className="bg-light p-3 mb-3">
 							<h5>{recipe.name}</h5>
 							<p className="mb-0">
-								Add <strong>{recipe.name}</strong> to your plan by selecting dates below.
-								When you're done selecting dates, click <strong>Save Changes</strong> at the
-								bottom.
+								Add <strong>{recipe.name}</strong> to your plan by selecting dates below. When you're done
+								selecting dates, click <strong>Save Changes</strong> at the bottom.
 							</p>
 						</div>
 						<PlannerView

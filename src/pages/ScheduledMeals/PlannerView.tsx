@@ -7,6 +7,7 @@ import { Card } from 'react-bootstrap'
 import { getDateArray } from 'utils/time.utils'
 import MealPlan from 'pages/MealPlans/types/MealPlan'
 import ButtonPlannerDayEdit from './PlannerDay.Edit'
+import MidSpinner from 'components/MidSpinner'
 
 export interface IMealPlanViewProps {
 	mealPlanId: string
@@ -18,6 +19,7 @@ export function PlannerView(props: IMealPlanViewProps) {
 	const { mealPlanId, mode = 'viewing', cardExtension: CardExtension } = props
 	const [daysWithMeals, setDaysWithMeals] = useState<DayWithMeals[]>([])
 	const [mealPlan, setMealPlan] = useState<MealPlan>()
+	const [isLoading, setLoading] = useState(true)
 
 	useEffect(() => {
 		MealPlan.get(mealPlanId).then(setMealPlan)
@@ -29,7 +31,9 @@ export function PlannerView(props: IMealPlanViewProps) {
 			const meals = scheduledMeals.map(scheduledMeal => {
 				return new ScheduledMeal(scheduledMeal)
 			})
-			mapScheduledMealsToAndRecipes(meals, mealPlan).then(setDaysWithMeals)
+			mapScheduledMealsToAndRecipes(meals, mealPlan)
+				.then(setDaysWithMeals)
+				.then(() => setLoading(false))
 		})
 	}, [mealPlan, mealPlanId])
 
@@ -41,43 +45,51 @@ export function PlannerView(props: IMealPlanViewProps) {
 
 	return (
 		<>
-			{daysWithMeals.map(mealDate => {
-				const dateString = format(mealDate.date, 'EEE, MMM dd')
+			{isLoading ? (
+				<MidSpinner />
+			) : (
+				<>
+					{daysWithMeals.map(mealDate => {
+						const dateString = format(mealDate.date, 'EEE, MMM dd')
 
-				return (
-					<React.Fragment key={mealDate.date.toISOString()}>
-						<Card className="mb-3">
-							<Card.Header>
-								<FlexCenterBetween>
-									{dateString}
-									{mode === 'viewing' && (
-										<ButtonPlannerDayEdit mealDate={mealDate} onComplete={getPlans} />
-									)}
-								</FlexCenterBetween>
-							</Card.Header>
-							<Card.Body>
-								<ul className="list-unstyled mb-0">
-									{mealDate.meals.map(meal => (
-										<li key={meal.id}>{meal.recipeName}</li>
-									))}
-								</ul>
-								{CardExtension && <CardExtension {...mealDate} />}
-							</Card.Body>
-						</Card>
-					</React.Fragment>
-				)
-			})}
+						return (
+							<React.Fragment key={mealDate.date.toISOString()}>
+								<Card className="mb-3">
+									<Card.Header>
+										<FlexCenterBetween>
+											{dateString}
+											{mode === 'viewing' && (
+												<ButtonPlannerDayEdit mealDate={mealDate} onComplete={getPlans} />
+											)}
+										</FlexCenterBetween>
+									</Card.Header>
+									<Card.Body>
+										<ul className="list-unstyled mb-0">
+											{mealDate.meals.map(meal => (
+												<li key={meal.id}>{meal.recipeName}</li>
+											))}
+										</ul>
+										{CardExtension && <CardExtension {...mealDate} />}
+									</Card.Body>
+								</Card>
+							</React.Fragment>
+						)
+					})}
+				</>
+			)}
 		</>
 	)
 }
 
-const mapScheduledMealsToAndRecipes = async (
-	scheduledMeals: ScheduledMeal[],
-	mealPlan: MealPlan
-) => {
+const mapScheduledMealsToAndRecipes = async (scheduledMeals: ScheduledMeal[], mealPlan: MealPlan) => {
 	const mealsWithRecipes = scheduledMeals.map(async scheduledMeal => {
-		const recipe = await mealdb.fetchRecipe(scheduledMeal.recipeId)
-		return { ...scheduledMeal, recipeName: recipe.strMeal as string }
+		try {
+			const recipe = await mealdb.fetchRecipe(scheduledMeal.recipeId)
+			return { ...scheduledMeal, recipeName: recipe.strMeal }
+		} catch (error) {
+			console.error(error)
+			return { ...scheduledMeal, recipeName: 'None' as string }
+		}
 	})
 
 	const mealsWithRecipesResolved = await Promise.all(mealsWithRecipes)

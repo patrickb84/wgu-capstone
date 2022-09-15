@@ -40,8 +40,7 @@ const MealPlanTable = () => {
 					<div>
 						<PageTitle>Meal Plans</PageTitle>
 						<PageSubtitle>
-							{user?.displayName}'s {userPlans.length}{' '}
-							{userPlans.length === 1 ? 'plan' : 'plans'}
+							{user?.displayName}'s {userPlans.length} {userPlans.length === 1 ? 'plan' : 'plans'}
 						</PageSubtitle>
 					</div>
 					<MealPlanCreateButton variant="light">Create Plan</MealPlanCreateButton>
@@ -52,6 +51,7 @@ const MealPlanTable = () => {
 						<Table striped responsive className="border border-light">
 							<thead className="bg-secondary text-white">
 								<tr>
+									<th>Active?</th>
 									<th>Plan Name</th>
 									<th>Plan Description</th>
 									<th>Start Date</th>
@@ -65,7 +65,16 @@ const MealPlanTable = () => {
 									return (
 										<tr key={plan.id}>
 											<td>
-												<Link to={`/meal-plan/${plan.id}`}>{plan.planName}</Link>
+												<Button
+													size="sm"
+													className="me-lg-1"
+													variant={planIsActive(plan.id) ? 'brand' : 'outline-brand'}
+													onClick={() => plan.id && setActiveMealPlan(plan.id)}>
+													{planIsActive(plan.id) ? 'Active' : 'Activate'}
+												</Button>
+											</td>
+											<td>
+												<Link to={`/meal-plan/${plan.id}`} replace>{plan.planName}</Link>
 											</td>
 											<td>{plan.planDescription}</td>
 											<td>{plan.$startDate}</td>
@@ -73,23 +82,12 @@ const MealPlanTable = () => {
 											<td>{plan.$numberOfDays}</td>
 											<td>
 												<div className="flex-column d-flex flex-lg-row">
-													<Button
-														className="me-lg-1"
-														variant={
-															planIsActive(plan.id) ? 'brand' : 'outline-brand'
-														}
-														onClick={() => plan.id && setActiveMealPlan(plan.id)}>
-														{planIsActive(plan.id) ? 'Active' : 'Activate'}
-													</Button>
-													<Link to={`/meal-plan/${plan.id}`}>
+													<Link to={`/meal-plan/${plan.id}`} replace>
 														<Button variant="secondary" className="me-lg-1">
 															View
 														</Button>
 													</Link>
-													<MealPlanEditButton
-														className="me-lg-1"
-														variant="secondary-gray"
-														userPlan={plan}>
+													<MealPlanEditButton className="me-lg-1" variant="secondary-gray" userPlan={plan}>
 														Edit
 													</MealPlanEditButton>
 													{plan.id && (

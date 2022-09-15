@@ -40,7 +40,7 @@ function RecipeCardImage({ imageUrl, name, id }: IRecipeCardImageProps) {
 	return (
 		<div className="w-100 position-relative recipe-card-image">
 			<div className="recipe-card-image-overlay">
-				<Link to={ROUTES.TO_RECIPE(id)} className="text-center no-underline text-white">
+				<Link to={ROUTES.TO_RECIPE(id)} className="text-center no-underline text-white" replace>
 					<i className="fat fa-book fa-3x" />
 					<Spacer h={1} />
 					<span className="font-hand fs-4">View Recipe Details</span>

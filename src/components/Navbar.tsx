@@ -42,22 +42,22 @@ export const Navbar = (props: INavbarProps) => {
 			<Container fluid className="justify-content-start align-items-center">
 				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
 					<Nav className="mb-3 mb-lg-0">
-						<LinkContainer to={ROUTES.HOME}>
+						<LinkContainer to={ROUTES.HOME} replace>
 							<Nav.Link className="mx-2">Home</Nav.Link>
 						</LinkContainer>
-						<LinkContainer to={ROUTES.MEAL_PLANS}>
+						<LinkContainer to={ROUTES.MEAL_PLANS} replace>
 							<Nav.Link className="mx-2">Meal Plans</Nav.Link>
 						</LinkContainer>
 
-						<LinkContainer to={ROUTES.RECIPES}>
+						<LinkContainer to={ROUTES.RECIPES} replace>
 							<Nav.Link className="mx-2">Recipes</Nav.Link>
 						</LinkContainer>
 
-						<LinkContainer to={ROUTES.CUSTOM_RECIPES}>
+						<LinkContainer to={ROUTES.CUSTOM_RECIPES} replace>
 							<Nav.Link className="mx-2">Create Recipes</Nav.Link>
 						</LinkContainer>
 
-						<LinkContainer to={ROUTES.GROCERY_LIST}>
+						<LinkContainer to={ROUTES.GROCERY_LIST} replace>
 							<Nav.Link className="mx-2">Shopping List</Nav.Link>
 						</LinkContainer>
 					</Nav>
@@ -66,14 +66,14 @@ export const Navbar = (props: INavbarProps) => {
 					<i className="far fa-bars" />
 				</BootstrapNavbar.Toggle>
 
-				<LinkContainer to={ROUTES.HOME} className="order-0 ms-2 ms-lg-0">
+				<LinkContainer to={ROUTES.HOME} className="order-0 ms-2 ms-lg-0" replace>
 					<NavbarBrand className="font-display fs-5 no-underline text-brand">
 						Sous Chef!
 					</NavbarBrand>
 				</LinkContainer>
 
 				<Nav className="ms-auto order-3 d-flex align-items-center flex-row">
-					<LinkContainer to={'/search'}>
+					<LinkContainer to={ROUTES.RECIPES} replace>
 						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
 							<i className="far fa-search text-secondary fs-3" />
 						</Nav.Link>
@@ -88,10 +88,10 @@ export const Navbar = (props: INavbarProps) => {
 const SignInSignUpButtons = () => {
 	return (
 		<>
-			<Link className="btn btn-brand btn-sm mx-1" to={ROUTES.REGISTER}>
+			<Link className="btn btn-brand btn-sm mx-1" to={ROUTES.REGISTER} replace>
 				Sign Up
 			</Link>
-			<Link className="btn btn-secondary btn-sm mx-1" to={ROUTES.LOGIN}>
+			<Link className="btn btn-secondary btn-sm mx-1" to={ROUTES.LOGIN} replace>
 				Sign In
 			</Link>
 		</>
@@ -108,7 +108,7 @@ const UserDropdown = ({ user }: { user: IUser }) => {
 				</div>
 			}
 			id="nav-dropdown">
-			<LinkContainer to={'/account'}>
+			<LinkContainer to={'/account'} replace>
 				<NavDropdown.Item>My Account</NavDropdown.Item>
 			</LinkContainer>
 			<NavDropdown.Divider />

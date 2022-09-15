@@ -43,7 +43,6 @@ export const HomePage = (props: IHomePageProps) => {
 									<Card.Text>
 										Plan your meals for the week and get a shopping list for the weekend.
 									</Card.Text>
-									<Link to={''}>Plan your meals</Link>
 								</Card.Body>
 							</Card>
 						</Col>
@@ -56,7 +55,6 @@ export const HomePage = (props: IHomePageProps) => {
 										Find recipes based on your preferences and ingredients you have at
 										home.
 									</Card.Text>
-									<Link to={''}>Find recipes</Link>
 								</Card.Body>
 							</Card>
 						</Col>
@@ -68,7 +66,6 @@ export const HomePage = (props: IHomePageProps) => {
 									<Card.Text>
 										Save your favorite recipes and plan them for the week.
 									</Card.Text>
-									<Link to={''}>View recipes</Link>
 								</Card.Body>
 							</Card>
 						</Col>
@@ -108,10 +105,10 @@ const Hero = () => {
 						Your meal plan assistant
 					</p>
 					<div className="pt-4">
-						<Link to={ROUTES.REGISTER} className="btn btn-brand btn-lg px-5 mx-1 mx-lg-2">
+						<Link to={ROUTES.REGISTER} className="btn btn-brand btn-lg px-5 mx-1 mx-lg-2" replace>
 							Sign Up
 						</Link>
-						<Link
+						<Link replace
 							to={ROUTES.LOGIN}
 							className="mx-1 mx-lg-2 btn btn-outline-secondary btn-lg px-5">
 							Sign In

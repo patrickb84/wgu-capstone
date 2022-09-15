@@ -1,3 +1,4 @@
+import bonsole from 'utils/exceptions'
 import { firestore } from 'api/firebase/app'
 import mealdb from 'api/mealdb'
 import ApiRecipe from 'api/mealdb/types/ApiRecipe'
@@ -107,15 +108,10 @@ export default class MealPlan implements IMealPlan {
 		return new MealPlan(plan)
 	}
 
-	static populateNewMealPlan = async (
-		startDate: Date,
-		endDate: Date,
-		planId: string,
-		userId: string
-	) => {
+	static populateNewMealPlan = async (startDate: Date, endDate: Date, planId: string, userId: string) => {
 		const numberOfDays = differenceInDays(endDate, startDate)
 
-		const d = Math.ceil((numberOfDays * 3) / 10)
+		const d = Math.ceil((numberOfDays * 4) / 10)
 
 		const randomMeals = []
 		for (let i = 0; i < d; i++) {
@@ -126,6 +122,7 @@ export default class MealPlan implements IMealPlan {
 
 		console.log(randomMeals)
 
+		const toAdd = []
 		for (let i = 0; i <= numberOfDays; i++) {
 			const date = addDays(startDate, i)
 			for (let j = 0; j < 3; j++) {
@@ -137,8 +134,35 @@ export default class MealPlan implements IMealPlan {
 					mealPlanId: planId,
 					mealDate: date
 				}
-				console.log(scheduledMeal)
-				ScheduledMeal.add(scheduledMeal, userId).then(id => console.log(id))
+				bonsole.data('scheduledMeal', scheduledMeal)
+				toAdd.push(scheduledMeal)
+			}
+		}
+
+		const ids: string[] = []
+		try {
+			await Promise.all(
+				toAdd.map(
+					async scheduledMeal =>
+						await ScheduledMeal.add(scheduledMeal, userId).then(id => {
+							if (id === undefined) throw new Error('No id returned')
+							console.log(id)
+							ids.push(id)
+						})
+				)
+			)
+			bonsole.success('Scheduled meals added', ids)
+		} catch (error) {
+			console.error(error)
+			bonsole.error('error', error)
+
+			if (ids.length > 0) {
+				await Promise.all(
+					ids.map(async id => {
+						await ScheduledMeal.delete(id)
+					})
+				)
+				bonsole.success('Scheduled meals deleted', ids)
 			}
 		}
 	}

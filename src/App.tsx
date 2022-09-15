@@ -28,6 +28,7 @@ export default function App() {
 				<Route path={ROUTES.SEARCH} element={<SearchResults />} />
 				<Route path={ROUTES.RECIPE_TYPE_VIEW} element={<RecipeTypeResults />} />
 				<Route path={ROUTES.GROCERY_LIST} element={<GroceryListTable />} />
+				<Route path={ROUTES.ERROR} element={<ErrorPage />} />
 
 				<Route path={'*'} element={<ErrorPage />} />
 			</Routes>

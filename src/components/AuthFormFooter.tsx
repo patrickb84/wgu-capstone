@@ -13,7 +13,7 @@ export function AuthFormFooter(props: IAuthFormFooterProps) {
 			<div className="mb-3" />
 			<div className="text-center d-flex flex-column px-5">
 				<GoogleButton className="btn-gray-200" />
-				<Link className="btn btn-link mt-2" to={ROUTES.HOME}>
+				<Link className="btn btn-link mt-2" to={ROUTES.HOME} replace>
 					Back to Home Page
 				</Link>
 			</div>

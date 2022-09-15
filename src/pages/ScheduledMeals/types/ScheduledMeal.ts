@@ -52,7 +52,8 @@ export default class ScheduledMeal implements IScheduledMeal {
 	}
 
 	static add = async (scheduledMeal: Partial<IScheduledMeal>, userId: string) => {
-		await DB.add(this.collectionName, { ...scheduledMeal, userId })
+		const id = await DB.add(this.collectionName, { ...scheduledMeal, userId })
+		return id
 	}
 
 	static update = async (values: Partial<IScheduledMeal>, id: string) => {
@@ -69,10 +70,7 @@ export default class ScheduledMeal implements IScheduledMeal {
 	}
 
 	static getMealPlanScheduledMeals = async (mealPlanId: string) => {
-		const q = query(
-			collection(firestore, this.collectionName),
-			where('mealPlanId', '==', mealPlanId)
-		)
+		const q = query(collection(firestore, this.collectionName), where('mealPlanId', '==', mealPlanId))
 		const docs = await DB.getCollectionByQuery(q)
 		const elements: IScheduledMeal[] = docs.map(this.mapIterator)
 		return elements

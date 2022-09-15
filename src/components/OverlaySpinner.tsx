@@ -4,7 +4,7 @@ import { MiniLogo } from './Logo'
 export default function OverlaySpinner() {
 	return <>
 		<div
-			className="bg-brand"
+			className="bg-secondary"
 			style={{
 				position: 'absolute',
 				top: 0,
@@ -21,7 +21,7 @@ export default function OverlaySpinner() {
 				<MiniLogo colorClass="white" />
 			</div>
 			<ClockLoader color="#fff" size={100} />
-			<h2 className="h4 text-white font-display mt-5">Waiting on the dinner bell</h2>
+			<h2 className="h4 text-white font-display mt-5">Somethin's cookin'...</h2>
 		</div>
 	</>
 }

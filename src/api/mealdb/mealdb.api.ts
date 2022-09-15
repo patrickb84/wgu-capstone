@@ -57,13 +57,17 @@ export const fetchLatestRecipes = async () =>
 	})
 
 export const fetchRecipe = async (id: string | number) => {
-	const data = await request({
-		method: 'GET',
-		url: `https://themealdb.p.rapidapi.com/lookup.php`,
-		params: { i: id },
-		headers
-	})
-	return data.meals[0]
+	try {
+		const data = await request({
+			method: 'GET',
+			url: `https://themealdb.p.rapidapi.com/lookup.php`,
+			params: { i: id },
+			headers
+		})
+		return data.meals[0]
+	} catch (error) {
+		console.log('🚀 ~ file: api.ts ~ line 68 ~ fetchRecipe ~ error', error)
+	}
 }
 
 export const fetchRecipesByFirstLetter = async (letter: string) => {
@@ -96,14 +100,12 @@ const filterRecipes = async (params: any) => {
 		headers
 	}
 	const data = await request(filterConfig)
-	console.log("🚀 ~ filterRecipes ~ data", data.meals)
+	console.log('🚀 ~ filterRecipes ~ data', data.meals)
 	return data.meals
 }
 
-export const fetchRecipesByIngredients = async (ingredients: string) =>
-	await filterRecipes({ i: ingredients })
+export const fetchRecipesByIngredients = async (ingredients: string) => await filterRecipes({ i: ingredients })
 
-export const fetchRecipesByCategory = async (category: string) =>
-	await filterRecipes({ c: category })
+export const fetchRecipesByCategory = async (category: string) => await filterRecipes({ c: category })
 
 export const fetchRecipesByArea = async (area: string) => await filterRecipes({ a: area })
