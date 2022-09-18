@@ -9,6 +9,8 @@ export interface IRecipe {
 	category?: string
 	instructions?: string[]
 	imageUrl?: string
+	isUserCreated?: boolean
+	linkUrl?: string
 }
 
 export class Recipe implements IRecipe {
@@ -93,4 +95,5 @@ export interface IMeasuredIngredient {
 	measure: string
 	recipeId: string
 	recipeName: string
+	isUserRecipe?: boolean
 }

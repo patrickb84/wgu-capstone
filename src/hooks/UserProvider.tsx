@@ -20,6 +20,7 @@ interface IUserProviderProps {
 
 export const UserProvider = ({ children }: IUserProviderProps) => {
 	const [currentUser, setCurrentUser] = useState<IUser | null>(null)
+	console.log('UserProvider', { currentUser })
 
 	const [firebaseUser, firebaseUserLoading, firebaseUserError] = useAuthState(auth, {
 		async onUserChanged(user: User | null) {
@@ -32,6 +33,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 	}
 
 	const handleUserChange = async (user: User | null) => {
+		console.log('handleUserChange', { user })
 		if (!user) return
 		try {
 			const userRef = doc(db, 'users', user.uid)
@@ -53,16 +55,16 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
 	useEffect(() => {
 		if (firebaseUser) {
 			console.log('firebaseUser', firebaseUser)
+			console.log('firebaseUser', firebaseUser)
 			const $user: IUser = {
 				displayName: firebaseUser.displayName || 'Chef!',
 				email: firebaseUser.email || null,
 				photoURL: firebaseUser.photoURL || null,
 				id: firebaseUser.uid
 			}
+			console.log('$user', $user)
 
-			getUser($user.id).then(user => {
-				setCurrentUser({ ...user, ...$user })
-			})
+			setCurrentUser($user)
 		} else {
 			setCurrentUser(null)
 		}

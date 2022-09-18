@@ -1,21 +1,16 @@
-import { deleteObject, getStorage, ref, StorageReference } from 'firebase/storage'
-import { Ingredient } from './Ingredient'
+import { deleteObject, getStorage, ref } from 'firebase/storage'
 import { IMeasuredIngredient } from 'pages/Recipes/types/Recipe'
 import { IRecipe } from 'pages/Recipes/types/Recipe'
 import { firestore } from 'api/firebase/app'
-import { addDays, differenceInDays } from 'date-fns'
 import DB from 'db/Database'
 import {
-	addDoc,
 	collection,
-	deleteDoc,
 	doc,
 	DocumentData,
 	getDoc,
 	getDocs,
 	query,
 	QueryDocumentSnapshot,
-	Timestamp,
 	updateDoc,
 	where
 } from 'firebase/firestore'
@@ -60,6 +55,32 @@ export class UserRecipe implements IUserRecipe {
 		this.instructions = recipe.instructions
 		this.imageUrl = recipe.imageUrl
 		this.imageFilename = recipe.imageFilename
+	}
+
+	toRecipe(): IRecipe {
+		const { id, userId, name, ingredients, area, category, instructions, imageUrl } = this
+		if (!id || !userId || !name || !ingredients) {
+			throw new Error('Invalid recipe')
+		}
+		return {
+			id,
+			name,
+			ingredients: ingredients
+				? ingredients.map(ingredient => {
+						return {
+							ingredientName: ingredient.ingredient,
+							measure: ingredient.measure,
+							recipeId: id,
+							recipeName: name,
+							isUserRecipe: true
+						} as IMeasuredIngredient
+				  })
+				: [],
+			area,
+			category,
+			instructions: instructions?.split(`\n`) || [''],
+			imageUrl
+		}
 	}
 
 	static collectionName = 'userRecipes'

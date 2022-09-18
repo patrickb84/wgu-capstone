@@ -1,14 +1,11 @@
 import { firestore } from 'api/firebase/app'
-import { addDays, differenceInDays } from 'date-fns'
 import DB from 'db/Database'
 import {
-	addDoc,
 	collection,
 	deleteDoc,
 	doc,
 	DocumentData,
 	getDoc,
-	getDocs,
 	query,
 	QueryDocumentSnapshot,
 	Timestamp,
@@ -24,6 +21,7 @@ export interface IScheduledMeal extends IAppModel {
 	mealDate: Date | Timestamp
 	mealPlanId: string
 	recipeId: string
+	isUserRecipe?: boolean
 }
 
 export default class ScheduledMeal implements IScheduledMeal {
@@ -32,16 +30,18 @@ export default class ScheduledMeal implements IScheduledMeal {
 	mealDate: Date
 	mealPlanId: string
 	recipeId: string
+	isUserRecipe?: boolean = false
 
 	static collectionName = 'scheduledMeals'
 
 	constructor(scheduledMeal: IScheduledMeal) {
-		const { id, userId, mealDate, mealPlanId, recipeId } = scheduledMeal
+		const { id, userId, mealDate, mealPlanId, recipeId, isUserRecipe: isUserCreated } = scheduledMeal
 		this.id = id
 		this.userId = userId
 		this.mealDate = convertTimestamp(mealDate)
 		this.mealPlanId = mealPlanId
 		this.recipeId = recipeId
+		this.isUserRecipe = isUserCreated
 	}
 
 	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): ScheduledMeal => {

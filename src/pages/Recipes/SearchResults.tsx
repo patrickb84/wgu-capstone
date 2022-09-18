@@ -1,5 +1,7 @@
 import mealdb from 'api/mealdb'
+import Breadcrumbs from 'components/Breadcrumbs'
 import Layout from 'components/Layout'
+import MidSpinner from 'components/MidSpinner'
 import { filterDataByParam, getTypeIcon, ISearchItem, SearchItemType } from 'components/Searchbox'
 import { useSearchData } from 'hooks/RecipeDataProvider'
 import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
@@ -20,8 +22,10 @@ export function SearchResults(props: ISearchResultsProps) {
 	const query = new URLSearchParams(location.search)
 	const searchParam = query.get('q')
 	const searchData = useSearchData()
+	const navigate = useNavigate()
 
 	useEffect(() => {
+		if (!searchParam) navigate(ROUTES.RECIPES)
 		if (searchParam && searchData) {
 			console.log('🚀 ~ useEffect ~ searchParam', searchParam)
 
@@ -29,12 +33,20 @@ export function SearchResults(props: ISearchResultsProps) {
 			console.log('🚀 ~ useEffect ~ results', results)
 			setSearchResults(results)
 		}
-	}, [searchParam, searchData])
+	}, [searchParam, searchData, navigate])
 
 	return (
 		<Layout>
 			<PageHeader>
 				<div>
+					<Breadcrumbs
+						items={[
+							{
+								to: '/recipes',
+								label: 'Recipes'
+							}
+						]}
+					/>
 					<PageTitle>Search Results</PageTitle>
 					<PageSubtitle>
 						{searchResults.length} results for "{searchParam}"
@@ -51,17 +63,18 @@ export function SearchResults(props: ISearchResultsProps) {
 function Items({ currentItems }: { currentItems: ISearchItem[] }) {
 	const [recipes, setRecipes] = useState<Recipe[]>([])
 	const navigate = useNavigate()
+	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
 		const fetchRecipes = async () => {
+			setIsLoading(true)
 			const recipes = await Promise.all(
-				currentItems
-					.filter(item => item.type === 'Recipe')
-					.map(item => item.id && mealdb.fetchRecipe(item.id))
+				currentItems.filter(item => item.type === 'Recipe').map(item => item.id && mealdb.fetchRecipe(item.id))
 			)
 			console.log('🚀 ~ fetchRecipes ~ recipes', recipes)
 
 			setRecipes(recipes.map(r => new Recipe(r)))
+			setIsLoading(false)
 		}
 		fetchRecipes()
 	}, [currentItems])
@@ -91,18 +104,14 @@ function Items({ currentItems }: { currentItems: ISearchItem[] }) {
 				break
 		}
 		const handleClick = () => {
-			const url = ROUTES.TO_RECIPE_TYPE_VIEW(
-				item.type as RecipeType,
-				item.id as string,
-				item.text
-			)
+			const url = ROUTES.TO_RECIPE_TYPE_VIEW(item.type as RecipeType, item.id as string, item.text)
 			navigate(url)
 		}
 		return (
 			<Card
 				onClick={handleClick}
 				className={`bg-${variant} w-100 h-100 d-flex align-items-center justify-content-center`}
-				style={{ minHeight: '23rem' }}>
+				style={{ minHeight: '23rem', cursor: 'pointer' }}>
 				<Card.Body className="text-white w-100 h-100 d-flex align-items-center justify-content-center">
 					<div className="text-center">
 						<i className={`fas ${icon} fa-2x`}></i>
@@ -117,17 +126,17 @@ function Items({ currentItems }: { currentItems: ISearchItem[] }) {
 	return (
 		<>
 			<Container className="py-4">
-				<Row>
-					{currentItems.map((item, index) => (
-						<Col key={index} xs={12} md={4} lg={3} className="mb-4 d-flex">
-							{item.type === 'Recipe' ? (
-								<RecipeHandler recipeId={item.id} />
-							) : (
-								<TypeHandler item={item} />
-							)}
-						</Col>
-					))}
-				</Row>
+				{isLoading ? (
+					<MidSpinner />
+				) : (
+					<Row>
+						{currentItems.map((item, index) => (
+							<Col key={index} xs={12} md={4} lg={3} className="mb-4 d-flex">
+								{item.type === 'Recipe' ? <RecipeHandler recipeId={item.id} /> : <TypeHandler item={item} />}
+							</Col>
+						))}
+					</Row>
+				)}
 			</Container>
 		</>
 	)

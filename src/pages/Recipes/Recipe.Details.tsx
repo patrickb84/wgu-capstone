@@ -5,88 +5,135 @@ import { GenericIconButtonProps } from 'components/IconButton'
 import Layout from 'components/Layout'
 import OverlaySpinner from 'components/OverlaySpinner'
 import Spacer from 'components/Spacer'
-import { useActiveMealPlan } from 'hooks/MealPlanProvider'
-import { useUser } from 'hooks/UserProvider'
 import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
 import { useEffect, useState } from 'react'
-import { Breadcrumb, Col, Container, Row } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import ROUTES from 'routes/routes'
+import { UserRecipe } from 'types/UserRecipe'
 import { ButtonAddRecipeToPlan } from './ButtonAddRecipeToPlan'
-import { Recipe } from './types/Recipe'
-
-export interface IRecipePageProps {}
+import { IRecipe, Recipe } from './types/Recipe'
 
 const iconProps: Pick<GenericIconButtonProps, 'size' | 'className' | 'colorVariant'> = {
-	size: '1.75em',
+	size: '1em',
 	className: 'mx-2',
 	colorVariant: 'white'
 }
 
-export default function RecipeDetails(props: IRecipePageProps) {
-	const [recipe, setRecipe] = useState<Recipe | null>(null)
-	const { recipeId } = useParams()
-	const { activeMealPlan } = useActiveMealPlan()
+export default function RecipeDetails() {
+	const [recipe, setRecipe] = useState<IRecipe | null>(null)
+	const { recipeId, userRecipeId } = useParams()
 	const navigate = useNavigate()
-	const user = useUser()
+	const [errorLoading, setErrorLoading] = useState(false)
 
 	useEffect(() => {
-		if (recipeId)
-			mealdb
-				.fetchRecipe(recipeId)
-				.then((data: ApiRecipe) => setRecipe(new Recipe(data)))
-				.catch(() => navigate(ROUTES.ERROR))
-	}, [navigate, recipeId])
-
-	if (!recipe) return <OverlaySpinner />
+		// const getUserRecipe = async (id: string) => {
+		// 	try {
+		// 		const customerRecipe = await UserRecipe.get(id)
+		// 		if (customerRecipe) {
+		// 			const recipe = customerRecipe.toRecipe() as Recipe
+		// 			setRecipe(recipe)
+		// 		}
+		// 	} catch (error) {
+		// 		console.error('error', { error, id })
+		// 	}
+		// }
+		const getApiRecipe = async (id: string) => {
+			try {
+				const apiRecipe: ApiRecipe = await mealdb.fetchRecipe(id)
+				const recipe = new Recipe(apiRecipe)
+				setRecipe(recipe)
+			} catch (error) {
+				console.error('error', { error, id })
+				console.warn('Could not find recipe, like a user recipe', { id })
+				// getUserRecipe(id)
+				await UserRecipe.get(id).then(customerRecipe => {
+					if (customerRecipe && customerRecipe.id) {
+						// navigate(ROUTES.TO_USER_RECIPE(customerRecipe.id))
+					} else {
+						setErrorLoading(true)
+					}
+				})
+			}
+		}
+		try {
+			if (recipeId) getApiRecipe(recipeId)
+			// if (userRecipeId) getUserRecipe(userRecipeId)
+		} catch (error) {
+			console.error('error', { error })
+		}
+	}, [userRecipeId, navigate, recipeId])
 
 	return (
 		<Layout>
-			<PageHeader variant="brand">
-				<div>
-					<Breadcrumbs
-						items={[
-							{ label: 'Home', to: ROUTES.HOME },
-							{ label: 'Recipes', to: ROUTES.RECIPES },
-							{ label: recipe.name, to: '.', active: true }
-						]}
-					/>
-					<PageTitle>{recipe.name}</PageTitle>
-				</div>
-				<div className="d-flex flex-lg-row flex-column justify-content-center align-items-lg-end align-items-center">
-					{user && (
-						<ButtonAddRecipeToPlan
-							iconFaGroup="fas"
-							{...iconProps}
-							recipe={recipe}
-							planId={activeMealPlan as string}
-						/>
+			{!errorLoading ? (
+				<>
+					{!recipe ? (
+						<OverlaySpinner />
+					) : (
+						<>
+							<PageHeader variant="brand">
+								<div>
+									<Breadcrumbs
+										items={[
+											{ label: 'Home', to: ROUTES.HOME },
+											{ label: 'Recipes', to: ROUTES.RECIPES }
+										]}
+									/>
+
+									<div className="d-flex justify-content-center align-items-lg-end align-items-center">
+										<PageTitle>{recipe.name}</PageTitle>
+									</div>
+								</div>
+
+								<ButtonAddRecipeToPlan as="button" recipe={recipe} />
+							</PageHeader>
+							<RecipePageMetadata {...recipe} />
+							<Container className='my-3'>
+								<Row>
+									<Col lg={4}>
+										<img
+											src={recipe.imageUrl}
+											alt={recipe.name}
+											className="w-100 rounded mb-4"
+											onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+												e.currentTarget.src = 'https://via.placeholder.com/640x640'
+											}}
+										/>
+										<RecipePageIngredientsList ingredients={recipe.ingredients} />
+									</Col>
+									<Col className="mt-0 mt-5">
+										<RecipeInstructions instructions={recipe.instructions} />
+										{recipe.linkUrl && <RecipeLink linkUrl={recipe.linkUrl} />}
+									</Col>
+								</Row>
+							</Container>
+							<Spacer h={5} />
+						</>
 					)}
-					{/* <IconButton iconFaName="fa-youtube" iconFaGroup="fa-brands" {...iconProps} /> */}
-				</div>
-			</PageHeader>
-			<Container>
-				<RecipePageMetadata {...recipe} />
-				<Row>
-					<Col lg={4}>
-						<img src={recipe.imageUrl} alt={recipe.name} className="w-100 rounded mb-4" />
-						<RecipePageIngredientsList ingredients={recipe.ingredients} />
-					</Col>
-					<Col className="mt-0 mt-5">
-						<RecipeInstructions instructions={recipe.instructions} />
-						{recipe.linkUrl && <RecipeLink linkUrl={recipe.linkUrl} />}
-					</Col>
-				</Row>
-			</Container>
-			<Spacer h={5} />
+				</>
+			) : (
+				<>
+					<div className="py-5">
+						<Container className="bg-light my-3 rounded p-lg-5 p-4 text-center">
+							<p>Recipe not found</p>
+							<h1 className="mb-4">Couldn't seem to find that one...</h1>
+							<Link to={ROUTES.RECIPES} className="btn btn-brand">
+								Go back to recipes
+							</Link>
+						</Container>
+					</div>
+				</>
+			)}
 		</Layout>
 	)
 }
 
 function RecipePageMetadata(props: Pick<Recipe, 'area' | 'category'>) {
+	if (!props.area && !props.category) return <></>
 	return (
-		<div className="small d-flex py-4 mb-2 w-100 flex-wrap">
+		<Container className="small d-flex py-3 w-100 flex-wrap">
 			{props.area && (
 				<div className="me-3 py-1">
 					<span className="text-muted">Area:</span>
@@ -101,7 +148,7 @@ function RecipePageMetadata(props: Pick<Recipe, 'area' | 'category'>) {
 					<span className="text-tertiary">{props.category}</span>
 				</div>
 			)}
-		</div>
+		</Container>
 	)
 }
 

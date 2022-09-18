@@ -9,23 +9,21 @@ import {
 } from 'firebase/storage'
 import { useUser } from 'hooks/UserProvider'
 import { useState } from 'react'
-import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap'
+import { Button, Form, InputGroup } from 'react-bootstrap'
 
 export interface IImageUploaderProps {
-	inputRef: React.RefObject<HTMLInputElement>
 	imageUrl?: string
 	imageRef?: StorageReference
-	setImageUrl: (url: string) => void
-	setImageRef: (ref: StorageReference) => void
-	setImageFilename: (filename: string) => void
+	setImageUrl: (url: string | undefined) => void
+	setImageRef: (ref: StorageReference | undefined) => void
+	setImageFilename: (filename: string | undefined) => void
 }
 
 export function ImageUploader(props: IImageUploaderProps) {
-	const { inputRef, imageUrl, imageRef, setImageUrl, setImageFilename, setImageRef } = props
+	const { setImageUrl, setImageFilename, setImageRef, imageUrl, imageRef } = props
 	const user = useUser()
 	const [error, setError] = useState<string | null>()
 	const fbStorage = getStorage()
-	// const [file, setFile] = useState<File | null>(null)
 
 	const deleteImageRef = async (imageRef: StorageReference) => {
 		try {
@@ -47,8 +45,7 @@ export function ImageUploader(props: IImageUploaderProps) {
 	}
 
 	function buildFileName(filename: string) {
-		const uniqueId =
-			Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+		const uniqueId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 		const ext = filename.split('.').pop()
 		const strippedFilename = filename.replace(/[^A-Z0-9]/gi, '_')
 		return `test1/${strippedFilename}${uniqueId}.${ext}`
@@ -82,14 +79,14 @@ export function ImageUploader(props: IImageUploaderProps) {
 			setError('File type not supported')
 		}
 		handleUpload(file)
+		e.target.value = ''
 	}
 
-	const resetFileInput = ($inputRef: React.RefObject<HTMLInputElement>) => {
-		if (!$inputRef.current) return
-		$inputRef && $inputRef.current && ($inputRef.current.value = '')
-		if (imageRef) {
-			deleteImageRef(imageRef)
-		}
+	const handleResetFileInput = () => {
+		if (imageRef) deleteImageRef(imageRef)
+		setImageUrl(undefined)
+		setImageRef(undefined)
+		setImageFilename(undefined)	
 	}
 
 	return (
@@ -103,19 +100,14 @@ export function ImageUploader(props: IImageUploaderProps) {
 				<Form.Label>Upload an image</Form.Label>
 
 				<InputGroup>
-					<Form.Control type="file" ref={inputRef} onChange={handleFileInputChange} />
-					<Button
-						variant="gray-500"
-						disabled={!imageRef}
-						onClick={() => resetFileInput(inputRef)}>
-						Reset
-					</Button>
-					{/* <Button
-						variant="secondary"
-						disabled={!file}
-						onClick={() => !!file && handleUpload(file)}>
-						Submit
-					</Button> */}
+					<Form.Control type="file" onChange={handleFileInputChange} />
+					{imageRef || imageUrl ? (
+						<Button variant="secondary" onClick={() => handleResetFileInput()}>
+							Reset
+						</Button>
+					) : (
+						<></>
+					)}
 				</InputGroup>
 
 				<Form.Text className="text-muted">Acceptable file types: .jpg, .jpeg, .png</Form.Text>

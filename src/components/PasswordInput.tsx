@@ -33,6 +33,7 @@ export function PasswordInput(props: IPasswordInputProps) {
 						required: true,
 						minLength: 8
 					})}
+					
 				/>
 				<Button
 					ref={target}

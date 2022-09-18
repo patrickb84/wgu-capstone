@@ -3,14 +3,17 @@ import { format, isSameDay } from 'date-fns'
 import ScheduledMeal, { IScheduledMeal } from 'pages/ScheduledMeals/types/ScheduledMeal'
 import { FlexCenterBetween } from 'pages/shared/PageHeader'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Card } from 'react-bootstrap'
-import { getDateArray } from 'utils/time.utils'
+import { Card, Container } from 'react-bootstrap'
+import { convertTimestamp, getDateArray } from 'utils/time.utils'
 import MealPlan from 'pages/MealPlans/types/MealPlan'
 import ButtonPlannerDayEdit from './PlannerDay.Edit'
 import MidSpinner from 'components/MidSpinner'
+import ROUTES from 'routes/routes'
+import { Link } from 'react-router-dom'
+import { UserRecipe } from 'types/UserRecipe'
 
 export interface IMealPlanViewProps {
-	mealPlanId: string
+	mealPlanId?: string
 	mode?: 'adding' | 'viewing'
 	cardExtension?: (props: DayWithMeals) => JSX.Element
 }
@@ -22,12 +25,12 @@ export function PlannerView(props: IMealPlanViewProps) {
 	const [isLoading, setLoading] = useState(true)
 
 	useEffect(() => {
-		MealPlan.get(mealPlanId).then(setMealPlan)
+		mealPlanId && MealPlan.get(mealPlanId).then(setMealPlan)
 	}, [mealPlanId])
 
 	const getPlans = useCallback(() => {
 		if (!mealPlan) return
-		ScheduledMeal.getMealPlanScheduledMeals(mealPlanId as string).then(scheduledMeals => {
+		ScheduledMeal.getMealPlanScheduledMeals(mealPlanId!).then(scheduledMeals => {
 			const meals = scheduledMeals.map(scheduledMeal => {
 				return new ScheduledMeal(scheduledMeal)
 			})
@@ -38,38 +41,49 @@ export function PlannerView(props: IMealPlanViewProps) {
 	}, [mealPlan, mealPlanId])
 
 	useEffect(() => {
-		if (mealPlanId as string) {
+		if (mealPlanId) {
 			getPlans()
 		}
 	}, [mealPlanId, getPlans])
 
+	if (!mealPlan)
+		return (
+			<Container className="my-3">
+				<h1>Meal Plan Not Found</h1>
+				<Link to={ROUTES.MEAL_PLANS}>Go to Meal Plans and activate one to get going.</Link>
+			</Container>
+		)
 	return (
 		<>
 			{isLoading ? (
 				<MidSpinner />
 			) : (
 				<>
-					{daysWithMeals.map(mealDate => {
-						const dateString = format(mealDate.date, 'EEE, MMM dd')
+					{daysWithMeals.map(dayWithMeals => {
+						const dateString = format(dayWithMeals.date, 'EEE, MMM dd')
 
 						return (
-							<React.Fragment key={mealDate.date.toISOString()}>
+							<React.Fragment key={dayWithMeals.date.toISOString()}>
 								<Card className="mb-3">
 									<Card.Header>
 										<FlexCenterBetween>
 											{dateString}
 											{mode === 'viewing' && (
-												<ButtonPlannerDayEdit mealDate={mealDate} onComplete={getPlans} />
+												<ButtonPlannerDayEdit mealDate={dayWithMeals} onComplete={getPlans} />
 											)}
 										</FlexCenterBetween>
 									</Card.Header>
 									<Card.Body>
 										<ul className="list-unstyled mb-0">
-											{mealDate.meals.map(meal => (
-												<li key={meal.id}>{meal.recipeName}</li>
+											{dayWithMeals.meals.map(singleMealOfDay => (
+												<li key={singleMealOfDay.id}>
+													<Link to={ROUTES.TO_RECIPE(singleMealOfDay.recipeId)}>
+														{singleMealOfDay.recipeName}
+													</Link>{' '}
+												</li>
 											))}
 										</ul>
-										{CardExtension && <CardExtension {...mealDate} />}
+										{CardExtension && <CardExtension {...dayWithMeals} />}
 									</Card.Body>
 								</Card>
 							</React.Fragment>
@@ -85,10 +99,16 @@ const mapScheduledMealsToAndRecipes = async (scheduledMeals: ScheduledMeal[], me
 	const mealsWithRecipes = scheduledMeals.map(async scheduledMeal => {
 		try {
 			const recipe = await mealdb.fetchRecipe(scheduledMeal.recipeId)
-			return { ...scheduledMeal, recipeName: recipe.strMeal }
+			return { ...scheduledMeal, recipeName: recipe.strMeal, recipeId: recipe.idMeal } as MealWithRecipe
 		} catch (error) {
 			console.error(error)
-			return { ...scheduledMeal, recipeName: 'None' as string }
+			try {
+				const recipe = (await UserRecipe.get(scheduledMeal.recipeId)) as UserRecipe
+				return { ...scheduledMeal, recipeName: recipe.name, recipeId: recipe.id } as MealWithRecipe
+			} catch (error) {
+				console.error(error)
+			}
+			return { ...scheduledMeal, recipeName: 'None' as string } as MealWithRecipe
 		}
 	})
 
@@ -96,7 +116,7 @@ const mapScheduledMealsToAndRecipes = async (scheduledMeals: ScheduledMeal[], me
 
 	const dateArray = getDateArray(mealPlan.planStartDate, mealPlan.planEndDate)
 	const result = dateArray.map(date => {
-		const mealsForDate = mealsWithRecipesResolved.filter(meal => isSameDay(meal.mealDate, date))
+		const mealsForDate = mealsWithRecipesResolved.filter(meal => isSameDay(convertTimestamp(meal.mealDate), date))
 		return {
 			date,
 			meals: mealsForDate
@@ -107,6 +127,7 @@ const mapScheduledMealsToAndRecipes = async (scheduledMeals: ScheduledMeal[], me
 
 interface MealWithRecipe extends IScheduledMeal {
 	recipeName: string
+	recipeId: string
 }
 
 export type DayWithMeals = {

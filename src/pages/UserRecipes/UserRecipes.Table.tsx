@@ -2,8 +2,11 @@ import Layout from 'components/Layout'
 import { useUserRecipes } from 'hooks/MealPlanProvider'
 import { useUser } from 'hooks/UserProvider'
 import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
+import { useEffect } from 'react'
 import { Container, Table } from 'react-bootstrap'
-import { Navigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import ROUTES from 'routes/routes'
 import { UserRecipeCreateButton } from './UserRecipe.Create'
 import { UserRecipeDeleteButton } from './UserRecipe.Delete'
 import { UserRecipeEditButton } from './UserRecipe.Edit'
@@ -16,9 +19,14 @@ const buttonProps = {
 
 export function UserRecipesTable(props: IUserRecipesTableProps) {
 	const userRecipes = useUserRecipes()
-	const user = useUser()
 
-	if (!user) return <Navigate to="/" replace />
+	const user = useUser()
+	const location = useLocation()
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		if (!user) navigate(ROUTES.LOGIN, { replace: true, state: { redirect: location.pathname } })
+	}, [location.pathname, navigate, user])
 
 	return (
 		<Layout>
@@ -51,6 +59,10 @@ export function UserRecipesTable(props: IUserRecipesTableProps) {
 													alt={userRecipe.name}
 													className="img-fluid"
 													style={{ maxWidth: 100 }}
+													onError={e => {
+														// @ts-ignore
+														e.target.src = 'https://via.placeholder.com/100'
+													}}
 												/>
 											) : (
 												<></>
@@ -59,24 +71,35 @@ export function UserRecipesTable(props: IUserRecipesTableProps) {
 										<td>{userRecipe.name}</td>
 										<td>
 											{userRecipe.instructions
-												?.split('\n\n')
+												?.split('\n')
 												.filter(e => e)
-												.map(i => (
-													<p key={i}>{i}</p>
+												.map((msg, idx) => (
+													<p key={idx}>{msg}</p>
 												))}
 										</td>
 										<td>{userRecipe.area}</td>
 										<td>{userRecipe.category}</td>
 										<td>
-											<UserRecipeEditButton {...buttonProps} userRecipe={userRecipe}>
-												Edit
-											</UserRecipeEditButton>
-											<UserRecipeDeleteButton
-												{...buttonProps}
-												variant="danger"
-												userRecipeId={userRecipe.id as string}>
-												Delete
-											</UserRecipeDeleteButton>
+											{userRecipe.id ? (
+												<>
+													{/* <Link
+														to={ROUTES.TO_USER_RECIPE(userRecipe.id)}
+														className="btn btn-secondary me-1">
+														View
+													</Link> */}
+													<UserRecipeEditButton {...buttonProps} userRecipe={userRecipe}>
+														Edit
+													</UserRecipeEditButton>
+													<UserRecipeDeleteButton
+														{...buttonProps}
+														variant="danger"
+														userRecipeId={userRecipe.id}>
+														Delete
+													</UserRecipeDeleteButton>
+												</>
+											) : (
+												<></>
+											)}
 										</td>
 									</tr>
 								)

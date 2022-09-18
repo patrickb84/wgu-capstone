@@ -66,7 +66,8 @@ export const fetchRecipe = async (id: string | number) => {
 		})
 		return data.meals[0]
 	} catch (error) {
-		console.log('🚀 ~ file: api.ts ~ line 68 ~ fetchRecipe ~ error', error)
+		console.error('🚀 ~ file: api.ts ~ line 68 ~ fetchRecipe ~ error', error)
+		throw error
 	}
 }
 

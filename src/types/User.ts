@@ -2,9 +2,9 @@ import DB from 'db/Database'
 
 export default interface IUser {
 	id: string
-	email: string | null
-	displayName: string | null
-	photoURL?: string | null
+	email?: string | null | undefined
+	displayName?: string | null | undefined
+	photoURL?: string | null | undefined
 	activeMealPlanId?: string
 }
 
@@ -13,18 +13,23 @@ export const updateUser = async (user: IUser, params: Partial<IUser>) => {
 }
 
 export const getUser = async (id: string) => {
-    const user = await DB.get('users', id) as IUser
+	console.log('getUser', id)
+	const user = await DB.get('users', id)
+	if (!user) {
+		throw new Error('User not found')
+	}
 	return new User(user)
 }
 
 export class User implements IUser {
 	id: string
-	email: string | null
-	displayName: string | null
-	photoURL?: string | null
+	email: string | null | undefined
+	displayName: string | null | undefined
+	photoURL?: string | null | undefined
 	activeMealPlanId?: string
 
 	constructor(user: IUser) {
+		console.log('🚀 ~ User ~ constructor ~ user', user)
 		this.id = user.id
 		this.email = user.email
 		this.displayName = user.displayName

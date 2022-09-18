@@ -2,11 +2,12 @@ import { Container, Nav, Navbar as BootstrapNavbar, NavbarBrand, NavDropdown } f
 import { LinkContainer } from 'react-router-bootstrap'
 import ROUTES from 'routes/routes'
 import { signOut } from 'firebase/auth'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { auth } from 'api/firebase/app'
 import IUser from 'types/User'
 import { useEffect, useState } from 'react'
 import { useUser } from 'hooks/UserProvider'
+import { useActivePlan } from 'hooks/MealPlanProvider'
 
 export interface INavbarSectionProps {
 	children?: React.ReactNode
@@ -25,6 +26,8 @@ export const Navbar = (props: INavbarProps) => {
 		setIsHidden([ROUTES.LOGIN, ROUTES.REGISTER].includes(location.pathname))
 	}, [location])
 
+	const { activePlan } = useActivePlan()
+
 	if (isHidden) return <></>
 
 	return (
@@ -32,42 +35,47 @@ export const Navbar = (props: INavbarProps) => {
 			<Container fluid className="justify-content-start align-items-center">
 				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
 					<Nav className="mb-3 mb-lg-0">
-						<LinkContainer to={ROUTES.HOME} replace>
+						<LinkContainer to={ROUTES.HOME}>
 							<Nav.Link className="mx-2">Home</Nav.Link>
 						</LinkContainer>
 						{user && (
-							<LinkContainer to={ROUTES.MEAL_PLANS} replace>
-								<Nav.Link className="mx-2">Meal Plans</Nav.Link>
+							<LinkContainer
+								to={activePlan && activePlan.id ? ROUTES.TO_MEAL_PLAN(activePlan.id) : ROUTES.MEAL_PLANS}>
+								<Nav.Link className="mx-2">My Meal Plan</Nav.Link>
 							</LinkContainer>
 						)}
 
-						<LinkContainer to={ROUTES.RECIPES} replace>
+						<LinkContainer to={ROUTES.RECIPES}>
 							<Nav.Link className="mx-2">Recipes</Nav.Link>
 						</LinkContainer>
 
-						{user && (
-							<LinkContainer to={ROUTES.CUSTOM_RECIPES} replace>
+						{/* {user && (
+							<LinkContainer to={ROUTES.USER_RECIPE_DASH}>
 								<Nav.Link className="mx-2">Create Recipes</Nav.Link>
+							</LinkContainer>
+						)} */}
+
+						{user && (
+							<LinkContainer to={ROUTES.GROCERY_LIST}>
+								<Nav.Link className="mx-2">Grocery List</Nav.Link>
 							</LinkContainer>
 						)}
 
-						{user && (
-							<LinkContainer to={ROUTES.GROCERY_LIST} replace>
-								<Nav.Link className="mx-2">Shopping List</Nav.Link>
-							</LinkContainer>
-						)}
+						<LinkContainer to={ROUTES.HOW_IT_WORKS}>
+							<Nav.Link className="mx-2">How it works</Nav.Link>
+						</LinkContainer>
 					</Nav>
 				</BootstrapNavbar.Collapse>
 				<BootstrapNavbar.Toggle as="span" className="border-2 py-2">
 					<i className="far fa-bars" />
 				</BootstrapNavbar.Toggle>
 
-				<LinkContainer to={ROUTES.HOME} className="order-0 ms-2 ms-lg-0" replace>
+				<LinkContainer to={ROUTES.HOME} className="order-0 ms-2 ms-lg-0">
 					<NavbarBrand className="font-display fs-5 no-underline text-brand">Sous Chef!</NavbarBrand>
 				</LinkContainer>
 
 				<Nav className="ms-auto order-3 d-flex align-items-center flex-row">
-					<LinkContainer to={ROUTES.RECIPES} replace>
+					<LinkContainer to={ROUTES.RECIPES}>
 						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
 							<i className="far fa-search text-secondary fs-3" />
 						</Nav.Link>
@@ -82,10 +90,10 @@ export const Navbar = (props: INavbarProps) => {
 const SignInSignUpButtons = () => {
 	return (
 		<>
-			<Link className="btn btn-brand btn-sm mx-1" to={ROUTES.REGISTER} replace>
+			<Link className="btn btn-brand btn-sm mx-1" to={ROUTES.REGISTER}>
 				Sign Up
 			</Link>
-			<Link className="btn btn-secondary btn-sm mx-1" to={ROUTES.LOGIN} replace>
+			<Link className="btn btn-secondary btn-sm mx-1" to={ROUTES.LOGIN}>
 				Sign In
 			</Link>
 		</>
@@ -93,6 +101,7 @@ const SignInSignUpButtons = () => {
 }
 
 const UserDropdown = ({ user }: { user: IUser }) => {
+	const navigate = useNavigate()
 	return (
 		<NavDropdown
 			className="nav-drop"
@@ -102,11 +111,11 @@ const UserDropdown = ({ user }: { user: IUser }) => {
 				</div>
 			}
 			id="nav-dropdown">
-			{/* <LinkContainer to={'/account'} replace>
+			{/* <LinkContainer to={'/account'}>
 				<NavDropdown.Item>My Account</NavDropdown.Item>
 			</LinkContainer>
 			<NavDropdown.Divider /> */}
-			<NavDropdown.Item onClick={() => signOut(auth)}>
+			<NavDropdown.Item onClick={() => signOut(auth).then(() => navigate(ROUTES.HOME))}>
 				<div className="d-flex justify-content-between align-items-center">
 					<span>Sign Out</span>
 					<i className="fad fa-sign-out-alt" />

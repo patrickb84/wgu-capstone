@@ -1,24 +1,30 @@
 import { Row, Col, Container } from 'react-bootstrap'
 import imgCooking from 'styles/img/chef-hat.png'
 import ROUTES from 'routes/routes'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { LoginForm } from 'pages/Login/LoginForm'
 import { MiniLogo } from 'components/Logo'
 import Spacer from 'components/Spacer'
 import { AuthFormFooter } from 'components/AuthFormFooter'
+import { useUser } from 'hooks/UserProvider'
+import { useEffect } from 'react'
 
 export const LoginPage = () => {
+	const user = useUser()
+	const location = useLocation()
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		const state = location.state as { redirect: string }
+		if (user && state.redirect) navigate(state.redirect || ROUTES.HOME, { replace: true })
+	}, [location.state, navigate, user])
+
 	return (
 		<Container fluid className="h-100 position-absolute">
 			<Row className="h-100">
 				<Col className="bg-brand d-none d-md-block">
 					<div className="d-flex flex-column h-100 align-items-center justify-content-center">
-						<img
-							src={imgCooking}
-							alt="cooking"
-							style={{ width: 430, maxWidth: '100%' }}
-							className="mb-5 mt-3"
-						/>
+						<img src={imgCooking} alt="cooking" style={{ width: 430, maxWidth: '100%' }} className="mb-5 mt-3" />
 						<h2 className="text-white font-display">Welcome back, chef!</h2>
 					</div>
 				</Col>
@@ -31,7 +37,10 @@ export const LoginPage = () => {
 							<Spacer h={1.5} />
 							<h2 className="font-display mb-1 mb-lg-2">Sign In!</h2>
 							<p className="text-center text-muted">
-								Don't have an account? <Link to={ROUTES.REGISTER} replace>Sign up</Link>
+								Don't have an account?{' '}
+								<Link to={ROUTES.REGISTER} replace>
+									Sign up
+								</Link>
 							</p>
 						</div>
 

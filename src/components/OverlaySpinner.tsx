@@ -6,7 +6,7 @@ export default function OverlaySpinner() {
 		<div
 			className="bg-secondary"
 			style={{
-				position: 'absolute',
+				position: 'fixed',
 				top: 0,
 				left: 0,
 				width: '100%',
@@ -15,7 +15,7 @@ export default function OverlaySpinner() {
 				display: 'flex',
 				alignItems: 'center',
 				justifyContent: 'center',
-				flexDirection: 'column'
+				flexDirection: 'column',
 			}}>
 			<div className="mb-5">
 				<MiniLogo colorClass="white" />

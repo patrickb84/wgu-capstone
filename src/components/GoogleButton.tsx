@@ -14,9 +14,11 @@ export interface IGoogleButtonProps {
 export const GoogleButton = ({ style, className }: IGoogleButtonProps) => {
 	const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
 
-	console.log('GoogleButton', { user, loading, error })
-
 	if (user) return <Navigate to={ROUTES.HOME} />
+
+	if (error) console.error(error)
+
+	if (loading) console.log('loading @ google button')
 
 	return (
 		<>

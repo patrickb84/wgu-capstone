@@ -1,4 +1,3 @@
-import bonsole from 'utils/exceptions'
 import { firestore } from 'api/firebase/app'
 import mealdb from 'api/mealdb'
 import ApiRecipe from 'api/mealdb/types/ApiRecipe'
@@ -27,6 +26,7 @@ export interface IMealPlan extends IAppModel {
 	planDescription?: string
 	planStartDate: Date | Timestamp
 	planEndDate: Date | Timestamp
+	shoppingList?: any[]
 }
 
 export default class MealPlan implements IMealPlan {
@@ -134,7 +134,6 @@ export default class MealPlan implements IMealPlan {
 					mealPlanId: planId,
 					mealDate: date
 				}
-				bonsole.data('scheduledMeal', scheduledMeal)
 				toAdd.push(scheduledMeal)
 			}
 		}
@@ -151,10 +150,8 @@ export default class MealPlan implements IMealPlan {
 						})
 				)
 			)
-			bonsole.success('Scheduled meals added', ids)
 		} catch (error) {
 			console.error(error)
-			bonsole.error('error', error)
 
 			if (ids.length > 0) {
 				await Promise.all(
@@ -162,7 +159,6 @@ export default class MealPlan implements IMealPlan {
 						await ScheduledMeal.delete(id)
 					})
 				)
-				bonsole.success('Scheduled meals deleted', ids)
 			}
 		}
 	}

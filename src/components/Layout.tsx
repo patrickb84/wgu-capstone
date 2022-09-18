@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { MiniLogo } from './Logo'
 import { Navbar } from './Navbar'
 
 export interface ILayoutProps {
@@ -10,10 +11,14 @@ export default function Layout({ children }: ILayoutProps) {
 		<>
 			<Navbar />
 			<div className="navbar-ref-height" />
-			<>{children}</>
-			<footer className="bg-light w-100 py-5">
+			<div style={{ minHeight: '78vh' }}>
+				<>{children}</>
+			</div>
+			<footer className="bg-white text-brand w-100 py-5 border border-top">
 				<div className="container">
-					<p>&copy; {new Date().getFullYear()} Sous Chef!</p>
+					<MiniLogo colorClass="brand" />
+
+					<p className="text-center mt-4 small mb-0">&copy; {new Date().getFullYear()} Sous Chef!</p>
 				</div>
 			</footer>
 		</>

@@ -7,9 +7,11 @@ import { FormText } from 'react-bootstrap'
 import { errorClass, FormField } from 'components/FormField'
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import OverlaySpinner from 'components/OverlaySpinner'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { auth } from 'api/firebase/app'
 import { useUser } from 'hooks/UserProvider'
+import { useEffect } from 'react'
+import ROUTES from 'routes/routes'
 
 interface IFormInputs {
 	email: string
@@ -18,10 +20,15 @@ interface IFormInputs {
 }
 
 export function RegisterForm() {
-	const currentUser = useUser()
+	const user = useUser()
+	const location = useLocation()
+	const navigate = useNavigate()
 
-	const [createUserWithEmailAndPassword, user, loading, error] =
-		useCreateUserWithEmailAndPassword(auth)
+	useEffect(() => {
+		if (user) navigate(ROUTES.HOME, { replace: true })
+	}, [location.pathname, navigate, user])
+
+	const [createUserWithEmailAndPassword, user$, loading, error] = useCreateUserWithEmailAndPassword(auth)
 
 	const {
 		register,
@@ -33,45 +40,22 @@ export function RegisterForm() {
 	const onSubmit: SubmitHandler<IFormInputs> = data => {
 		console.log(data)
 		createUserWithEmailAndPassword(data.email, data.newPassword)
-
-		// error obj
-		/**
-		 * {
-			"appUser": null,
-			"loading": false,
-			"error": {
-				"code": "auth/email-already-in-use",
-				"customData": {
-					"appName": "[DEFAULT]",
-					"_tokenResponse": {
-						"error": {
-							"code": 400,
-							"message": "EMAIL_EXISTS",
-							"errors": [
-								{
-									"message": "EMAIL_EXISTS",
-									"domain": "global",
-									"reason": "invalid"
-								}
-							]
-						}
-					}
-				},
-				"name": "FirebaseError"
-			}
-		}
-		 */
 	}
 
-	console.log('register', { currentUser, user, loading, error })
+	console.log('register', { currentUser: user, user: user$, loading, error })
 
-	if (user) return <Navigate to="/" replace />
+	if (user$) return <Navigate to="/" replace />
 
 	if (loading) return <OverlaySpinner />
 
 	return (
 		<>
 			<Form noValidate onSubmit={handleSubmit(onSubmit)}>
+				{error && (
+					<div className="d-flex align-items-center flex-column text-danger">
+						<p>{error.message}</p>
+					</div>
+				)}
 				<FormField
 					label="Email"
 					placeholder="Enter email"
@@ -83,22 +67,9 @@ export function RegisterForm() {
 					type="email"
 				/>
 
-				{/* <FormField
-					label="Name"
-					placeholder="Enter your name"
-					error={errors.name}
-					errorMessage="Please enter a user name."
-					registered={register('name', { required: true })}
-				/> */}
-
 				<Form.Group className="mb-3">
 					<Form.Label className={errorClass(errors.newPassword).text}>Password</Form.Label>
-					<PasswordInput
-						creating
-						register={register}
-						error={errors.newPassword}
-						value={watch('newPassword')}
-					/>
+					<PasswordInput creating register={register} error={errors.newPassword} value={watch('newPassword')} />
 					<FormText className={errorClass(errors.newPassword).text}>
 						Password must be at least 8 characters long.
 					</FormText>

@@ -25,10 +25,17 @@ export interface IBreadcrumbProps {
 export default function Breadcrumbs({ items }: IBreadcrumbProps) {
 	return (
 		<>
-			<BootstrapBreadcrumb className='small'>
+			<BootstrapBreadcrumb className="small">
+				<LinkContainer to={'/'}>
+					<BootstrapBreadcrumbItem>
+						<span className="text-white">
+							<i className="fad fa-home" />
+						</span>
+					</BootstrapBreadcrumbItem>
+				</LinkContainer>
 				{items.map((item, index) => (
-					<LinkContainer key={index} to={item.to} replace>
-						<BootstrapBreadcrumbItem key={index}>
+					<LinkContainer key={index} to={item.to}>
+						<BootstrapBreadcrumbItem>
 							<span className="text-white">{item.label}</span>
 						</BootstrapBreadcrumbItem>
 					</LinkContainer>

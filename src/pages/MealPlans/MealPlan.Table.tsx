@@ -1,12 +1,13 @@
 import mealdb from 'api/mealdb'
 import Layout from 'components/Layout'
-import { differenceInDays } from 'date-fns'
-import { useActiveMealPlan, useUserMealPlans } from 'hooks/MealPlanProvider'
+import { differenceInDays, isAfter } from 'date-fns'
+import { useActivePlan, useUserMealPlans } from 'hooks/MealPlanProvider'
 import { useIfNoUser, useUser } from 'hooks/UserProvider'
 import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
 import { useEffect, useState } from 'react'
 import { Button, Container, Table } from 'react-bootstrap'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
+import ROUTES from 'routes/routes'
 import { MealPlanCreateButton } from './MealPlan.Create'
 import MealPlanDeleteButton from './MealPlan.Delete'
 import MealPlanEditButton from './MealPlan.Edit'
@@ -15,15 +16,23 @@ import MealPlan, { IMealPlan } from './types/MealPlan'
 const MealPlanTable = () => {
 	const user = useUser()
 	const userPlans = useUserMealPlans()
-	const { activeMealPlan, setActiveMealPlan } = useActiveMealPlan()
+	const { activePlan, activatePlan } = useActivePlan()
 
-	const planIsActive = (planId: string | undefined) => {
-		if (!user || !planId || !activeMealPlan) return false
-		return activeMealPlan === planId
+	const location = useLocation()
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		if (!user) navigate(ROUTES.LOGIN, { replace: true, state: { redirect: location.pathname } })
+	}, [location.pathname, navigate, user])
+
+	const isPlanActive = (planId: string | undefined) => {
+		if (!activePlan) return false
+		return activePlan.id === planId
 	}
 
 	const displayData = () => {
-		return userPlans.map(userPlan => {
+		const sorted = userPlans.sort((a, b) => (isAfter(new Date(a.planEndDate), new Date(b.planStartDate)) ? -1 : 1))
+		return sorted.map(userPlan => {
 			return {
 				...userPlan,
 				$startDate: userPlan.planStartDate.toLocaleDateString(),
@@ -33,25 +42,32 @@ const MealPlanTable = () => {
 		})
 	}
 
-	if (!user) return <Navigate to="/" replace />
-
 	return (
 		<>
 			<Layout>
 				<PageHeader variant="secondary">
 					<div>
 						<PageTitle>Meal Plans</PageTitle>
-						<PageSubtitle>
-							{user?.displayName}'s {userPlans.length === 1 ? 'plan' : 'plans'}
-						</PageSubtitle>
+						<PageSubtitle>Manage your meal plans</PageSubtitle>
 					</div>
-					<MealPlanCreateButton variant="light">Create Plan</MealPlanCreateButton>
+					<MealPlanCreateButton variant="danger" className="shadow-lg">
+						Create Plan
+					</MealPlanCreateButton>
 				</PageHeader>
 
 				<section>
-					<Container className="py-3">
+					<Container className="my-3">
+						<div className="py-lg-4 px-lg-5 p-4 mb-3 bg-light rounded-4">
+							<h5 className="mb-3">Start by creating a meal plan</h5>
+							<p>
+								Create a plan. Designate a range of dates to plan for. For example, if you want to grocery shop
+								for just a week, pick that many days.
+							</p>
+							<p>When you create a plan, we add a few recipes to get you started.</p>
+							<p className="mb-0">When you're finished, view your plan. Go wild!</p>
+						</div>
 						{userPlans.length > 0 ? (
-							<Table striped responsive className="border border-light">
+							<Table responsive className="border border-light">
 								<thead className="bg-secondary text-white">
 									<tr>
 										<th>Active?</th>
@@ -69,11 +85,10 @@ const MealPlanTable = () => {
 											<tr key={plan.id}>
 												<td>
 													<Button
-														size="sm"
-														className="me-lg-1"
-														variant={planIsActive(plan.id) ? 'brand' : 'outline-brand'}
-														onClick={() => plan.id && setActiveMealPlan(plan.id)}>
-														{planIsActive(plan.id) ? 'Active' : 'Activate'}
+														className="w-100"
+														variant={isPlanActive(plan.id) ? 'danger' : 'outline-secondary-gray'}
+														onClick={() => plan.id && activatePlan(plan.id)}>
+														{isPlanActive(plan.id) ? 'Active' : 'Activate'}
 													</Button>
 												</td>
 												<td>
@@ -100,13 +115,13 @@ const MealPlanTable = () => {
 														</MealPlanEditButton>
 														{plan.id && (
 															<MealPlanDeleteButton
-																variant="outline-danger"
+																variant="danger"
 																className="me-lg-1"
 																userPlanId={plan.id}>
 																Delete
 															</MealPlanDeleteButton>
 														)}
-														<Button
+														{/* <Button
 															variant="outline-secondary"
 															onClick={() =>
 																user &&
@@ -119,7 +134,7 @@ const MealPlanTable = () => {
 																)
 															}>
 															Populate
-														</Button>
+														</Button> */}
 													</div>
 												</td>
 											</tr>

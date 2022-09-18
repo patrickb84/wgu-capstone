@@ -4,7 +4,6 @@ import { useCombobox } from 'downshift'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSearchData } from 'hooks/RecipeDataProvider'
 import ROUTES from 'routes/routes'
-import bonsole from 'utils/exceptions'
 
 export type SearchItemType = 'Category' | 'Ingredient' | 'Area' | 'Recipe' | 'Separator'
 
@@ -106,8 +105,6 @@ const Searchbox = () => {
 			displayResults = displayResults.concat(ingredients)
 		}
 
-		bonsole.fire('ingredients', ingredients)
-
 		return displayResults
 	}
 
@@ -115,7 +112,7 @@ const Searchbox = () => {
 		<>
 			<div className="autocomplete-searchbox position-relative">
 				<InputGroup className="mb-1" {...getComboboxProps()}>
-					<InputGroup.Text className='bg-brand border-0 text-white'>
+					<InputGroup.Text className="bg-secondary border-0 text-white">
 						<i className="fas fa-magnifying-glass" />
 					</InputGroup.Text>
 					<Form.Control placeholder="Find a recipe, category, area or ingredient" {...getInputProps()} />
@@ -141,8 +138,7 @@ const Searchbox = () => {
 										key={index}
 										to={url || '/'}
 										style={{ textDecoration: 'none' }}
-										state={{ searchTerm: text }}
-										replace>
+										state={{ searchTerm: text }}>
 										<ListGroup.Item
 											className={`d-flex justify-content-start align-items-center ${
 												highlightedIndex === index && selectedItem !== item && 'bg-gray-200'

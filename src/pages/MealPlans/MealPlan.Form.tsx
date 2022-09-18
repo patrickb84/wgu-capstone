@@ -6,6 +6,7 @@ import MealPlan, { IMealPlan } from './types/MealPlan'
 import { useUser } from 'hooks/UserProvider'
 import { useEffect } from 'react'
 import { dateFromYYYYMMDD } from 'utils/time.utils'
+import { useActivePlan } from 'hooks/MealPlanProvider'
 
 interface IModalProps {
 	show: boolean
@@ -23,6 +24,7 @@ interface IFormValues {
 const MealPlanModal = (props: IModalProps) => {
 	const user = useUser()
 	const { show, onHide } = props
+	const { activatePlan } = useActivePlan()
 
 	const {
 		register,
@@ -60,9 +62,12 @@ const MealPlanModal = (props: IModalProps) => {
 			console.log('🚀 ~ onSubmit ~ docRef', docRefId)
 
 			if (!docRefId) throw new Error('No docRef returned from add')
+			else activatePlan(docRefId)
 
 			MealPlan.populateNewMealPlan(plan.planStartDate as Date, plan.planEndDate as Date, docRefId, userId)
-		} catch (error) {}
+		} catch (error) {
+			console.error('🚀 ~ onSubmit ~ error', error)
+		}
 	}
 
 	const submitUpdate = async (plan: Partial<IMealPlan>, planId: string) => {
@@ -90,9 +95,7 @@ const MealPlanModal = (props: IModalProps) => {
 		<Modal show={show} onHide={onHide} size="lg" scrollable={true}>
 			<Form onSubmit={handleSubmit(onSubmit)}>
 				<Modal.Header className="border-0 text-center" closeButton>
-					<Modal.Title className="text-center font-display">
-						Create a new meal plan
-					</Modal.Title>
+					<Modal.Title className="text-center font-display">Create a new meal plan</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Container>
@@ -129,10 +132,8 @@ const MealPlanModal = (props: IModalProps) => {
 										required: 'End date is required',
 										validate: {
 											correctDates: v =>
-												differenceInDays(
-													new Date(v),
-													new Date(watch('planStartDate'))
-												) > 0 || 'End date must be after start date'
+												differenceInDays(new Date(v), new Date(watch('planStartDate'))) > 0 ||
+												'End date must be after start date'
 										}
 									})}
 									type="date"

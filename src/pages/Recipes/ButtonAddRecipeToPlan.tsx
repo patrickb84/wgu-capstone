@@ -6,21 +6,28 @@ import { IRecipe } from './types/Recipe'
 import { GenericIconButtonProps, IconButton } from 'components/IconButton'
 import { DayWithMeals, PlannerView } from 'pages/ScheduledMeals/PlannerView'
 import ScheduledMeal from 'pages/ScheduledMeals/types/ScheduledMeal'
-import MidSpinner from 'components/MidSpinner'
-import { useActiveMealPlan } from 'hooks/MealPlanProvider'
-import { RECIPES } from '__stubs__/recipes'
 import { Link } from 'react-router-dom'
 import ROUTES from 'routes/routes'
+import { useActivePlan } from 'hooks/MealPlanProvider'
 
 export interface IButtonAddToPlanProps extends GenericIconButtonProps {
-	planId: string
 	recipe: IRecipe
+	isUserRecipe?: boolean
+	as?: 'icon' | 'button'
 }
 
-export function ButtonAddRecipeToPlan(props: IButtonAddToPlanProps) {
-	const { iconFaGroup, colorVariant, size, className, recipe, planId } = props
+export function ButtonAddRecipeToPlan({
+	iconFaGroup,
+	colorVariant,
+	size,
+	className,
+	recipe,
+	isUserRecipe,
+	as = 'icon',
+	...props
+}: IButtonAddToPlanProps) {
 	const [selectedDates, setSelectedDates] = React.useState<Date[]>([])
-	const activePlan = useActiveMealPlan()
+	const { activePlan } = useActivePlan()
 
 	const user = useUser()
 	const [show, setShow] = React.useState(false)
@@ -64,15 +71,17 @@ export function ButtonAddRecipeToPlan(props: IButtonAddToPlanProps) {
 
 	const handleSave = async () => {
 		if (!user) return
+		if (!activePlan) return
 		await Promise.all(
 			selectedDates.map(date => {
 				const scheduledMeal: Partial<ScheduledMeal> = {
 					recipeId: recipe.id,
 					userId: user?.id,
 					mealDate: date,
-					mealPlanId: planId
+					mealPlanId: activePlan.id,
+					isUserRecipe: isUserRecipe
 				}
-				ScheduledMeal.add(scheduledMeal, user.id)
+				return ScheduledMeal.add(scheduledMeal, user.id)
 			})
 		)
 		handleHide()
@@ -80,22 +89,28 @@ export function ButtonAddRecipeToPlan(props: IButtonAddToPlanProps) {
 
 	return (
 		<>
-			<IconButton
-				onClick={handleShow}
-				iconFaName="fa-calendar-plus"
-				iconFaGroup={iconFaGroup ? iconFaGroup : 'far'}
-				colorVariant={colorVariant ? colorVariant : 'secondary'}
-				size={size}
-				tooltip="Add recipe to meal plan"
-				className={className}
-			/>
+			{as === 'icon' ? (
+				<IconButton
+					onClick={handleShow}
+					iconFaName="fa-calendar-plus"
+					iconFaGroup={iconFaGroup ? iconFaGroup : 'far'}
+					colorVariant={colorVariant ? colorVariant : 'secondary'}
+					size={size}
+					tooltip="Add recipe to meal plan"
+					className={className}
+				/>
+			) : (
+				<Button variant="secondary" onClick={handleShow}>
+					<i className='fas fa-calendar-plus' /> Add to meal plan
+				</Button>
+			)}
 
 			<Modal show={show} onHide={handleHide} size="lg" scrollable>
 				<Modal.Header closeButton>
 					<Modal.Title>Add to Meal Plan</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{!activePlan ? (
+					{activePlan ? (
 						<Container fluid>
 							<div className="bg-light p-3 mb-3">
 								<h5>{recipe.name}</h5>
@@ -105,7 +120,7 @@ export function ButtonAddRecipeToPlan(props: IButtonAddToPlanProps) {
 								</p>
 							</div>
 							<PlannerView
-								mealPlanId={planId}
+								mealPlanId={activePlan.id}
 								mode="adding"
 								cardExtension={(props: DayWithMeals) => <CardExtension {...props} />}
 							/>

@@ -1,4 +1,3 @@
-import { IconButton } from 'components/IconButton'
 import React, { useState } from 'react'
 import { Button, ListGroup, ListGroupItem, Modal } from 'react-bootstrap'
 import { DayWithMeals } from './PlannerView'

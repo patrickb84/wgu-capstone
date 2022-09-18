@@ -1,6 +1,7 @@
 import Form from 'react-bootstrap/Form'
 import { FormText } from 'react-bootstrap'
 import { FieldError } from 'react-hook-form'
+import { createRef, useEffect } from 'react'
 
 export interface IFormFieldProps {
 	error?: FieldError | undefined
@@ -21,7 +22,8 @@ export const FormField = ({
 	type,
 	onChange,
 	value,
-	rows
+	rows,
+	...props
 }: IFormFieldProps) => {
 	return (
 		<Form.Group className="mb-3">
@@ -31,7 +33,7 @@ export const FormField = ({
 				className={errorClass(error).border}
 				placeholder={placeholder}
 				{...registered}
-				as={type === 'textarea' ? 'textarea' : 'input'}
+				as={type === 'textarea' ? 'textarea' : undefined}
 				onChange={onChange}
 				value={value}
 				rows={rows}

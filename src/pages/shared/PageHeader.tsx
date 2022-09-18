@@ -49,7 +49,7 @@ export interface IChildrenProps {
 }
 
 export const FlexCenterBetween = ({ children }: IChildrenProps) => {
-	return <div className="d-flex align-items-center justify-content-between">{children}</div>
+	return <div className="d-flex align-items-center justify-content-between flex-wrap">{children}</div>
 }
 
 interface IPageTitleProps {
@@ -59,7 +59,7 @@ interface IPageTitleProps {
 }
 export const PageTitle = (props: IPageTitleProps) => {
 	const { children, className } = props
-	return <h1 className={`font-display mb-0 ${className}`}>{children}</h1>
+	return <h1 className={`font-display mb-lg-0 ${className}`}>{children}</h1>
 }
 
 export const PageSubtitle = (props: IChildrenProps) => {

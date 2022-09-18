@@ -1,12 +1,11 @@
-import { Button, Col, Container, Form, FormGroup, Modal, Row } from 'react-bootstrap'
+import { Button, Container, Form, FormGroup, Modal } from 'react-bootstrap'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import FormField from 'components/FormField'
 import { useUser } from 'hooks/UserProvider'
-import React, { createRef, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IUserRecipe, UserRecipe, UserRecipeIngredient } from 'types/UserRecipe'
 import { ImageUploader } from 'components/ImageUploader'
-import { deleteObject, getStorage, ref, StorageReference } from 'firebase/storage'
-import { ComboBoxSelector } from 'components/ComboBox'
+import { getStorage, ref, StorageReference } from 'firebase/storage'
 import { useRecipeData } from 'hooks/RecipeDataProvider'
 import { ListSelect } from 'components/ListSelect'
 
@@ -27,24 +26,13 @@ interface IFormValues {
 export default function UserRepiceForm(props: IUserRepiceFormProps) {
 	const user = useUser()
 	const { show, onHide, userRecipe } = props
-	// const [userIngredients, setUserIngredients] = useState<UserRecipeIngredient[]>(
-	// 	userRecipe?.ingredients || []
-	// )
 	const [imageUrl, setImageUrl] = useState<string | undefined>(userRecipe?.imageUrl)
 	const [imageRef, setImageRef] = useState<StorageReference | undefined>()
 	const [imageFilename, setImageFilename] = useState<string | undefined>(userRecipe?.imageFilename)
 
-	const fileInputRef = createRef<HTMLInputElement>()
+	const { ingredients: $ingredients } = useRecipeData()
 
-	const { areas, categories, ingredients: $ingredients } = useRecipeData()
-
-	const areaOptions = areas.map(area => area.strArea || null).filter(e => e) as string[]
-	const categoryOptions = categories
-		.map(category => category.strCategory || null)
-		.filter(e => e) as string[]
-	const ingredientOptions = $ingredients
-		.map(ingredient => ingredient.strIngredient || null)
-		.filter(e => e) as string[]
+	const ingredientOptions = $ingredients.map(ingredient => ingredient.strIngredient || null).filter(e => e) as string[]
 
 	const fbStorage = getStorage()
 
@@ -57,19 +45,13 @@ export default function UserRepiceForm(props: IUserRepiceFormProps) {
 		reset
 	} = useForm<IFormValues>()
 
-	function removeUndefined(obj: any) {
-		return Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key])
-	}
-
 	const onSubmit: SubmitHandler<IFormValues> = async data => {
 		if (!user) return
 		let plan: Partial<IUserRecipe> = {
 			...data,
-			// ingredients: userIngredients,
 			imageUrl: imageUrl,
 			imageFilename: imageFilename
 		}
-		removeUndefined(plan)
 
 		try {
 			if (userRecipe && userRecipe.id) {
@@ -102,14 +84,10 @@ export default function UserRepiceForm(props: IUserRepiceFormProps) {
 			const { name, ingredients, area, category, instructions } = userRecipe
 			console.log('🚀 ~ useEffect ~ userRecipe', userRecipe)
 			setValue('name', name)
-			// setUserIngredients(ingredients)
 			setValue('ingredients', ingredients)
 			setValue('area', area)
 			setValue('category', category)
-			// setInstructions(instructions || '')
 			setValue('instructions', instructions || '')
-			// setImageUrl(userRecipe.imageUrl)
-			// setImageRef(userRecipe.imageRef)
 			if (userRecipe.imageFilename) {
 				const imageRef = ref(fbStorage, userRecipe.imageFilename)
 				setImageRef(imageRef)
@@ -128,32 +106,19 @@ export default function UserRepiceForm(props: IUserRepiceFormProps) {
 	}, [show, reset])
 
 	const handleCancel = async () => {
-		if (imageRef) {
-			try {
-				await deleteObject(imageRef)
-			} catch (error) {
-				console.error(error)
-			}
-		}
-		setImageRef(undefined)
-		setImageUrl(undefined)
-		setImageFilename(undefined)
 		reset()
 		onHide()
 	}
 
 	return (
-		<Modal show={show} onHide={handleCancel} fullscreen scrollable={true}>
+		<Modal show={show} onHide={handleCancel} size="lg" scrollable={true}>
 			<Modal.Header closeButton>
 				<Modal.Title>{userRecipe ? 'Edit' : 'Create'} Recipe</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Container>
 					<Form onSubmit={handleSubmit(onSubmit)}>
-						<ImageUploader
-							{...{ setImageRef, setImageUrl, imageRef, imageUrl, setImageFilename }}
-							inputRef={fileInputRef}
-						/>
+						<ImageUploader {...{ setImageRef, setImageUrl, imageRef, imageUrl, setImageFilename }} />
 
 						<FormField
 							label="Recipe Name"
@@ -161,60 +126,25 @@ export default function UserRepiceForm(props: IUserRepiceFormProps) {
 							registered={register('name', { required: 'Recipe name is required' })}
 							error={errors.name}
 						/>
-						<Row>
-							<Col xs={12} lg={6}>
-								<FormGroup className="mb-3">
-									<ListSelect
-										options={ingredientOptions}
-										// setSelected={setUserIngredients}
-										setSelected={value => setValue('ingredients', value)}
-										// selected={userIngredients}
-										selected={watch('ingredients') || []}
-										placeholder="Add ingredients"
-										label="Ingredients"
-									/>
-								</FormGroup>
-							</Col>
-							<Col xs={12} lg={6}>
-								<FormField
-									label="Instructions"
-									type="textarea"
-									placeholder="Instructions"
-									registered={register('instructions', {
-										required: 'Instructions are required'
-									})}
-									rows={8}
-									error={errors.instructions}
-								/>
-							</Col>
-						</Row>
-
-						{/* <Row>
-							<Col>
-								<FormGroup className="mb-3">
-									<ComboBoxSelector
-										label="Area"
-										placeholder="What part of the world?"
-										options={areaOptions}
-										onChange={value => setValue('area', value)}
-										// $inputValue={watch('area') || ''}
-										// setInputValue={value => setValue('area', value)}
-									/>
-								</FormGroup>
-							</Col>
-							<Col>
-								<FormGroup className="mb-3">
-									<ComboBoxSelector
-										label="Category"
-										placeholder="What kind of recipe?"
-										options={categoryOptions}
-										onChange={value => setValue('category', value)}
-										// $inputValue={watch('category') || ''}
-										// setInputValue={value => setValue('category', value)}
-									/>
-								</FormGroup>
-							</Col>
-						</Row> */}
+						<FormGroup className="mb-3">
+							<ListSelect
+								options={ingredientOptions}
+								setSelected={value => setValue('ingredients', value)}
+								selected={watch('ingredients') || []}
+								placeholder="Add ingredients"
+								label="Ingredients"
+							/>
+						</FormGroup>
+						<FormField
+							label="Instructions"
+							type="textarea"
+							placeholder="Write your instructions here. Separate each step with a new line."
+							registered={register('instructions', {
+								required: 'Instructions are required'
+							})}
+							rows={8}
+							error={errors.instructions}
+						/>
 					</Form>
 				</Container>
 			</Modal.Body>
