@@ -1,18 +1,26 @@
 import { HelperModal } from 'components/HelperModal'
 import Spacer from 'components/Spacer'
+import { useGroceryItems, useIncludedItems, useRecipeSchedule } from 'hooks/MealPlanProvider'
 import * as React from 'react'
 import { Button, ButtonGroup, Modal } from 'react-bootstrap'
 
 export interface ICreateReportButtonProps {}
 
 export function CreateReportButton(props: ICreateReportButtonProps) {
+	const { groceryItems } = useGroceryItems()
+	const { includedItems } = useIncludedItems()
+	const getSchedule = useRecipeSchedule()
 	const [show, setShow] = React.useState(false)
 	const handleClose = () => setShow(false)
 	const handleShow = () => setShow(true)
 
-	const handleClicked = () => {
-		console.log('clicked')
-		
+	const handleClicked = async () => {
+		const includedGroceryItems = includedItems.map(itemName => {
+			return groceryItems.find(item => item.ingredientName === itemName)
+		})
+		console.log(includedGroceryItems)
+		const schedule = await getSchedule()
+		console.log(schedule)
 	}
 
 	return (

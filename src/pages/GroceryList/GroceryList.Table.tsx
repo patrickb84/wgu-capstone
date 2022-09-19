@@ -56,7 +56,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 	React.useEffect(() => {
 		try {
 			if (activePlan) {
-				const fetch2 = async () => {
+				const parseOutIngredientsFromScheduledRecipes = async () => {
 					setLoading(true)
 
 					// Scheduled Meals
@@ -141,7 +141,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 					setLoading(false)
 				}
 
-				fetch2()
+				parseOutIngredientsFromScheduledRecipes()
 			}
 		} catch (error) {
 			console.error(error)
