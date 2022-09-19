@@ -12,6 +12,16 @@ import ROUTES from 'routes/routes'
 import { Link } from 'react-router-dom'
 import { UserRecipe } from 'types/UserRecipe'
 
+interface MealWithRecipe extends IScheduledMeal {
+	recipeName: string
+	recipeId: string
+}
+
+export type DayWithMeals = {
+	date: Date
+	meals: MealWithRecipe[]
+}
+
 export interface IMealPlanViewProps {
 	mealPlanId?: string
 	mode?: 'adding' | 'viewing'
@@ -45,18 +55,16 @@ export function PlannerView(props: IMealPlanViewProps) {
 			getPlans()
 		}
 	}, [mealPlanId, getPlans])
-
-	if (!mealPlan)
-		return (
-			<Container className="my-3">
-				<h1>Meal Plan Not Found</h1>
-				<Link to={ROUTES.MEAL_PLANS}>Go to Meal Plans and activate one to get going.</Link>
-			</Container>
-		)
+	
 	return (
 		<>
 			{isLoading ? (
 				<MidSpinner />
+			) : !mealPlan ? (
+				<Container className="my-3">
+					<h1>Meal Plan Not Found</h1>
+					<Link to={ROUTES.MEAL_PLANS}>Go to Meal Plans and activate one to get going.</Link>
+				</Container>
 			) : (
 				<>
 					{daysWithMeals.map(dayWithMeals => {
@@ -123,14 +131,4 @@ const mapScheduledMealsToAndRecipes = async (scheduledMeals: ScheduledMeal[], me
 		}
 	})
 	return result
-}
-
-interface MealWithRecipe extends IScheduledMeal {
-	recipeName: string
-	recipeId: string
-}
-
-export type DayWithMeals = {
-	date: Date
-	meals: MealWithRecipe[]
 }

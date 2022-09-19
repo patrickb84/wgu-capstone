@@ -8,6 +8,9 @@ import IUser from 'types/User'
 import { useEffect, useState } from 'react'
 import { useUser } from 'hooks/UserProvider'
 import { useActivePlan } from 'hooks/MealPlanProvider'
+import Tippy from '@tippyjs/react'
+import MealPlan from 'pages/MealPlans/types/MealPlan'
+import { format } from 'date-fns'
 
 export interface INavbarSectionProps {
 	children?: React.ReactNode
@@ -35,19 +38,22 @@ export const Navbar = (props: INavbarProps) => {
 			<Container fluid className="justify-content-start align-items-center">
 				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
 					<Nav className="mb-3 mb-lg-0">
-						<LinkContainer to={ROUTES.HOME}>
+						{/* <LinkContainer to={ROUTES.HOME}>
 							<Nav.Link className="mx-2">Home</Nav.Link>
-						</LinkContainer>
+						</LinkContainer> */}
+
 						{user && (
-							<LinkContainer
-								to={activePlan && activePlan.id ? ROUTES.TO_MEAL_PLAN(activePlan.id) : ROUTES.MEAL_PLANS}>
-								<Nav.Link className="mx-2">My Meal Plan</Nav.Link>
+							<LinkContainer to={ROUTES.MEAL_PLANS}>
+								<Nav.Link className="mx-2">My Meal Plans</Nav.Link>
 							</LinkContainer>
 						)}
 
-						<LinkContainer to={ROUTES.RECIPES}>
-							<Nav.Link className="mx-2">Recipes</Nav.Link>
-						</LinkContainer>
+						{user && (
+							<LinkContainer
+								to={activePlan && activePlan.id ? ROUTES.TO_MEAL_PLAN(activePlan.id) : ROUTES.MEAL_PLANS}>
+								<Nav.Link className="mx-2">My Schedule</Nav.Link>
+							</LinkContainer>
+						)}
 
 						{/* {user && (
 							<LinkContainer to={ROUTES.USER_RECIPE_DASH}>
@@ -57,12 +63,17 @@ export const Navbar = (props: INavbarProps) => {
 
 						{user && (
 							<LinkContainer to={ROUTES.GROCERY_LIST}>
-								<Nav.Link className="mx-2">Grocery List</Nav.Link>
+								<Nav.Link className="mx-2">My Grocery Planner</Nav.Link>
 							</LinkContainer>
 						)}
 
+						<LinkContainer to={ROUTES.RECIPES}>
+							<Nav.Link className="mx-2">
+								Search Recipes
+							</Nav.Link>
+						</LinkContainer>
 						<LinkContainer to={ROUTES.HOW_IT_WORKS}>
-							<Nav.Link className="mx-2">How it works</Nav.Link>
+							<Nav.Link className="mx-2"> How it works</Nav.Link>
 						</LinkContainer>
 					</Nav>
 				</BootstrapNavbar.Collapse>
@@ -77,10 +88,17 @@ export const Navbar = (props: INavbarProps) => {
 				<Nav className="ms-auto order-3 d-flex align-items-center flex-row">
 					<LinkContainer to={ROUTES.RECIPES}>
 						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
-							<i className="far fa-search text-secondary fs-3" />
+							<Tippy content="Search Recipes">
+								<i className="far fa-search text-secondary fs-3" />
+							</Tippy>
 						</Nav.Link>
 					</LinkContainer>
-					{!user ? <SignInSignUpButtons /> : <UserDropdown user={user} />}
+					<LinkContainer to={ROUTES.RECIPES}>
+						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
+							<i className="far fa-basket-shopping text-secondary fs-3" />
+						</Nav.Link>
+					</LinkContainer>
+					{!user ? <SignInSignUpButtons /> : <UserDropdown user={user} activePlan={activePlan} />}
 				</Nav>
 			</Container>
 		</BootstrapNavbar>
@@ -100,8 +118,38 @@ const SignInSignUpButtons = () => {
 	)
 }
 
-const UserDropdown = ({ user }: { user: IUser }) => {
+const UserDropdown = ({ user, activePlan: plan }: { user: IUser; activePlan?: MealPlan | null }) => {
 	const navigate = useNavigate()
+
+	const formatDate = (date: Date) => {
+		return format(new Date(date), 'MMM dd')
+	}
+	const planDisplay =
+		plan && plan.id ? (
+			<>
+				<LinkContainer to={ROUTES.TO_MEAL_PLAN(plan.id)}>
+					<NavDropdown.Item>
+						<div className="small fw-semibold" style={{ opacity: 0.7 }}>
+							Current meal plan:
+						</div>
+						<div>
+							{plan.planName}, {formatDate(plan.planStartDate)} - {formatDate(plan.planEndDate)}
+						</div>
+					</NavDropdown.Item>
+				</LinkContainer>
+
+				<LinkContainer to={ROUTES.MEAL_PLANS}>
+					<NavDropdown.Item>My Meal Plans</NavDropdown.Item>
+				</LinkContainer>
+			</>
+		) : (
+			<LinkContainer to={ROUTES.MEAL_PLANS}>
+				<NavDropdown.Item>
+					<i className="fas fa-circle-exclamation text-danger" /> Activate a meal plan
+				</NavDropdown.Item>
+			</LinkContainer>
+		)
+
 	return (
 		<NavDropdown
 			className="nav-drop"
@@ -111,10 +159,9 @@ const UserDropdown = ({ user }: { user: IUser }) => {
 				</div>
 			}
 			id="nav-dropdown">
-			{/* <LinkContainer to={'/account'}>
-				<NavDropdown.Item>My Account</NavDropdown.Item>
-			</LinkContainer>
-			<NavDropdown.Divider /> */}
+			{planDisplay}
+			<NavDropdown.Divider />
+			<NavDropdown.Header>{user.email}</NavDropdown.Header>
 			<NavDropdown.Item onClick={() => signOut(auth).then(() => navigate(ROUTES.HOME))}>
 				<div className="d-flex justify-content-between align-items-center">
 					<span>Sign Out</span>

@@ -49,6 +49,9 @@ $theme-colors: (
 	dark: $gray-900,
 	danger: $red-500,
 	success: $green-500,
+	blue: $blue-500,
+	info: $info,
+	warning: $warning,
 );
 
 $font-family-sans-serif: 'Noto Sans', sans-serif;
@@ -246,4 +249,10 @@ $breadcrumb-active-color: $gray-600;
 		font-weight: 600;
 		width: 100%;
 	}
+}
+
+.active.list-group-item {
+	background-color: $secondary;
+	border-color: $secondary;
+	color: white;
 }

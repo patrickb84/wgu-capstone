@@ -16,9 +16,7 @@ export const AppProvider = ({ children }: IAppProviderProps) => {
 		<AppContext.Provider value={{}}>
 			<UserProvider>
 				<RecipeDataProvider>
-					<MealPlanProvider>
-						{children}
-					</MealPlanProvider>
+					<MealPlanProvider>{children}</MealPlanProvider>
 				</RecipeDataProvider>
 			</UserProvider>
 		</AppContext.Provider>

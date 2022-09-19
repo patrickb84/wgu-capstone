@@ -1,10 +1,17 @@
 import { firestore } from 'api/firebase/app'
+import mealdb from 'api/mealdb'
+import { ApiCategory } from 'api/mealdb/types/ApiCategory'
+import { isBefore } from 'date-fns'
 import DB from 'db/Database'
 import { doc, onSnapshot, setDoc } from 'firebase/firestore'
+import { GroceryItem } from 'pages/GroceryList/GroceryList.Table'
 import MealPlan from 'pages/MealPlans/types/MealPlan'
+import { IMeasuredIngredient, IRecipe, Recipe } from 'pages/Recipes/types/Recipe'
 import ScheduledMeal from 'pages/ScheduledMeals/types/ScheduledMeal'
 import { createContext, useState, useContext, useEffect } from 'react'
 import { UserRecipe } from 'types/UserRecipe'
+import { convertTimestamp } from 'utils/time.utils'
+import { useRecipeData } from './RecipeDataProvider'
 import { useUser } from './UserProvider'
 
 export interface IMealPlanContext {
@@ -13,6 +20,11 @@ export interface IMealPlanContext {
 	activatePlan: (planId: string) => Promise<void>
 	activePlan: MealPlan | null
 	setActivePlan: (plan: MealPlan | null) => void
+	groceryItems: GroceryItem[]
+	setGroceryItems: (items: GroceryItem[]) => void
+	includedItems: string[]
+	setIncludedItems: (items: string[]) => void
+	parseMealPlanScheduleAndRecipes: () => Promise<void>
 }
 
 export interface IUserData {
@@ -30,6 +42,9 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 	const [userPlans, setUserPlans] = useState<MealPlan[]>([])
 	const [userRecipes, setUserRecipes] = useState<UserRecipe[]>([])
 	const [activePlan, setActivePlan] = useState<MealPlan | null>(null)
+	const [groceryItems, setGroceryItems] = useState<GroceryItem[]>([])
+	const [includedItems, setIncludedItems] = useState<string[]>([])
+	const { recipeIndex } = useRecipeData()
 
 	useEffect(() => {
 		if (!user) return
@@ -68,6 +83,32 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 	// 	getMeals()
 	// }, [activePlan, user])
 
+	const parseMealPlanScheduleAndRecipes = async () => {
+		if (!user || !activePlan || !activePlan.id) return
+
+		const meals = await ScheduledMeal.getMealPlanScheduledMeals(activePlan.id!)
+		console.log('meals', meals)
+		interface DatePlusRecipeName {
+			date: Date
+			recipeName: string
+		}
+
+		const datesAndRecipes: DatePlusRecipeName[] = meals
+			.map(meal => {
+				const recipe = recipeIndex.find(recipe => recipe.id === meal.recipeId)
+				return {
+					date: convertTimestamp(meal.mealDate),
+					recipeName: recipe?.recipeName || 'Unknown recipe'
+				}
+			})
+			.sort((a, b) => (isBefore(a.date, b.date) ? -1 : 1))
+
+		// console.log('datesAndRecipes', datesAndRecipes)
+
+		const groceryList = groceryItems.filter(item => includedItems.includes(item.ingredientName))
+		console.log('groceryList', groceryList)
+	}
+
 	useEffect(() => {
 		try {
 			if (!user) return
@@ -100,6 +141,74 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 		}
 	}, [user, userPlans])
 
+	// const parseIngredientsFromScheduledMeals = async () => {
+	// 	if (!user || !activePlan || !activePlan.id) return
+	// 	const $meals = await ScheduledMeal.getMealPlanScheduledMeals(activePlan.id)
+	// 	const meals = $meals.map(scheduledMeal => new ScheduledMeal(scheduledMeal))
+	// 	const $recipes = await Promise.all(
+	// 		meals
+	// 			.map(scheduledMeal => scheduledMeal.recipeId)
+	// 			.map(async recipeId => (await mealdb.fetchRecipe(recipeId)) as ApiCategory)
+	// 	)
+	// 	const $$recipes = $recipes.filter(e => e).map(recipe => new Recipe(recipe) as IRecipe)
+	// 	function getUniqueRecipesAndCounts(recipes: IRecipe[]) {
+	// 		const unique: IRecipe[] = []
+	// 		const recipeAndCount: (IRecipe & { count: number })[] = []
+	// 		recipes.forEach(recipe => {
+	// 			const uniqueIndex = unique.findIndex(u => u.id === recipe.id)
+	// 			if (uniqueIndex === -1) {
+	// 				unique.push(recipe)
+	// 				recipeAndCount.push({ ...recipe, count: 1 })
+	// 			} else {
+	// 				recipeAndCount[uniqueIndex].count++
+	// 			}
+	// 		})
+	// 		return recipeAndCount
+	// 	}
+	// 	const recipesWithCount = getUniqueRecipesAndCounts($$recipes)
+	// 	const ingredientsPlus: IngredientPlus[] = recipesWithCount
+	// 		.map(recipe =>
+	// 			recipe.ingredients.map(
+	// 				ingredient =>
+	// 					({
+	// 						...ingredient,
+	// 						recipeId: recipe.id,
+	// 						recipeName: recipe.name,
+	// 						recipeCount: recipe.count
+	// 					} as IngredientPlus)
+	// 			)
+	// 		)
+	// 		.flat()
+	// 	type IngredientPlus = IMeasuredIngredient & { recipeCount: number }
+	// 	const getUniqueIngredients = (ingredients: IngredientPlus[]) => {
+	// 		const unique: string[] = []
+	// 		ingredients.forEach(({ ingredientName }) => {
+	// 			const uniqueIndex = unique.findIndex(u => u.toLowerCase() === ingredientName.toLowerCase())
+	// 			if (uniqueIndex === -1) {
+	// 				unique.push(ingredientName)
+	// 			}
+	// 		})
+	// 		return unique
+	// 	}
+	// 	const uniqueNames = getUniqueIngredients(ingredientsPlus)
+	// 	const ingredients = uniqueNames.map(ingredientName => {
+	// 		const ingredientPlus = ingredientsPlus.filter(
+	// 			ig => ig.ingredientName.toLowerCase() === ingredientName.toLowerCase()
+	// 		)
+	// 		const metadata = ingredientPlus.map(ig => ({
+	// 			measure: ig.measure,
+	// 			recipeName: ig.recipeName,
+	// 			recipeCount: ig.recipeCount
+	// 		}))
+	// 		return {
+	// 			ingredientName,
+	// 			metadata
+	// 		}
+	// 	})
+	// 	setGroceryItems(ingredients)
+	// 	setIncludedItems(ingredients.map(ig => ig.ingredientName))
+	// }
+
 	return (
 		<MealPlanContext.Provider
 			value={{
@@ -107,7 +216,12 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 				userRecipes,
 				activatePlan,
 				activePlan,
-				setActivePlan
+				setActivePlan,
+				groceryItems,
+				setGroceryItems,
+				includedItems,
+				setIncludedItems,
+				parseMealPlanScheduleAndRecipes
 			}}>
 			{children}
 		</MealPlanContext.Provider>
@@ -131,4 +245,14 @@ export const useUserRecipes = () => {
 export const useActivePlan = () => {
 	const { activePlan, activatePlan } = useMealPlanContext()
 	return { activePlan, activatePlan }
+}
+
+export const useGroceryItems = () => {
+	const { groceryItems, setGroceryItems } = useMealPlanContext()
+	return { groceryItems, setGroceryItems }
+}
+
+export const useIncludedItems = () => {
+	const { includedItems, setIncludedItems } = useMealPlanContext()
+	return { includedItems, setIncludedItems }
 }

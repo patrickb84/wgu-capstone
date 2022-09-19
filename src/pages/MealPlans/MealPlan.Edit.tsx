@@ -29,6 +29,7 @@ export default function MealPlanEditButton(props: IMealPlanEditProps & IGenericB
 			<Button
 				variant={props.variant}
 				className={props.className}
+				size='sm'
 				onClick={() => editPlan(props.userPlan as MealPlan)}>
 				{props.children}
 			</Button>

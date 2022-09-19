@@ -38,7 +38,7 @@ export default function ButtonPlannerDayEdit({ mealDate, onComplete }: IPlannerD
 	return (
 		<>
 			{/* <IconButton iconFaName="fa-ellipsis-vertical" iconFaGroup="far" onClick={handleShow} /> */}
-			<Button variant="secondary-gray" size="sm" onClick={handleShow}>
+			<Button variant="secondary" size="sm" onClick={handleShow}>
 				Edit
 			</Button>
 
@@ -56,8 +56,8 @@ export default function ButtonPlannerDayEdit({ mealDate, onComplete }: IPlannerD
 							const id = meal.id as string
 							return (
 								<ListGroupItem key={id}>
-									<p>{recipeName}</p>
-									<div className="d-flex justify-content-end">
+									<div className="d-flex justify-content-between">
+										{recipeName}
 										{!idWillBeDeleted(id) ? (
 											<Button variant="outline-danger" size="sm" onClick={() => handleRemove(id)}>
 												Remove
@@ -75,7 +75,7 @@ export default function ButtonPlannerDayEdit({ mealDate, onComplete }: IPlannerD
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={handleClose}>
-						Close
+						Cancel
 					</Button>
 					<Button variant="primary" onClick={handleSave}>
 						Save Changes

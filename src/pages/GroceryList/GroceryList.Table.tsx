@@ -10,22 +10,24 @@ import { IMeasuredIngredient, IRecipe, Recipe } from 'pages/Recipes/types/Recipe
 import ScheduledMeal from 'pages/ScheduledMeals/types/ScheduledMeal'
 import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
 import * as React from 'react'
-import { Button, Card, Col, Collapse, Container, Form, InputGroup, Modal, Row, Table } from 'react-bootstrap'
+import { Alert, Button, Card, Col, Collapse, Container, Form, InputGroup, Modal, Row, Table } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ROUTES from 'routes/routes'
 import Papa from 'papaparse'
 import jsPDF from 'jspdf'
 import { Link } from 'react-router-dom'
-import { useActivePlan } from 'hooks/MealPlanProvider'
+import { useActivePlan, useGroceryItems, useIncludedItems } from 'hooks/MealPlanProvider'
+import MidSpinner from 'components/MidSpinner'
+import { CreateReportButton } from 'pages/Reports/Report.Create'
 
 export interface IGroceryListTableProps {}
 
-type GroceryItemMeta = {
+export type GroceryItemMeta = {
 	measure: string
 	recipeName: string
 	recipeCount: number
 }
-type GroceryItem = {
+export type GroceryItem = {
 	ingredientName: string
 	metadata: GroceryItemMeta[]
 }
@@ -36,10 +38,10 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 	const navigate = useNavigate()
 	const pdfRef = React.createRef<HTMLTableElement>()
 
+	const { groceryItems, setGroceryItems } = useGroceryItems()
+	const { includedItems, setIncludedItems } = useIncludedItems()
 	const [scheduledMeals, setScheduledMeals] = React.useState<ScheduledMeal[]>([])
-	const [recipes, setRecipes] = React.useState<(IRecipe & { count: number })[]>([])
-	const [groceryItems, setGroceryItems] = React.useState<GroceryItem[]>([])
-	const [includedItems, setIncludedItems] = React.useState<string[]>([])
+	const [recipesWithCounts, setRecipesWithCounts] = React.useState<(IRecipe & { count: number })[]>([])
 	const [show, setShow] = React.useState(false)
 	const [searchTerm, setSearchTerm] = React.useState('')
 	const { activePlan } = useActivePlan()
@@ -50,7 +52,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 	React.useEffect(() => {
 		if (!user) navigate(ROUTES.LOGIN, { replace: true, state: { redirect: location.pathname } })
 	}, [location.pathname, navigate, user])
-	
+
 	React.useEffect(() => {
 		try {
 			if (activePlan) {
@@ -87,7 +89,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 						return recipeAndCount
 					}
 					const recipesWithCount = getUniqueRecipesAndCounts($$recipes)
-					setRecipes(recipesWithCount)
+					setRecipesWithCounts(recipesWithCount)
 
 					// * Ingredients
 					const ingredientsPlus: IngredientPlus[] = recipesWithCount
@@ -144,7 +146,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 		} catch (error) {
 			console.error(error)
 		}
-	}, [activePlan])
+	}, [activePlan, setGroceryItems, setIncludedItems])
 
 	const handleToggleIncluded = (ingredientName: string) => {
 		const index = includedItems.findIndex(i => i === ingredientName)
@@ -250,188 +252,195 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 			})
 		}
 	}
-	return (
-		<>
-			{loading && <OverlaySpinner />}
-			<Layout>
-				<PageHeader variant="secondary">
-					<div>
-						<PageTitle>Grocery List</PageTitle>
-						<PageSubtitle>
-							{groceryItems.length} items, {recipes.length} different recipes, {scheduledMeals.length} meals
-						</PageSubtitle>
-					</div>
-				</PageHeader>
 
-				{!scheduledMeals.length ? (
-					<>
-						<Container className="my-3">
-							<div className="py-lg-4 px-lg-5 p-4 mb-3 bg-light rounded-4">
-								<div className="mb-4">
-									<h2 className="h3">You'll see this page fill up</h2>
-									<p className="mb-0">
-										Once you've added some meals to your meal plan, you'll see a list of ingredients here. You
-										can use this list to create a grocery list, or to see what you have on hand.
-									</p>
-								</div>
+	const GroceryPlannerView = () => {
+		if (loading) {
+			return <MidSpinner />
+		} else
+			return (
+				<>
+					{!scheduledMeals.length ? (
+						<>
+							<Alert variant="secondary">
+								<Alert.Heading>You'll see this page fill up</Alert.Heading>
+								<p className="mb-0">
+									Once you've added some meals to your meal plan, you'll see a list of ingredients here. You
+									can use this list to create a grocery list, or to see what you have on hand.
+								</p>
 								<hr />
 								{!activePlan && (
-									<div className="mb-4">
+									<>
 										<h2 className="h5 mb-3">
 											Have you created a meal plan? Or maybe you don't have an active one.
 										</h2>
 										<p className="mb-0">You can create a meal plan by clicking the button below.</p>
-										<div className="mt-3">
-											<Link to={ROUTES.HOME} className="btn btn-secondary btn-sm">
+										<div className="my-3">
+											<Link to={ROUTES.HOME} className="btn btn-secondary">
 												Create a meal plan
 											</Link>
 										</div>
-									</div>
+									</>
 								)}
 								{!scheduledMeals.length && (
-									<div className="mb-4">
+									<>
 										<h2 className="h5 mb-3">You don't have any scheduled meals.</h2>
 
 										<p className="mb-0">
 											You can schedule meals by finding recipes and clicking the calendar icon next to them.
 										</p>
 										<div className="mt-3">
-											<Link to={ROUTES.RECIPES} className="btn btn-secondary btn-sm">
+											<Link to={ROUTES.RECIPES} className="btn btn-secondary">
 												Find recipes
 											</Link>
 										</div>
-									</div>
+									</>
 								)}
+							</Alert>
+						</>
+					) : (
+						<>
+							{/* <div className="my-3 d-flex align-items-center justify-content-end">
+								<p className="mb-0">Download</p>
+								<Spacer w={0.8} />
+								<Button variant="dark" onClick={() => downloadJSON()}>
+									<i className="fas fa-download mr-1" /> JSON
+								</Button>
+								<Spacer w={0.8} />
+								<Button variant="dark" onClick={() => downloadCSV()}>
+									<i className="fas fa-download" /> CSV
+								</Button>
+								<Spacer w={0.8} />
+								<Button variant="dark" onClick={() => downloadPDF()}>
+									<i className="fas fa-download" /> PDF
+								</Button>
+								<Spacer w={0.8} />
+							</div> */}
+							<div className="my-3 d-flex align-items-center justify-content-end">
+								<CreateReportButton />
 							</div>
-						</Container>
-					</>
-				) : (
-					<>
-						<Container className="my-3 d-flex align-items-center justify-content-end">
-							<p className="mb-0">Download</p>
-							<Spacer w={0.8} />
-							<Button variant="dark" onClick={() => downloadJSON()}>
-								<i className="fas fa-download mr-1" /> JSON
-							</Button>
-							<Spacer w={0.8} />
-							<Button variant="dark" onClick={() => downloadCSV()}>
-								<i className="fas fa-download" /> CSV
-							</Button>
-							<Spacer w={0.8} />
-							<Button variant="dark" onClick={() => downloadPDF()}>
-								<i className="fas fa-download" /> PDF
-							</Button>
-						</Container>
 
-						<Container className="my-3">
-							<Row>
-								<Col>
-									<Card className="mb-4">
-										<Card.Body>
-											<Card.Title>Shopping List ({includedItems.length})</Card.Title>
-											<div>
-												{includedItems.length ? (
-													includedItems
-														.sort((a, b) => a.localeCompare(b))
-														.map((item, index) => {
-															return (
-																<div key={index}>
-																	<Form.Check
-																		type="checkbox"
-																		checked={isItemIncluded(item)}
-																		onChange={e => handleToggleIncluded(item)}
-																		label={item}
-																	/>
-																</div>
-															)
-														})
-												) : (
-													<div className="text-muted">No items selected</div>
-												)}
-											</div>
-										</Card.Body>
-									</Card>
-								</Col>
-								<Col lg={8}>
-									<Card>
-										<Card.Header>
-											<div className="d-flex align-items-center justify-content-between">
-												<span>Required Ingredients</span>
-												{/* <Button variant="primary" onClick={() => setCollapseData(!collapseData)}>
-											{collapseData ? 'Expand' : 'Collapse'}
-										</Button> */}
-												<InputGroup className="ms-auto" style={{ width: 200 }}>
-													<Form.Control
-														placeholder="Lookup item"
-														value={searchTerm}
-														onChange={e => setSearchTerm(e.target.value)}
-													/>
-													{!!searchTerm && (
-														<Button variant="light" onClick={() => setSearchTerm('')}>
-															<i className="far fa-xmark" />
-														</Button>
+							<div className="my-3">
+								<Row>
+									<Col>
+										<Card className="mb-4">
+											<Card.Body>
+												<Card.Title>Shopping List ({includedItems.length})</Card.Title>
+												<div>
+													{includedItems.length ? (
+														includedItems
+															.sort((a, b) => a.localeCompare(b))
+															.map((item, index) => {
+																return (
+																	<div key={index}>
+																		<Form.Check
+																			type="checkbox"
+																			checked={isItemIncluded(item)}
+																			onChange={e => handleToggleIncluded(item)}
+																			label={item}
+																		/>
+																	</div>
+																)
+															})
+													) : (
+														<div className="text-muted">No items selected</div>
 													)}
-												</InputGroup>
-											</div>
-										</Card.Header>
+												</div>
+											</Card.Body>
+										</Card>
+									</Col>
+									<Col lg={8}>
+										<Card>
+											<Card.Header>
+												<div className="d-flex align-items-center justify-content-between">
+													<span>Required Ingredients</span>
+													{/* <Button variant="primary" onClick={() => setCollapseData(!collapseData)}>
+														{collapseData ? 'Expand' : 'Collapse'}
+													</Button> */}
+													<InputGroup className="ms-auto" style={{ width: 200 }}>
+														<Form.Control
+															placeholder="Lookup item"
+															value={searchTerm}
+															onChange={e => setSearchTerm(e.target.value)}
+														/>
+														{!!searchTerm && (
+															<Button variant="light" onClick={() => setSearchTerm('')}>
+																<i className="far fa-xmark" />
+															</Button>
+														)}
+													</InputGroup>
+												</div>
+											</Card.Header>
 
-										<Card.Body>
-											<Card.Title>Total ({groceryItems.length})</Card.Title>
-											<Spacer h={1} />
-											<Table size="sm" bordered ref={pdfRef}>
-												<thead>
-													<tr>
-														<th>
-															<div className="px-1">
-																<Tippy content="Check/Uncheck all">
-																	<Form.Check
-																		type="checkbox"
-																		checked={includedItems.length === groceryItems.length}
-																		onChange={() => {
-																			if (includedItems.length === groceryItems.length) {
-																				setIncludedItems([])
-																			} else {
-																				setIncludedItems(groceryItems.map(ig => ig.ingredientName))
-																			}
-																		}}
-																	/>
-																</Tippy>
-															</div>
-														</th>
-														<th>Ingredient</th>
-														<th>Measure</th>
-														<th>Recipe</th>
-													</tr>
-												</thead>
-												<tbody>
-													{dataFeed().map((gi, index) => {
-														const rowSpan = gi.metadata.length
-														return (
-															<React.Fragment key={index}>
-																{gi.metadata.map((m, i) => {
-																	const showCount = m.recipeCount > 1 && (
-																		<span className="text-danger">({m.recipeCount})</span>
-																	)
-																	if (i === 0) {
+											<Card.Body>
+												<Card.Title>Total ({groceryItems.length})</Card.Title>
+												<Spacer h={1} />
+												<Table size="sm" bordered ref={pdfRef}>
+													<thead>
+														<tr>
+															<th>
+																<div className="px-1">
+																	<Tippy content="Check/Uncheck all">
+																		<Form.Check
+																			type="checkbox"
+																			checked={includedItems.length === groceryItems.length}
+																			onChange={() => {
+																				if (includedItems.length === groceryItems.length) {
+																					setIncludedItems([])
+																				} else {
+																					setIncludedItems(
+																						groceryItems.map(ig => ig.ingredientName)
+																					)
+																				}
+																			}}
+																		/>
+																	</Tippy>
+																</div>
+															</th>
+															<th>Ingredient</th>
+															<th>Measure</th>
+															<th>Recipe</th>
+														</tr>
+													</thead>
+													<tbody>
+														{dataFeed().map((gi, index) => {
+															const rowSpan = gi.metadata.length
+															return (
+																<React.Fragment key={index}>
+																	{gi.metadata.map((m, i) => {
+																		const showCount = m.recipeCount > 1 && (
+																			<span className="text-danger">({m.recipeCount})</span>
+																		)
+																		if (i === 0) {
+																			return (
+																				<tr key={i}>
+																					<td rowSpan={rowSpan}>
+																						<div className="px-1">
+																							<Form.Check
+																								type="checkbox"
+																								checked={isItemIncluded(gi.ingredientName)}
+																								onChange={() =>
+																									handleToggleIncluded(gi.ingredientName)
+																								}
+																							/>
+																						</div>
+																					</td>
+																					<td
+																						className="fw-bold"
+																						style={{ textTransform: 'capitalize' }}
+																						rowSpan={rowSpan}>
+																						{gi.ingredientName}
+																					</td>
+																					<td className="small">
+																						{m.measure} {showCount}
+																					</td>
+																					<td className="small">
+																						{m.recipeName} {showCount}
+																					</td>
+																				</tr>
+																			)
+																		}
 																		return (
 																			<tr key={i}>
-																				<td rowSpan={rowSpan}>
-																					<div className="px-1">
-																						<Form.Check
-																							type="checkbox"
-																							checked={isItemIncluded(gi.ingredientName)}
-																							onChange={() =>
-																								handleToggleIncluded(gi.ingredientName)
-																							}
-																						/>
-																					</div>
-																				</td>
-																				<td
-																					className="fw-bold"
-																					style={{ textTransform: 'capitalize' }}
-																					rowSpan={rowSpan}>
-																					{gi.ingredientName}
-																				</td>
 																				<td className="small">
 																					{m.measure} {showCount}
 																				</td>
@@ -440,30 +449,38 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 																				</td>
 																			</tr>
 																		)
-																	}
-																	return (
-																		<tr key={i}>
-																			<td className="small">
-																				{m.measure} {showCount}
-																			</td>
-																			<td className="small">
-																				{m.recipeName} {showCount}
-																			</td>
-																		</tr>
-																	)
-																})}
-															</React.Fragment>
-														)
-													})}
-												</tbody>
-											</Table>
-										</Card.Body>
-									</Card>
-								</Col>
-							</Row>
-						</Container>
-					</>
-				)}
+																	})}
+																</React.Fragment>
+															)
+														})}
+													</tbody>
+												</Table>
+											</Card.Body>
+										</Card>
+									</Col>
+								</Row>
+							</div>
+						</>
+					)}
+				</>
+			)
+	}
+
+	const PageView = () => (
+		<>
+			{loading && <OverlaySpinner />}
+			<Layout>
+				<PageHeader variant="secondary">
+					<div>
+						<PageTitle>Grocery List</PageTitle>
+						<PageSubtitle>
+							{groceryItems.length} items, {recipesWithCounts.length} different recipes, {scheduledMeals.length}{' '}
+							meals
+						</PageSubtitle>
+					</div>
+				</PageHeader>
+
+				<GroceryPlannerView />
 
 				<Spacer h={5} />
 			</Layout>
@@ -487,6 +504,21 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 					</Button>
 				</Modal.Footer>
 			</Modal>
+		</>
+	)
+
+	return (
+		<>
+			<Alert variant="primary">
+				<Alert.Heading>Grocery Planner</Alert.Heading>
+				<p>Here you'll find all the ingredients need for your meal plan in one place.</p>
+				<p>
+					You can use this page to create a shopping list for your next grocery trip. If you don't need all the
+					ingredients, you can uncheck them to leave them out.
+				</p>
+				<p className="mb-0">When you're finished, you can save this as a report.</p>
+			</Alert>
+			<GroceryPlannerView />
 		</>
 	)
 }

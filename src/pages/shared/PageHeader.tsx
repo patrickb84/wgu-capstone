@@ -37,7 +37,7 @@ export default function PageHeader({
 
 	return (
 		<header className={headerClassBuilder()}>
-			<Container className="py-4 py-lg-5">
+			<Container className="py-4">
 				{nonStandard ? children : <FlexCenterBetween>{children}</FlexCenterBetween>}
 			</Container>
 		</header>
