@@ -237,15 +237,6 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 	}
 
 	const downloadPDF = () => {
-		const data = groceryItems.filter(item => isItemIncluded(item.ingredientName))
-		console.log('🚀 ~ downloadPDF ~ data', data)
-
-		const specialElementHandlers = {
-			'#bypassme': (element: any, renderer: any) => {
-				return true
-			}
-		}
-
 		const doc = new jsPDF('p', 'pt', 'letter')
 
 		const margins = {
@@ -254,39 +245,8 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 			left: 40,
 			width: 522
 		}
-
-		// const pdfjs = pdfRef.current ? pdfRef.current : null
-		// if (pdfjs) {
-		// 	doc.html(pdfjs, {
-		// 		callback: function (doc) {
-		// 			doc.save('grocery-list.pdf')
-		// 		},
-		// 		x: 10,
-		// 		y: 10
-		// 	})
-		// }
-		console.log({ groceryItems })
-		console.log(groceryItems.map(gi => gi.metadata.map(m => ({ ...m, ingredientName: gi.ingredientName }))).flat())
-		groceryItems.map(gi => gi.metadata.map(m => ({ ...m, ingredientName: gi.ingredientName })))
-		// doc.table(
-		// 	10,
-		// 	10,
-		// 	groceryItems
-		// 		.map(gi =>
-		// 			gi.metadata.map(m => {
-		// 				const { recipeCount, ...rest } = m
-		// 				return { ...rest, ingredientName: gi.ingredientName }
-		// 			})
-		// 		)
-		// 		.flat(),
-		// 	['Ingredient', 'Measure', 'Recipe', 'Recipe Count'],
-		// 	{ autoSize: true, printHeaders: true }
-		// )
-
-		// doc.save('grocery-list.pdf')
-
 		doc.html(
-			document.getElementById('pdf')!, // HTML string or DOM elem ref.
+			document.getElementById('pdf')!,
 			{
 				margin: [margins.left, margins.top, margins.left, margins.bottom],
 				width: margins.width,
@@ -588,7 +548,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 					You can use this page to create a shopping list for your next grocery trip. If you don't need all the
 					ingredients, you can uncheck them to leave them out.
 				</p>
-				<p className="mb-0">When you're finished, you can save this as a report.</p>
+				<p className="mb-0">When you're finished, you can download the data.</p>
 			</Alert>
 			<GroceryPlannerView />
 		</>
