@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Form, InputGroup, ListGroup } from 'react-bootstrap'
 import { useCombobox } from 'downshift'
 import { Link, useNavigate } from 'react-router-dom'

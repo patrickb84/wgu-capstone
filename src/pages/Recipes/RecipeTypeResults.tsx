@@ -10,6 +10,7 @@ import ReactPaginate from 'react-paginate'
 import { useLocation, useParams } from 'react-router-dom'
 import { RecipeCard } from './Recipe.Card'
 import { Recipe } from '../../types/Recipe'
+import { Link } from 'react-router-dom'
 
 export interface IRecipeTypeResultsProps {}
 
@@ -22,6 +23,7 @@ export function RecipeTypeResults(props: IRecipeTypeResultsProps) {
 	const location = useLocation()
 	const query = new URLSearchParams(location.search)
 	const [isLoading, setIsLoading] = useState(true)
+	const [noneFound, setNoneFound] = useState(false)
 
 	const qValue = query.get('q')
 	const qTitle = query.get('t')
@@ -40,6 +42,12 @@ export function RecipeTypeResults(props: IRecipeTypeResultsProps) {
 			if (recipeType === 'area') {
 				interimRecipes = await mealdb.fetchRecipesByArea(qValue)
 			}
+			if (!interimRecipes) {
+				setNoneFound(true)
+				setIsLoading(false)
+				return
+			}
+
 			const res = await Promise.all(interimRecipes.map(recipe$ => mealdb.fetchRecipe(recipe$.idMeal)))
 			const recipes: Recipe[] = res.map((recipe: ApiRecipe) => new Recipe(recipe))
 			setRecipes(recipes)
@@ -59,7 +67,7 @@ export function RecipeTypeResults(props: IRecipeTypeResultsProps) {
 							{
 								to: '/recipes',
 								label: 'Recipes'
-							},
+							}
 						]}
 					/>
 					<PageTitle>{qTitle || 'Nothing here!'}</PageTitle>
@@ -71,8 +79,16 @@ export function RecipeTypeResults(props: IRecipeTypeResultsProps) {
 					<MidSpinner />
 				) : (
 					<>
-						{!recipes.length ? (
-							<div className="bg-light p-3">No recipes found.</div>
+
+						{!recipes.length || noneFound ? (
+								<div className="text-center bg-light p-3 py-lg-5">
+									<h3 className='font-display mb-4'>
+										We couldn't find recipes for {qTitle}!
+									</h3>
+									<Link to='/recipes' className='btn btn-primary'>
+										Back to Recipes
+									</Link>
+							</div>
 						) : (
 							<PaginatedItems itemsPerPage={12} items={recipes} />
 						)}
