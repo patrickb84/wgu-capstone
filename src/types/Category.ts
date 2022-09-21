@@ -1,5 +1,5 @@
 import mealdb from "api/mealdb"
-import { ApiCategory } from "api/mealdb/types/ApiCategory"
+import { ApiCategory } from "types/ApiCategory"
 
 export interface ICategory {
 	id?: string

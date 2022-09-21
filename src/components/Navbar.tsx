@@ -93,11 +93,11 @@ export const Navbar = (props: INavbarProps) => {
 							</Tippy>
 						</Nav.Link>
 					</LinkContainer>
-					<LinkContainer to={ROUTES.RECIPES}>
+					{/* <LinkContainer to={ROUTES.RECIPES}>
 						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
 							<i className="far fa-basket-shopping text-secondary fs-3" />
 						</Nav.Link>
-					</LinkContainer>
+					</LinkContainer> */}
 					{!user ? <SignInSignUpButtons /> : <UserDropdown user={user} activePlan={activePlan} />}
 				</Nav>
 			</Container>

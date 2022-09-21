@@ -240,18 +240,63 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 		const data = groceryItems.filter(item => isItemIncluded(item.ingredientName))
 		console.log('🚀 ~ downloadPDF ~ data', data)
 
-		const doc = new jsPDF('l', 'mm', [1200, 1210])
+		const specialElementHandlers = {
+			'#bypassme': (element: any, renderer: any) => {
+				return true
+			}
+		}
 
-		const pdfjs = pdfRef.current ? pdfRef.current : null
-		if (pdfjs) {
-			doc.html(pdfjs, {
+		const doc = new jsPDF('p', 'pt', 'letter')
+
+		const margins = {
+			top: 80,
+			bottom: 60,
+			left: 40,
+			width: 522
+		}
+
+		// const pdfjs = pdfRef.current ? pdfRef.current : null
+		// if (pdfjs) {
+		// 	doc.html(pdfjs, {
+		// 		callback: function (doc) {
+		// 			doc.save('grocery-list.pdf')
+		// 		},
+		// 		x: 10,
+		// 		y: 10
+		// 	})
+		// }
+		console.log({ groceryItems })
+		console.log(groceryItems.map(gi => gi.metadata.map(m => ({ ...m, ingredientName: gi.ingredientName }))).flat())
+		groceryItems.map(gi => gi.metadata.map(m => ({ ...m, ingredientName: gi.ingredientName })))
+		// doc.table(
+		// 	10,
+		// 	10,
+		// 	groceryItems
+		// 		.map(gi =>
+		// 			gi.metadata.map(m => {
+		// 				const { recipeCount, ...rest } = m
+		// 				return { ...rest, ingredientName: gi.ingredientName }
+		// 			})
+		// 		)
+		// 		.flat(),
+		// 	['Ingredient', 'Measure', 'Recipe', 'Recipe Count'],
+		// 	{ autoSize: true, printHeaders: true }
+		// )
+
+		// doc.save('grocery-list.pdf')
+
+		doc.html(
+			document.getElementById('pdf')!, // HTML string or DOM elem ref.
+			{
+				margin: [margins.left, margins.top, margins.left, margins.bottom],
+				width: margins.width,
+				autoPaging: 'text',
+
 				callback: function (doc) {
 					doc.save('grocery-list.pdf')
-				},
-				x: 10,
-				y: 10
-			})
-		}
+				}
+			}
+		)
 	}
 
 	const GroceryPlannerView = () => {
@@ -300,7 +345,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 						</>
 					) : (
 						<>
-							{/* <div className="my-3 d-flex align-items-center justify-content-end">
+							<div className="my-3 d-flex align-items-center justify-content-end">
 								<p className="mb-0">Download</p>
 								<Spacer w={0.8} />
 								<Button variant="dark" onClick={() => downloadJSON()}>
@@ -315,10 +360,10 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 									<i className="fas fa-download" /> PDF
 								</Button>
 								<Spacer w={0.8} />
-							</div> */}
-							<div className="my-3 d-flex align-items-center justify-content-end">
-								<CreateReportButton />
 							</div>
+							{/* <div className="my-3 d-flex align-items-center justify-content-end">
+								<CreateReportButton />
+							</div> */}
 
 							<div className="my-3">
 								<Row>
@@ -375,7 +420,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 											<Card.Body>
 												<Card.Title>Total ({groceryItems.length})</Card.Title>
 												<Spacer h={1} />
-												<Table size="sm" bordered ref={pdfRef}>
+												<table className="table table-sm table-bordered" id="pdfTable">
 													<thead>
 														<tr>
 															<th>
@@ -455,7 +500,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 															)
 														})}
 													</tbody>
-												</Table>
+												</table>
 											</Card.Body>
 										</Card>
 									</Col>
@@ -463,6 +508,32 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 							</div>
 						</>
 					)}
+					{/* pdf table */}
+					<div className="d-none">
+						<table id="pdf">
+							<tbody>
+								<tr style={{ fontWeight: 'bold', fontSize: 10, whiteSpace: 'nowrap' }}>
+									<th>Item</th>
+									<th>Measure</th>
+									<th>Recipe</th>
+									<th>Recipe count</th>
+								</tr>
+								{groceryItems
+									.map(gi => gi.metadata.map(m => ({ ...m, ingredientName: gi.ingredientName })))
+									.flat()
+									.map((m, i) => {
+										return (
+											<tr key={i} style={{ fontSize: 10, whiteSpace: 'nowrap' }}>
+												<td>{m.ingredientName}</td>
+												<td>{m.measure} </td>
+												<td>{m.recipeName}</td>
+												<td>{m.recipeCount}</td>
+											</tr>
+										)
+									})}
+							</tbody>
+						</table>
+					</div>
 				</>
 			)
 	}
