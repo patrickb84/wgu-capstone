@@ -1,6 +1,5 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Card, Col, Container, Row } from 'react-bootstrap'
-
 import img_1 from 'styles/img/arch_cooks/009-cooking.png'
 import img_2 from 'styles/img/arch_cooks/016-cooking.png'
 import img_3 from 'styles/img/arch_cooks/013-cooking.png'
@@ -110,7 +109,7 @@ export const HomePage = (props: IHomePageProps) => {
 const Hero = () => {
 	const user = useUser()
 	return (
-		<header data-testid='homepage-hero' className={!user ? 'bg-light' : 'bg-tertiary'}>
+		<header data-testid='homepage' className={!user ? 'bg-light' : 'bg-tertiary'}>
 			<Container>
 				{!user ? (
 					<div

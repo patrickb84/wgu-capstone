@@ -5,11 +5,10 @@ import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
 import { differenceInDays, format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Alert, Card, Col, Container, Row } from 'react-bootstrap'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import MealPlan from '../../types/MealPlan'
 import { Link } from 'react-router-dom'
 import ROUTES from 'routes/routes'
-import { useUser } from 'hooks/UserProvider'
 import Breadcrumbs from 'components/Breadcrumbs'
 import { HelperModal } from 'components/HelperModal'
 
@@ -121,7 +120,10 @@ export function MealPlanView(props: IMealPlanViewProps) {
 			<Alert variant="primary">
 				<Alert.Heading>My Schedule</Alert.Heading>
 				<p>Here you'll find what meals you've assigned to a given day.</p>
-				<p>If you don't like what you see on a particular day, you can edit it by clicking the <strong>Edit</strong> button.</p>
+				<p>
+					If you don't like what you see on a particular day, you can edit it by clicking the <strong>Edit</strong>{' '}
+					button.
+				</p>
 				<p className="mb-0">
 					To see the details of the recipe, just click on the name! To add recipes, navigate to the{' '}
 					<Link to={ROUTES.RECIPES}>Recipes</Link> page!

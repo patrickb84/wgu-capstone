@@ -1,12 +1,11 @@
 import { createContext, useContext, useState } from 'react'
 import { auth, firestore as db } from 'api/firebase/app'
-import IUser, { getUser } from 'types/User'
+import IUser from 'types/User'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { User } from 'firebase/auth'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useEffect } from 'react'
 import OverlaySpinner from 'components/OverlaySpinner'
-import { useNavigate } from 'react-router-dom'
 
 export interface IUserContextState {
 	currentUser: IUser | null

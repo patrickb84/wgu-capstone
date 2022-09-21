@@ -3,14 +3,14 @@ import Button from 'react-bootstrap/Button'
 import Spacer from 'components/Spacer'
 import { PasswordInput } from '../../components/PasswordInput'
 import { useForm, SubmitHandler, UseFormRegister } from 'react-hook-form'
-import { errorClass, FormField } from 'components/FormField'
+import { errorClass } from 'components/FormField'
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import OverlaySpinner from 'components/OverlaySpinner'
 import { Navigate } from 'react-router-dom'
 import { auth } from 'api/firebase/app'
 import { useUser } from 'hooks/UserProvider'
 import { FormText } from 'react-bootstrap'
-import React, { createRef, useEffect, useRef } from 'react'
+import React from 'react'
 import ROUTES from 'routes/routes'
 
 interface IFormInputs {
@@ -76,7 +76,7 @@ export function LoginForm() {
 
 				<Spacer h={1} />
 				<div className="text-center">
-					<Button variant="brand" type="submit" className="px-5 btn-pill">
+					<Button variant="brand" type="submit" className="px-5 btn-pill" data-testid='sign-in-button'>
 						Sign In
 					</Button>
 				</div>
@@ -94,6 +94,7 @@ const EmailInput = React.forwardRef<HTMLInputElement, { label: string } & Return
 			<>
 				<Form.Label>{label}</Form.Label>
 				<Form.Control
+					data-testid="email-input"
 					type="text"
 					placeholder={'Enter email'}
 					onChange={onChange}

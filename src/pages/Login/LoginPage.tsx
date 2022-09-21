@@ -35,7 +35,7 @@ export const LoginPage = () => {
 						<div className="text-center">
 							<MiniLogo />
 							<Spacer h={1.5} />
-							<h2 className="font-display mb-1 mb-lg-2">Sign In!</h2>
+							<h2 className="font-display mb-1 mb-lg-2" data-testid='sign-in-h2'>Sign In!</h2>
 							<p className="text-center text-muted">
 								Don't have an account?{' '}
 								<Link to={ROUTES.REGISTER}>

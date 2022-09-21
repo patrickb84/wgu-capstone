@@ -168,6 +168,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 		return csv
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const getCSV2 = () => {
 		const csv = groceryItems
 			.filter(item => isItemIncluded(item.ingredientName))

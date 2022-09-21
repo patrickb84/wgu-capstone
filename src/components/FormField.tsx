@@ -1,7 +1,6 @@
 import Form from 'react-bootstrap/Form'
 import { FormText } from 'react-bootstrap'
 import { FieldError } from 'react-hook-form'
-import { createRef, useEffect } from 'react'
 
 export interface IFormFieldProps {
 	error?: FieldError | undefined

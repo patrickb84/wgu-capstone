@@ -5,7 +5,6 @@ import { Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ROUTES from 'routes/routes'
 
-import image from 'styles/img/fun_cooks/008-cooking.png'
 import image2 from 'styles/img/line_guy/011-cook.png'
 
 export interface IHowToProps {}

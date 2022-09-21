@@ -1,7 +1,6 @@
 import mealdb from 'api/mealdb'
 import ApiRecipe from 'types/ApiRecipe'
 import Breadcrumbs from 'components/Breadcrumbs'
-import { GenericIconButtonProps } from 'components/IconButton'
 import Layout from 'components/Layout'
 import OverlaySpinner from 'components/OverlaySpinner'
 import Spacer from 'components/Spacer'
@@ -14,12 +13,6 @@ import ROUTES from 'routes/routes'
 import { UserRecipe } from 'types/UserRecipe'
 import { ButtonAddRecipeToPlan } from './ButtonAddRecipeToPlan'
 import { IRecipe, Recipe } from '../../types/Recipe'
-
-const iconProps: Pick<GenericIconButtonProps, 'size' | 'className' | 'colorVariant'> = {
-	size: '1em',
-	className: 'mx-2',
-	colorVariant: 'white'
-}
 
 export default function RecipeDetails() {
 	const [recipe, setRecipe] = useState<IRecipe | null>(null)

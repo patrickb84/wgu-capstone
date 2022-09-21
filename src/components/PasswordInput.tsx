@@ -25,6 +25,7 @@ export function PasswordInput(props: IPasswordInputProps) {
 		<>
 			<InputGroup>
 				<Form.Control
+					data-testid="password-input"
 					className={errorClass(error).border}
 					type={showPassword ? 'text' : 'password'}
 					placeholder="Password"

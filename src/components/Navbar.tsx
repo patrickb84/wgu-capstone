@@ -34,7 +34,7 @@ export const Navbar = (props: INavbarProps) => {
 	if (isHidden) return <></>
 
 	return (
-		<BootstrapNavbar bg="white" expand="lg" fixed="top" className="border-brand border-top border-5 shadow-sm">
+		<BootstrapNavbar bg="white" expand="lg" fixed="top" className="border-brand border-top border-5 shadow-sm" data-testid='navbar'>
 			<Container fluid className="justify-content-start align-items-center">
 				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
 					<Nav className="mb-3 mb-lg-0">
@@ -111,7 +111,7 @@ const SignInSignUpButtons = () => {
 			<Link className="btn btn-brand btn-sm mx-1" to={ROUTES.REGISTER}>
 				Sign Up
 			</Link>
-			<Link className="btn btn-secondary btn-sm mx-1" to={ROUTES.LOGIN}>
+			<Link className="btn btn-secondary btn-sm mx-1" data-testid='navbar-sign-in' to={ROUTES.LOGIN}>
 				Sign In
 			</Link>
 		</>
@@ -162,7 +162,7 @@ const UserDropdown = ({ user, activePlan: plan }: { user: IUser; activePlan?: Me
 			{planDisplay}
 			<NavDropdown.Divider />
 			<NavDropdown.Header>{user.email}</NavDropdown.Header>
-			<NavDropdown.Item onClick={() => signOut(auth).then(() => navigate(ROUTES.HOME))}>
+			<NavDropdown.Item data-testid='navbar-sign-out' onClick={() => signOut(auth).then(() => navigate(ROUTES.HOME))}>
 				<div className="d-flex justify-content-between align-items-center">
 					<span>Sign Out</span>
 					<i className="fad fa-sign-out-alt" />
