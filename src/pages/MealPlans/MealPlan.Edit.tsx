@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import IGenericButtonProps from 'types/GenericButton'
 import MealPlanModal from './MealPlan.Form'
-import MealPlan from './types/MealPlan'
+import MealPlan from '../../types/MealPlan'
 
 export interface IMealPlanEditProps {
 	userPlan: EditingMealPlan

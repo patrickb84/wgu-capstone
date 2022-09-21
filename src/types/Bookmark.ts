@@ -9,41 +9,38 @@ export interface IBookmark extends IAppResourceModel {
 }
 
 export default class Bookmark extends DatabaseCollection implements IBookmark {
-	recipeId: string
-	userId: string
-	createdDate?: Timestamp | Date | undefined
-	createdBy?: string | undefined
-	id?: string | undefined
-
-	constructor(bookmark: IBookmark) {
-		super()
-		const { recipeId, userId, createdDate, createdBy, id } = bookmark
-		this.recipeId = recipeId
-		this.userId = userId
-		this.createdDate = createdDate && convertTimestamp(createdDate)
-		this.createdBy = createdBy
-		this.id = id
+	static add = async (bookmark: Bookmark) => {
+		return DB.add(this.collectionName, bookmark)
 	}
-
 	static collectionName = 'bookmarks'
-
+	public static get = async (id: string) => {
+		const doc = (await DB.get(this.collectionName, id)) as Bookmark
+		const bookmark = new Bookmark(doc)
+		return bookmark
+	}
+	static getBookmarkByRecipeId = async (recipeId: string, userId: string) => {
+		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
+		const bookmarks: IBookmark[] = queryDocs.map(this.mapIterator)
+		const bookmark = bookmarks.find(b => b.recipeId === recipeId)
+		return bookmark
+	}
+	static getUserBookmarks = async (userId: string) => {
+		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
+		const bookmarks: IBookmark[] = queryDocs.map(this.mapIterator)
+		return bookmarks
+	}
 	static mapCollectionDocs = (doc: any) => {
 		return new Bookmark({
 			id: doc.id,
 			...(doc.data() as IBookmark)
 		})
 	}
-
-	public static get = async (id: string) => {
-		const doc = (await DB.get(this.collectionName, id)) as Bookmark
-		const bookmark = new Bookmark(doc)
-		return bookmark
+	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): Bookmark => {
+		return new Bookmark({
+			id: doc.id,
+			...(doc.data() as Bookmark)
+		})
 	}
-
-	static add = async (bookmark: Bookmark) => {
-		return DB.add(this.collectionName, bookmark)
-	}
-
 	static remove = async (id?: string) => {
 		if (!id) return true
 		try {
@@ -54,24 +51,18 @@ export default class Bookmark extends DatabaseCollection implements IBookmark {
 			return false
 		}
 	}
-
-	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): Bookmark => {
-		return new Bookmark({
-			id: doc.id,
-			...(doc.data() as Bookmark)
-		})
-	}
-
-	static getUserBookmarks = async (userId: string) => {
-		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
-		const bookmarks: IBookmark[] = queryDocs.map(this.mapIterator)
-		return bookmarks
-	}
-
-	static getBookmarkByRecipeId = async (recipeId: string, userId: string) => {
-		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
-		const bookmarks: IBookmark[] = queryDocs.map(this.mapIterator)
-		const bookmark = bookmarks.find(b => b.recipeId === recipeId)
-		return bookmark
+	createdBy?: string | undefined
+	createdDate?: Timestamp | Date | undefined
+	id?: string | undefined
+	recipeId: string
+	userId: string
+	constructor(bookmark: IBookmark) {
+		super()
+		const { recipeId, userId, createdDate, createdBy, id } = bookmark
+		this.recipeId = recipeId
+		this.userId = userId
+		this.createdDate = createdDate && convertTimestamp(createdDate)
+		this.createdBy = createdBy
+		this.id = id
 	}
 }

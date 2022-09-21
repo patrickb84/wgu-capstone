@@ -22,12 +22,11 @@ export const getUser = async (id: string) => {
 }
 
 export class User implements IUser {
-	id: string
-	email: string | null | undefined
-	displayName: string | null | undefined
-	photoURL?: string | null | undefined
 	activeMealPlanId?: string
-
+	displayName: string | null | undefined
+	email: string | null | undefined
+	id: string
+	photoURL?: string | null | undefined
 	constructor(user: IUser) {
 		console.log('🚀 ~ User ~ constructor ~ user', user)
 		this.id = user.id

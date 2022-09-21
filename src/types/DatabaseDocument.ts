@@ -9,10 +9,10 @@ export interface IAppResourceModel {
 }
 
 export abstract class DatabaseCollection {
+	static add: (i?: any) => any
 	static collectionName: string
 	static collectionRef: CollectionReference<DocumentData>
+	static delete: (i?: any) => any
 	static get: (i?: any) => any
 	static getAll: (i?: any) => any
-	static add: (i?: any) => any
-	static delete: (i?: any) => any
 }

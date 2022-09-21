@@ -15,7 +15,7 @@ import {
 	updateDoc,
 	where
 } from 'firebase/firestore'
-import IAppModel from 'pages/shared/types/AppModel'
+import IAppModel from 'types/AppModel'
 
 export default class DB {
 	static add = async (collectionName: string, values: any) => {
@@ -28,40 +28,12 @@ export default class DB {
 			console.error(error)
 		}
 	}
-
-	static set = async (collectionName: string, id: string, object: any) => {
-		await setDoc(doc(firestore, collectionName, id), { ...object })
-	}
-
-	static update = async (collectionName: string, values: any, id: string) => {
-		try {
-			const docRef = doc(firestore, collectionName, id)
-			await updateDoc(docRef, values)
-		} catch (error) {
-			console.error(error)
-		}
-	}
-
 	static delete = async (collectionName: string, id: string) => {
 		await deleteDoc(doc(firestore, collectionName, id))
 	}
-
 	static generateQuery = (collectionName: string, field: string, operator: any, value: any) => {
 		return query(collection(firestore, collectionName), where(field, operator, value))
 	}
-
-	static getCollectionByUserId = async (collectionName: string, userId: string) => {
-		const querySnapshot = await getDocs(
-			query(collection(firestore, collectionName), where('userId', '==', userId))
-		)
-		return querySnapshot.docs
-	}
-
-	static getCollectionByQuery = async (query: Query<DocumentData>) => {
-		const querySnapshot = await getDocs(query)
-		return querySnapshot.docs
-	}
-
 	static get = async (collectionName: string, id: string) => {
 		const docRef = doc(firestore, collectionName, id)
 		const docSnap = await getDoc(docRef)
@@ -72,7 +44,19 @@ export default class DB {
 			return null
 		}
 	}
-
+	static getCollectionByQuery = async (query: Query<DocumentData>) => {
+		const querySnapshot = await getDocs(query)
+		return querySnapshot.docs
+	}
+	static getCollectionByUserId = async (collectionName: string, userId: string) => {
+		const querySnapshot = await getDocs(
+			query(collection(firestore, collectionName), where('userId', '==', userId))
+		)
+		return querySnapshot.docs
+	}
+	static set = async (collectionName: string, id: string, object: any) => {
+		await setDoc(doc(firestore, collectionName, id), { ...object })
+	}
 	static subscribeToCollection = (
 		$query: Query<DocumentData>,
 		mapIterator: (doc: QueryDocumentSnapshot<DocumentData>) => any,
@@ -83,5 +67,13 @@ export default class DB {
 			callback(elements)
 		})
 		return unsubscribe
+	}
+	static update = async (collectionName: string, values: any, id: string) => {
+		try {
+			const docRef = doc(firestore, collectionName, id)
+			await updateDoc(docRef, values)
+		} catch (error) {
+			console.error(error)
+		}
 	}
 }

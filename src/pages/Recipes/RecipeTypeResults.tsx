@@ -1,5 +1,5 @@
 import mealdb from 'api/mealdb'
-import ApiRecipe from 'api/mealdb/types/ApiRecipe'
+import ApiRecipe from 'types/ApiRecipe'
 import Breadcrumbs from 'components/Breadcrumbs'
 import Layout from 'components/Layout'
 import MidSpinner from 'components/MidSpinner'
@@ -9,7 +9,7 @@ import { Col, Container, Row } from 'react-bootstrap'
 import ReactPaginate from 'react-paginate'
 import { useLocation, useParams } from 'react-router-dom'
 import { RecipeCard } from './Recipe.Card'
-import { Recipe } from './types/Recipe'
+import { Recipe } from '../../types/Recipe'
 
 export interface IRecipeTypeResultsProps {}
 

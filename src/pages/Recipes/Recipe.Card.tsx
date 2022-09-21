@@ -4,7 +4,7 @@ import { Badge, Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ROUTES from 'routes/routes'
 import { ButtonAddRecipeToPlan } from './ButtonAddRecipeToPlan'
-import { Recipe } from './types/Recipe'
+import { Recipe } from '../../types/Recipe'
 
 export interface IRecipeCardProps {
 	recipe: Recipe

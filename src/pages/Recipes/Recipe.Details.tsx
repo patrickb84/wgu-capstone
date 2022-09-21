@@ -1,5 +1,5 @@
 import mealdb from 'api/mealdb'
-import ApiRecipe from 'api/mealdb/types/ApiRecipe'
+import ApiRecipe from 'types/ApiRecipe'
 import Breadcrumbs from 'components/Breadcrumbs'
 import { GenericIconButtonProps } from 'components/IconButton'
 import Layout from 'components/Layout'
@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom'
 import ROUTES from 'routes/routes'
 import { UserRecipe } from 'types/UserRecipe'
 import { ButtonAddRecipeToPlan } from './ButtonAddRecipeToPlan'
-import { IRecipe, Recipe } from './types/Recipe'
+import { IRecipe, Recipe } from '../../types/Recipe'
 
 const iconProps: Pick<GenericIconButtonProps, 'size' | 'className' | 'colorVariant'> = {
 	size: '1em',

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import IGenericButtonProps from 'types/GenericButton'
-import MealPlan from './types/MealPlan'
+import MealPlan from '../../types/MealPlan'
 
 interface IProps extends IGenericButtonProps {
 	userPlanId: string

@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { useUser } from 'hooks/UserProvider'
 import { useActivePlan } from 'hooks/MealPlanProvider'
 import Tippy from '@tippyjs/react'
-import MealPlan from 'pages/MealPlans/types/MealPlan'
+import MealPlan from 'types/MealPlan'
 import { format } from 'date-fns'
 
 export interface INavbarSectionProps {

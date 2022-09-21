@@ -1,13 +1,13 @@
 import Tippy from '@tippyjs/react'
 import mealdb from 'api/mealdb'
-import { ApiCategory } from 'api/mealdb/types/ApiCategory'
+import { ApiCategory } from 'types/ApiCategory'
 import Layout from 'components/Layout'
 import OverlaySpinner from 'components/OverlaySpinner'
 import Spacer from 'components/Spacer'
 import { getDayOfYear } from 'date-fns'
 import { useUser } from 'hooks/UserProvider'
-import { IMeasuredIngredient, IRecipe, Recipe } from 'pages/Recipes/types/Recipe'
-import ScheduledMeal from 'pages/ScheduledMeals/types/ScheduledMeal'
+import { IMeasuredIngredient, IRecipe, Recipe } from 'types/Recipe'
+import ScheduledMeal from 'types/ScheduledMeal'
 import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
 import * as React from 'react'
 import { Alert, Button, Card, Col, Collapse, Container, Form, InputGroup, Modal, Row, Table } from 'react-bootstrap'
@@ -27,6 +27,7 @@ export type GroceryItemMeta = {
 	recipeName: string
 	recipeCount: number
 }
+
 export type GroceryItem = {
 	ingredientName: string
 	metadata: GroceryItemMeta[]

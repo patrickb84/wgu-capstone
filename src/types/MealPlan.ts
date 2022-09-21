@@ -1,6 +1,6 @@
 import { firestore } from 'api/firebase/app'
 import mealdb from 'api/mealdb'
-import ApiRecipe from 'api/mealdb/types/ApiRecipe'
+import ApiRecipe from 'types/ApiRecipe'
 import { addDays, differenceInDays } from 'date-fns'
 import DB from 'db/Database'
 import {
@@ -15,8 +15,8 @@ import {
 	updateDoc,
 	where
 } from 'firebase/firestore'
-import ScheduledMeal from 'pages/ScheduledMeals/types/ScheduledMeal'
-import IAppModel from 'pages/shared/types/AppModel'
+import ScheduledMeal from 'types/ScheduledMeal'
+import IAppModel from 'types/AppModel'
 import { Dispatch, SetStateAction } from 'react'
 import { convertTimestamp } from 'utils/time.utils'
 
@@ -30,41 +30,6 @@ export interface IMealPlan extends IAppModel {
 }
 
 export default class MealPlan implements IMealPlan {
-	userId: string
-	id?: string
-	planName: string
-	planDescription?: string
-	planStartDate: Date
-	planEndDate: Date
-	createdBy?: string
-	createdOn: Date
-	updatedBy?: string
-	updatedOn?: Date
-
-	constructor(mealPlan: IMealPlan) {
-		const { userId, id, planName, planDescription, planStartDate, planEndDate } = mealPlan
-		this.userId = userId
-		this.id = id
-		this.planName = planName
-		this.planDescription = planDescription
-		this.planStartDate = convertTimestamp(planStartDate)
-		this.planEndDate = convertTimestamp(planEndDate)
-		this.createdOn = new Date()
-	}
-
-	static collectionName = 'userPlan'
-
-	numberOfDays() {
-		return differenceInDays(this.planEndDate, this.planStartDate)
-	}
-
-	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): MealPlan => {
-		return new MealPlan({
-			id: doc.id,
-			...(doc.data() as MealPlan)
-		})
-	}
-
 	static add = async (userPlan: Partial<IMealPlan>, userId: string) => {
 		console.log(this.collectionName, userPlan)
 		try {
@@ -76,38 +41,26 @@ export default class MealPlan implements IMealPlan {
 			console.error(error)
 		}
 	}
-
-	static update = async (values: Partial<IMealPlan>, id: string) => {
-		try {
-			const docRef = doc(firestore, this.collectionName, id)
-			await updateDoc(docRef, values)
-		} catch (error) {
-			console.error(error)
-		}
-	}
-
+	static collectionName = 'userPlan'
 	static delete = async (userPlanId: string) => {
 		await deleteDoc(doc(firestore, this.collectionName, userPlanId))
 	}
-
+	static get = async (planId: string) => {
+		const plan = (await DB.get(this.collectionName, planId)) as IMealPlan
+		return new MealPlan(plan)
+	}
 	static getUserMealPlans = async (userId: string) => {
 		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
 		const plans: IMealPlan[] = queryDocs.map(this.mapIterator)
 		console.log('🚀 ~ MealPlan ~ getUserMealPlans= ~ plans', plans)
 		return plans
 	}
-
-	static subscribe = (userId: string, callback: Dispatch<SetStateAction<MealPlan[]>>) => {
-		const q = query(collection(firestore, this.collectionName), where('userId', '==', userId))
-		const unsubscribe = DB.subscribeToCollection(q, this.mapIterator, callback)
-		return unsubscribe
+	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): MealPlan => {
+		return new MealPlan({
+			id: doc.id,
+			...(doc.data() as MealPlan)
+		})
 	}
-
-	static get = async (planId: string) => {
-		const plan = (await DB.get(this.collectionName, planId)) as IMealPlan
-		return new MealPlan(plan)
-	}
-
 	static populateNewMealPlan = async (startDate: Date, endDate: Date, planId: string, userId: string) => {
 		const numberOfDays = differenceInDays(endDate, startDate)
 
@@ -161,5 +114,42 @@ export default class MealPlan implements IMealPlan {
 				)
 			}
 		}
+	}
+	static subscribe = (userId: string, callback: Dispatch<SetStateAction<MealPlan[]>>) => {
+		const q = query(collection(firestore, this.collectionName), where('userId', '==', userId))
+		const unsubscribe = DB.subscribeToCollection(q, this.mapIterator, callback)
+		return unsubscribe
+	}
+	static update = async (values: Partial<IMealPlan>, id: string) => {
+		try {
+			const docRef = doc(firestore, this.collectionName, id)
+			await updateDoc(docRef, values)
+		} catch (error) {
+			console.error(error)
+		}
+	}
+	createdBy?: string
+	createdOn: Date
+	id?: string
+	planDescription?: string
+	planEndDate: Date
+	planName: string
+	planStartDate: Date
+	updatedBy?: string
+	updatedOn?: Date
+	userId: string
+	constructor(mealPlan: IMealPlan) {
+		const { userId, id, planName, planDescription, planStartDate, planEndDate } = mealPlan
+		this.userId = userId
+		this.id = id
+		this.planName = planName
+		this.planDescription = planDescription
+		this.planStartDate = convertTimestamp(planStartDate)
+		this.planEndDate = convertTimestamp(planEndDate)
+		this.createdOn = new Date()
+	}
+
+	private numberOfDays() {
+		return differenceInDays(this.planEndDate, this.planStartDate)
 	}
 }

@@ -12,7 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import ROUTES from 'routes/routes'
 import { RecipeCard } from './Recipe.Card'
 import { RecipeType } from './RecipeTypeResults'
-import { Recipe } from './types/Recipe'
+import { Recipe } from '../../types/Recipe'
 
 export interface ISearchResultsProps {}
 

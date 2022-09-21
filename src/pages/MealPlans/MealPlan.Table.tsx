@@ -12,7 +12,7 @@ import ROUTES from 'routes/routes'
 import { MealPlanCreateButton } from './MealPlan.Create'
 import MealPlanDeleteButton from './MealPlan.Delete'
 import MealPlanEditButton from './MealPlan.Edit'
-import MealPlan, { IMealPlan } from './types/MealPlan'
+import MealPlan, { IMealPlan } from '../../types/MealPlan'
 
 const MealPlanTable = () => {
 	const user = useUser()
