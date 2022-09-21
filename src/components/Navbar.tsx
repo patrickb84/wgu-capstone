@@ -44,16 +44,16 @@ export const Navbar = (props: INavbarProps) => {
 
 						{user && (
 							<LinkContainer to={ROUTES.MEAL_PLANS}>
-								<Nav.Link className="mx-2">My Meal Plans</Nav.Link>
+								<Nav.Link className="mx-2">Dashboard</Nav.Link>
 							</LinkContainer>
 						)}
 
-						{user && (
+						{/* {user && (
 							<LinkContainer
 								to={activePlan && activePlan.id ? ROUTES.TO_MEAL_PLAN(activePlan.id) : ROUTES.MEAL_PLANS}>
 								<Nav.Link className="mx-2">My Schedule</Nav.Link>
 							</LinkContainer>
-						)}
+						)} */}
 
 						{/* {user && (
 							<LinkContainer to={ROUTES.USER_RECIPE_DASH}>
@@ -61,11 +61,11 @@ export const Navbar = (props: INavbarProps) => {
 							</LinkContainer>
 						)} */}
 
-						{user && (
+						{/* {user && (
 							<LinkContainer to={ROUTES.GROCERY_LIST}>
 								<Nav.Link className="mx-2">My Grocery Planner</Nav.Link>
 							</LinkContainer>
-						)}
+						)} */}
 
 						<LinkContainer to={ROUTES.RECIPES}>
 							<Nav.Link className="mx-2">

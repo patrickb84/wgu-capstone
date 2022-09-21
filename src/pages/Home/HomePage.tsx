@@ -110,7 +110,7 @@ export const HomePage = (props: IHomePageProps) => {
 const Hero = () => {
 	const user = useUser()
 	return (
-		<header className={!user ? 'bg-light' : 'bg-tertiary'}>
+		<header data-testid='homepage-hero' className={!user ? 'bg-light' : 'bg-tertiary'}>
 			<Container>
 				{!user ? (
 					<div
