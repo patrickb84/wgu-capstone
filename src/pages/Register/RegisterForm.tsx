@@ -25,7 +25,7 @@ export function RegisterForm() {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (user) navigate(ROUTES.HOME, { replace: true })
+		if (user) navigate(ROUTES.HOME)
 	}, [location.pathname, navigate, user])
 
 	const [createUserWithEmailAndPassword, user$, loading, error] = useCreateUserWithEmailAndPassword(auth)
@@ -44,7 +44,7 @@ export function RegisterForm() {
 
 	console.log('register', { currentUser: user, user: user$, loading, error })
 
-	if (user$) return <Navigate to="/" replace />
+	if (user$) return <Navigate to="/" />
 
 	if (loading) return <OverlaySpinner />
 

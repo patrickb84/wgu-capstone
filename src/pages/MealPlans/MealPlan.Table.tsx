@@ -23,7 +23,7 @@ const MealPlanTable = () => {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (!user) navigate(ROUTES.LOGIN, { replace: true, state: { redirect: location.pathname } })
+		if (!user) navigate(ROUTES.LOGIN, { state: { redirect: location.pathname } })
 	}, [location.pathname, navigate, user])
 
 	const isPlanActive = (planId: string | undefined) => {
@@ -97,7 +97,7 @@ const MealPlanTable = () => {
 												</Button>
 											</td>
 											<td>
-												<Link to={`/meal-plan/${plan.id}`} replace>
+												<Link to={`/meal-plan/${plan.id}`}>
 													{plan.planName}
 												</Link>
 												<br />
@@ -108,7 +108,7 @@ const MealPlanTable = () => {
 											<td>{plan.$numberOfDays}</td>
 											<td>
 												<div className="flex-column d-flex flex-lg-row">
-													<Link to={`/meal-plan/${plan.id}`} replace>
+													<Link to={`/meal-plan/${plan.id}`}>
 														<Button size="sm" variant="secondary" className="me-lg-1">
 															View
 														</Button>

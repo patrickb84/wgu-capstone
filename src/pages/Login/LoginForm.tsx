@@ -34,7 +34,7 @@ export function LoginForm() {
 		signInWithEmailAndPassword(data.email, data.password)
 	}
 
-	if (user) return <Navigate to="/" replace />
+	if (user) return <Navigate to="/" />
 
 	if (loading) return <OverlaySpinner />
 
@@ -44,7 +44,7 @@ export function LoginForm() {
 
 	console.log('login', { user, loading, error })
 
-	if (currentUser) return <Navigate to={ROUTES.MEAL_PLANS} replace />
+	if (currentUser) return <Navigate to={ROUTES.MEAL_PLANS} />
 
 	return (
 		<>

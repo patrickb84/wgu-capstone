@@ -51,7 +51,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 	const [loading, setLoading] = React.useState(false)
 
 	React.useEffect(() => {
-		if (!user) navigate(ROUTES.LOGIN, { replace: true, state: { redirect: location.pathname } })
+		if (!user) navigate(ROUTES.LOGIN, { state: { redirect: location.pathname } })
 	}, [location.pathname, navigate, user])
 
 	React.useEffect(() => {

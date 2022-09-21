@@ -191,7 +191,7 @@ function RecipeLink(props: Pick<Recipe, 'linkUrl'>) {
 		<>
 			<div className="pt-4 text-end pe-2 small i">
 				Source:{' '}
-				<Link className="text-tertiary" to={props.linkUrl} replace>
+				<Link className="text-tertiary" to={props.linkUrl}>
 					{props.linkUrl}
 				</Link>
 			</div>

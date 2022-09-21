@@ -72,7 +72,7 @@ export const HomePage = (props: IHomePageProps) => {
 
 					<Spacer h={2} />
 					<div className="text-center">
-						<Link to={ROUTES.HOW_IT_WORKS} className="btn btn-brand btn-lg mx-auto px-5" replace>
+						<Link to={ROUTES.HOW_IT_WORKS} className="btn btn-brand btn-lg mx-auto px-5">
 							More Details
 						</Link>
 					</div>
@@ -121,10 +121,10 @@ const Hero = () => {
 							Your meal plan assistant
 						</p>
 						<div className="pt-4">
-							<Link to={ROUTES.REGISTER} className="btn btn-brand btn-lg px-5 mx-1 mx-lg-2" replace>
+							<Link to={ROUTES.REGISTER} className="btn btn-brand btn-lg px-5 mx-1 mx-lg-2">
 								Sign Up
 							</Link>
-							<Link replace to={ROUTES.LOGIN} className="mx-1 mx-lg-2 btn btn-outline-secondary btn-lg px-5">
+							<Link to={ROUTES.LOGIN} className="mx-1 mx-lg-2 btn btn-outline-secondary btn-lg px-5">
 								Sign In
 							</Link>
 						</div>
@@ -137,7 +137,7 @@ const Hero = () => {
 							<Spacer h={1} />
 						<h1 className="font-display text-white display-1 mt-3">Get Started!</h1>
 						<div className="pt-4">
-							<Link to={ROUTES.MEAL_PLANS} className="btn btn-secondary btn-lg mx-1 mx-lg-2 my-2" replace>
+							<Link to={ROUTES.MEAL_PLANS} className="btn btn-secondary btn-lg mx-1 mx-lg-2 my-2">
 								Create a Meal Plan
 							</Link>
 						</div>

@@ -82,9 +82,9 @@ export const useUser = () => {
 	return currentUser
 }
 
-export const useIfNoUser = () => {
-	const { currentUser } = useContext(UserContext)
-	const navigate = useNavigate()
+// export const useIfNoUser = () => {
+// 	const { currentUser } = useContext(UserContext)
+// 	const navigate = useNavigate()
 
-	if (!currentUser) navigate('/', { replace: true })
-}
+// 	if (!currentUser) navigate('/')
+// }

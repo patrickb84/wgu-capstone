@@ -16,7 +16,7 @@ export const LoginPage = () => {
 
 	useEffect(() => {
 		const state = location.state as { redirect: string }
-		if (user && state.redirect) navigate(state.redirect || ROUTES.HOME, { replace: true })
+		if (user && state.redirect) navigate(state.redirect || ROUTES.HOME)
 	}, [location.state, navigate, user])
 
 	return (
@@ -38,7 +38,7 @@ export const LoginPage = () => {
 							<h2 className="font-display mb-1 mb-lg-2">Sign In!</h2>
 							<p className="text-center text-muted">
 								Don't have an account?{' '}
-								<Link to={ROUTES.REGISTER} replace>
+								<Link to={ROUTES.REGISTER}>
 									Sign up
 								</Link>
 							</p>
