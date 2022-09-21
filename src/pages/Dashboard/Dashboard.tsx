@@ -1,19 +1,27 @@
-import { HelperModal } from 'components/HelperModal'
+
 import Layout from 'components/Layout'
 import { format } from 'date-fns'
 import { useActivePlan } from 'hooks/MealPlanProvider'
-import { CreateReportButton } from 'pages/Reports/Report.Create'
 import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
-import * as React from 'react'
-import { Alert, Button, Card, Col, Container, ListGroup, Row } from 'react-bootstrap'
+import { Card, Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Outlet } from 'react-router-dom'
 import ROUTES from 'routes/routes'
+import { useUser } from 'hooks/UserProvider'
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export interface IDashboardProps {}
 
 export function Dashboard(props: IDashboardProps) {
 	const { activePlan } = useActivePlan()
+	const location = useLocation()
+	const navigate = useNavigate()
+	const user = useUser()
+
+	useEffect(() => {
+		if (!user) navigate(ROUTES.LOGIN, { state: { redirect: location.pathname } })
+	}, [location.pathname, navigate, user])
 
 	return (
 		<Layout>

@@ -23,14 +23,6 @@ export function MealPlanView(props: IMealPlanViewProps) {
 	const [mealPlan, setMealPlan] = useState<MealPlan | null>(null)
 	const [loading, setLoading] = useState(true)
 
-	const user = useUser()
-	const location = useLocation()
-	const navigate = useNavigate()
-
-	useEffect(() => {
-		if (!user) navigate(ROUTES.LOGIN, { state: { redirect: location.pathname } })
-	}, [location.pathname, navigate, user])
-
 	useEffect(() => {
 		if (id) {
 			MealPlan.get(id).then(mealPlan => {

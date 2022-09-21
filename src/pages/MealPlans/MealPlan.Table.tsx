@@ -1,30 +1,18 @@
-import mealdb from 'api/mealdb'
 import { HelperModal } from 'components/HelperModal'
 import Layout from 'components/Layout'
 import { differenceInDays, isAfter } from 'date-fns'
 import { useActivePlan, useUserMealPlans } from 'hooks/MealPlanProvider'
-import { useUser } from 'hooks/UserProvider'
 import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
-import { useEffect, useState } from 'react'
 import { Alert, Button, Card, Container, Table } from 'react-bootstrap'
-import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import ROUTES from 'routes/routes'
+import { Link } from 'react-router-dom'
 import { MealPlanCreateButton } from './MealPlan.Create'
 import MealPlanDeleteButton from './MealPlan.Delete'
 import MealPlanEditButton from './MealPlan.Edit'
-import MealPlan, { IMealPlan } from '../../types/MealPlan'
+import MealPlan from '../../types/MealPlan'
 
 const MealPlanTable = () => {
-	const user = useUser()
 	const userPlans = useUserMealPlans()
 	const { activePlan, activatePlan } = useActivePlan()
-
-	const location = useLocation()
-	const navigate = useNavigate()
-
-	useEffect(() => {
-		if (!user) navigate(ROUTES.LOGIN, { state: { redirect: location.pathname } })
-	}, [location.pathname, navigate, user])
 
 	const isPlanActive = (planId: string | undefined) => {
 		if (!activePlan) return false
