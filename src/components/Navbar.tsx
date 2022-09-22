@@ -39,8 +39,7 @@ export const Navbar = (props: INavbarProps) => {
 			expand="lg"
 			fixed="top"
 			className="border-brand border-top border-5 shadow-sm"
-			data-testid="navbar"
-			style={{ height: 67.5 }}>
+			data-testid="navbar">
 			<Container fluid className="justify-content-start align-items-center">
 				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
 					<Nav className="mb-3 mb-lg-0">
@@ -90,22 +89,15 @@ export const Navbar = (props: INavbarProps) => {
 				</LinkContainer>
 
 				<Nav className="ms-auto order-3 d-flex align-items-center flex-row">
-					{/* <LinkContainer to={ROUTES.RECIPES}>
+					<LinkContainer to={ROUTES.RECIPES}>
 						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
-							<i className="far fa-basket-shopping text-secondary fs-3" />
+							<i className="far fa-search text-secondary fs-3" />
 						</Nav.Link>
-					</LinkContainer> */}
+					</LinkContainer>
 					{!user ? (
 						<SignInSignUpButtons />
 					) : (
 						<>
-							<LinkContainer to={ROUTES.RECIPES}>
-								<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
-									<Tippy content="Search Recipes">
-										<i className="far fa-search text-secondary fs-3" />
-									</Tippy>
-								</Nav.Link>
-							</LinkContainer>
 							<UserDropdown user={user} activePlan={activePlan} />
 						</>
 					)}
@@ -118,7 +110,7 @@ export const Navbar = (props: INavbarProps) => {
 const SignInSignUpButtons = () => {
 	return (
 		<>
-			<Link className="btn btn-brand btn-sm ms-lg-1" to={ROUTES.REGISTER}>
+			<Link className="btn btn-brand btn-sm ms-lg-1 d-none d-lg-block" to={ROUTES.REGISTER}>
 				Sign Up
 			</Link>
 			<Link className="btn btn-secondary btn-sm ms-1 ms-lg-1" data-testid="navbar-sign-in" to={ROUTES.LOGIN}>
