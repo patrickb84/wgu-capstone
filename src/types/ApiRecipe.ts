@@ -1,14 +1,14 @@
 export default interface ApiRecipe {
 	dateModified?: string | null
-	idMeal?: string | null
-	strArea?: string | null
-	strCategory?: string | null
-	strInstructions?: string | null
-	strMeal?: string | null
-	strMealThumb?: string | null
-	strTags?: string | null
-	strYoutube?: string | null
-	strSource?: string | null
+	idMeal?: string
+	strArea?: string
+	strCategory?: string
+	strInstructions?: string
+	strMeal?: string
+	strMealThumb?: string
+	strTags?: string
+	strYoutube?: string
+	strSource?: string
 	strDrinkAlternate?: string | null
 	strIngredient1?: string | null
 	strIngredient2?: string | null
