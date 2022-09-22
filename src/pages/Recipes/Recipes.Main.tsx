@@ -1,5 +1,5 @@
 import Layout from 'components/Layout'
-import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
+import PageHeader, { PageSubtitle, PageTitle } from 'components/PageHeader'
 import * as React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Recipe } from 'types/Recipe'

@@ -1,7 +1,7 @@
 import mealdb from 'api/mealdb'
 import { format, isSameDay } from 'date-fns'
 import ScheduledMeal, { IScheduledMeal } from 'types/ScheduledMeal'
-import { FlexCenterBetween } from 'pages/shared/PageHeader'
+import { FlexCenterBetween } from 'components/PageHeader'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Card, Container } from 'react-bootstrap'
 import { convertTimestamp, getDateArray } from 'utils/time.utils'

@@ -20,7 +20,7 @@ export function HelperModal(props: IHelperModalProps) {
 	return (
 		<>
 			{asButton ? (
-				<Button variant="primary" onClick={handleShow}>
+				<Button variant="primary" onClick={handleShow} data-testid="button-only">
 					<i className="fad fa-circle-question"></i>
 				</Button>
 			) : (
@@ -34,7 +34,7 @@ export function HelperModal(props: IHelperModalProps) {
 				/>
 			)}
 
-			<Modal show={show} onHide={handleClose}>
+			<Modal show={show} onHide={handleClose} data-testid="helper-modal">
 				<Modal.Header closeButton>
 					<Modal.Title>{props.title ? props.title : 'Help'}</Modal.Title>
 				</Modal.Header>

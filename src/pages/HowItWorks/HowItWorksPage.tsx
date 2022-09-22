@@ -1,17 +1,16 @@
 import Layout from 'components/Layout'
-import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
+import PageHeader, { PageSubtitle, PageTitle } from 'components/PageHeader'
 import * as React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import ROUTES from 'routes/routes'
-
 import image2 from 'styles/img/line_guy/011-cook.png'
 
 export interface IHowToProps {}
 
 const Section = ({ children }: { children: React.ReactNode }) => <div className="py-5">{children}</div>
 
-export function HowTo(props: IHowToProps) {
+export function HowItWorksPage(props: IHowToProps) {
 	return (
 		<Layout>
 			<PageHeader variant="brand">
@@ -21,7 +20,7 @@ export function HowTo(props: IHowToProps) {
 				</div>
 			</PageHeader>
 
-			<Container className="my-5">
+			<Container className="my-5" data-testid='howitworks'>
 				<Row>
 					<Col lg={5} md={10}>
 						<h2>Steps</h2>
@@ -40,7 +39,7 @@ export function HowTo(props: IHowToProps) {
 							</p>
 							<br />
 
-							<Link to={ROUTES.MEAL_PLANS} className="btn btn-tertiary text-white">
+							<Link to={ROUTES.MEAL_PLANS} className="btn btn-tertiary text-white howitworks-btn" data-testid='howitworks-btn'>
 								Create a meal plan
 							</Link>
 						</Section>
@@ -56,7 +55,7 @@ export function HowTo(props: IHowToProps) {
 							{/* <p>
 								You can even add your own recipes! Just click the "Create recipes" button on the recipe page.
 							</p> */}
-							<Link to={ROUTES.RECIPES} className="btn btn-tertiary text-white">
+							<Link to={ROUTES.RECIPES} className="btn btn-tertiary text-white howitworks-btn" data-testid='howitworks-btn'>
 								Search for recipes
 							</Link>
 							{/* <br />
@@ -75,7 +74,7 @@ export function HowTo(props: IHowToProps) {
 								convenience.
 							</p>
 
-							<Link to={ROUTES.GROCERY_LIST} className="btn btn-tertiary text-white">
+							<Link to={ROUTES.GROCERY_LIST} className="btn btn-tertiary text-white howitworks-btn" data-testid='howitworks-btn'>
 								Get a shopping list
 							</Link>
 						</Section>

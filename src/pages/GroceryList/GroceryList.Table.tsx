@@ -10,7 +10,7 @@ import Papa from 'papaparse'
 import jsPDF from 'jspdf'
 import { useActivePlan, useGroceryItems, useIncludedItems } from 'hooks/MealPlanProvider'
 import MidSpinner from 'components/MidSpinner'
-import { GroceryPageInfo } from './InfoMessage'
+import { GroceryPageInfo } from '../../components/GroceryInfo'
 import ShoppingSublist from './ShoppingSublist'
 
 export interface IGroceryListTableProps {}
@@ -242,7 +242,7 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 	return (
 		<>
 			{!scheduledMeals.length ? (
-				<GroceryPageInfo scheduledMeals={scheduledMeals} />
+				<GroceryPageInfo hasScheduledMeals={!!scheduledMeals.length} hasActivePlan={!!activePlan} />
 			) : (
 				<>
 					<div className="my-3 d-flex align-items-center justify-content-end">

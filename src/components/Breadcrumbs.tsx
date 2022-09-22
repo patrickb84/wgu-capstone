@@ -1,16 +1,6 @@
-import * as React from 'react'
 import BootstrapBreadcrumb from 'react-bootstrap/Breadcrumb'
 import BootstrapBreadcrumbItem from 'react-bootstrap/BreadcrumbItem'
 import { LinkContainer } from 'react-router-bootstrap'
-
-// export interface IBootstrapBreadcrumbItemProps {
-// 	active?: boolean
-// 	href?: string
-// 	title?: string
-// 	target?: string
-// 	onClick?: (event: React.MouseEvent<HTMLElement>) => void
-// 	children?: React.ReactNode
-// }
 
 export interface IBreadcrumbItemProps {
 	active?: boolean
@@ -25,7 +15,7 @@ export interface IBreadcrumbProps {
 export default function Breadcrumbs({ items }: IBreadcrumbProps) {
 	return (
 		<>
-			<BootstrapBreadcrumb className="small">
+			<BootstrapBreadcrumb className="small" data-testid="breadcrumbs">
 				<LinkContainer to={'/'}>
 					<BootstrapBreadcrumbItem>
 						<span className="text-white">
@@ -36,7 +26,9 @@ export default function Breadcrumbs({ items }: IBreadcrumbProps) {
 				{items.map((item, index) => (
 					<LinkContainer key={index} to={item.to}>
 						<BootstrapBreadcrumbItem>
-							<span className="text-white">{item.label}</span>
+							<span className="text-white" data-testid="breadcrumb-label">
+								{item.label}
+							</span>
 						</BootstrapBreadcrumbItem>
 					</LinkContainer>
 				))}

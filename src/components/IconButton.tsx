@@ -20,6 +20,7 @@ const RenderButton = React.forwardRef((props: IconButtonProps, ref) => {
 	const { onClick, iconFaName, iconFaGroup, colorVariant, size } = props
 	return (
 		<button
+			data-testid="icon-button"
 			ref={ref as React.Ref<HTMLButtonElement>}
 			onClick={onClick}
 			className={`icon-button icon-button-lg text-${colorVariant} ${props.className}`}

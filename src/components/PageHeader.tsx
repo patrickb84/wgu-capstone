@@ -29,14 +29,14 @@ export default function PageHeader({
 
 	if (nonStandard) {
 		return (
-			<header className={headerClassBuilder()}>
+			<header data-testid='page-header' className={headerClassBuilder()}>
 				<Container className="py-4">{children}</Container>
 			</header>
 		)
 	}
 
 	return (
-		<header className={headerClassBuilder()}>
+		<header data-testid='page-header' className={headerClassBuilder()}>
 			<Container className="py-4">
 				{nonStandard ? children : <FlexCenterBetween>{children}</FlexCenterBetween>}
 			</Container>
@@ -59,9 +59,9 @@ interface IPageTitleProps {
 }
 export const PageTitle = (props: IPageTitleProps) => {
 	const { children, className } = props
-	return <h1 className={`font-display mb-lg-0 ${className}`}>{children}</h1>
+	return <h1 data-testid='page-title' className={`font-display mb-lg-0 ${className}`}>{children}</h1>
 }
 
 export const PageSubtitle = (props: IChildrenProps) => {
-	return <p className="mb-0">{props.children}</p>
+	return <p data-testid='page-subtitle' className="mb-0">{props.children}</p>
 }

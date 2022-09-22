@@ -2,7 +2,7 @@ import { HelperModal } from 'components/HelperModal'
 import Layout from 'components/Layout'
 import { differenceInDays, isAfter } from 'date-fns'
 import { useActivePlan, useUserMealPlans } from 'hooks/MealPlanProvider'
-import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
+import PageHeader, { PageSubtitle, PageTitle } from 'components/PageHeader'
 import { Alert, Button, Card, Container, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { MealPlanCreateButton } from './MealPlan.Create'
@@ -149,40 +149,6 @@ const MealPlanTable = () => {
 					)}
 				</Card.Body>
 			</Card>
-		</>
-	)
-}
-
-export const MealPlanTablePage = ({ children }: any) => {
-	return (
-		<>
-			<Layout>
-				<PageHeader variant="secondary">
-					<div>
-						<PageTitle>
-							Meal Plans{' '}
-							<HelperModal title="Start by creating a meal plan">
-								<>
-									<p>
-										Create a plan. Designate a range of dates to plan for. For example, if you want to grocery
-										shop for just a week, pick that many days.
-									</p>
-									<p>When you create a plan, we add a few recipes to get you started.</p>
-									<p className="mb-0">When you're finished, view your plan. Go wild!</p>
-								</>
-							</HelperModal>
-						</PageTitle>
-						<PageSubtitle>Manage your meal plans</PageSubtitle>
-					</div>
-					<MealPlanCreateButton variant="danger" className="shadow-lg">
-						Create Plan
-					</MealPlanCreateButton>
-				</PageHeader>
-
-				<section>
-					<Container className="my-3">{children}</Container>
-				</section>
-			</Layout>
 		</>
 	)
 }

@@ -2,7 +2,7 @@ import { Dashboard } from 'pages/Dashboard/Dashboard'
 import { ErrorPage } from 'pages/Error/ErrorPage'
 import GroceryListTable from 'pages/GroceryList/GroceryList.Table'
 import { HomePage } from 'pages/Home/HomePage'
-import { HowTo } from 'pages/HowItWorks/HowTo'
+import { HowItWorksPage } from 'pages/HowItWorks/HowItWorksPage'
 import { LoginPage } from 'pages/Login/LoginPage'
 import MealPlanTable from 'pages/MealPlans/MealPlan.Table'
 import { MealPlanView } from 'pages/MealPlans/MealPlan.View'
@@ -31,7 +31,7 @@ export default function App() {
 				<Route path={ROUTES.RECIPE} element={<RecipeDetails />} />
 				<Route path={ROUTES.RECIPE_TYPE_VIEW} element={<RecipeTypeResults />} />
 				<Route path={ROUTES.SEARCH} element={<SearchResults />} />
-				<Route path={ROUTES.HOW_IT_WORKS} element={<HowTo />} />
+				<Route path={ROUTES.HOW_IT_WORKS} element={<HowItWorksPage />} />
 
 				<Route path={ROUTES.ERROR} element={<ErrorPage />} />
 

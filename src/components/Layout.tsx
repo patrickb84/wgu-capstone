@@ -10,11 +10,11 @@ export default function Layout({ children }: ILayoutProps) {
 	return (
 		<>
 			<Navbar />
-			<div className="navbar-ref-height" />
+			<div data-testid='navbar-offset' className="navbar-ref-height" />
 			<div style={{ minHeight: '78vh' }}>
 				<>{children}</>
 			</div>
-			<footer className="bg-white text-brand w-100 py-5 border border-top">
+			<footer data-testid='footer' className="bg-white text-brand w-100 py-5 border border-top">
 				<div className="container">
 					<MiniLogo colorClass="brand" />
 

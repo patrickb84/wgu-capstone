@@ -1,7 +1,7 @@
 import Breadcrumbs from 'components/Breadcrumbs'
 import Layout from 'components/Layout'
 import { useRecipeData } from 'hooks/RecipeDataProvider'
-import PageHeader, { PageTitle } from 'pages/shared/PageHeader'
+import PageHeader, { PageTitle } from 'components/PageHeader'
 import * as React from 'react'
 import { Container } from 'react-bootstrap'
 import { Link } from 'react-router-dom'

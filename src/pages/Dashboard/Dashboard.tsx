@@ -2,7 +2,7 @@
 import Layout from 'components/Layout'
 import { format } from 'date-fns'
 import { useActivePlan } from 'hooks/MealPlanProvider'
-import PageHeader, { PageSubtitle, PageTitle } from 'pages/shared/PageHeader'
+import PageHeader, { PageSubtitle, PageTitle } from 'components/PageHeader'
 import { Card, Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Outlet } from 'react-router-dom'

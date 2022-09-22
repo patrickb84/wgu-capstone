@@ -13,6 +13,8 @@ import { Recipe } from 'types/Recipe'
 import { RecipeCard } from 'pages/Recipes/Recipe.Card'
 import { useUser } from 'hooks/UserProvider'
 import { MiniLogo } from 'components/Logo'
+import { HomePageSectionHowItWorks } from './Section.HowItWorks'
+import { SectionRecipes } from './Section.Recipes'
 
 export interface IHomePageProps {}
 
@@ -30,78 +32,9 @@ export const HomePage = (props: IHomePageProps) => {
 		<Layout>
 			<Hero />
 
-			<section className="py-5">
-				<Container className="py-5">
-					<h1 className="text-center mb-5 display-4">How it works</h1>
-					<Row>
-						<Col lg={4}>
-							<Card className="border-0 mb-3">
-								<img src={img_1} alt="plan" className="w-100 mb-2 mx-auto" style={{ maxWidth: 250 }} />
-								<Card.Body className="px-lg-5 text-center">
-									<Card.Title>Create a meal plan</Card.Title>
-									<Card.Text>For whatever time frame you'd like, however many plans you want or need</Card.Text>
-								</Card.Body>
-							</Card>
-						</Col>
-						<Col lg={4}>
-							<Card className="border-0 mb-3">
-								<img src={img_2} alt="find" className="w-100 mb-2 mx-auto" style={{ maxWidth: 250 }} />
-								<Card.Body className="px-lg-5 text-center">
-									<Card.Title>Add recipes</Card.Title>
-									<Card.Text>
-										Once you create a meal plan, we'll automatically fill it in with recipes that fit. At any
-										time you can add or remove recipes.
-									</Card.Text>
-								</Card.Body>
-							</Card>
-						</Col>
-						<Col lg={4}>
-							<Card className="border-0 mb-3">
-								<img src={img_3} alt="save" className="w-100 mb-2 mx-auto" style={{ maxWidth: 250 }} />
-								<Card.Body className="px-lg-5 text-center">
-									<Card.Title>Get a shopping list</Card.Title>
-									<Card.Text>
-										When you're ready, a shopping list will be prepared for you, just exclude the items you
-										don't need and be on your way!
-									</Card.Text>
-								</Card.Body>
-							</Card>
-						</Col>
-					</Row>
+			<HomePageSectionHowItWorks />
 
-					<Spacer h={2} />
-					<div className="text-center">
-						<Link to={ROUTES.HOW_IT_WORKS} className="btn btn-brand btn-lg mx-auto px-5">
-							More Details
-						</Link>
-					</div>
-				</Container>
-			</section>
-
-			<section className="py-5 bg-gray-200">
-				<Container className="py-5">
-					<h2 className="display-4 font-display text-tertiary text-center mb-5">Such Recipes!</h2>
-					<p className="font-hand h1 text-center mb-5">Choose from an ever-growing cookbook.</p>
-					<Spacer h={1} />
-					<Row>
-						{recipes.slice(0, 8).map((recipe, idx) => {
-							return (
-								<Col md={6} lg={4} xl={3} className="mb-3" key={idx}>
-									<RecipeCard key={recipe.id} recipe={recipe} />
-								</Col>
-							)
-						})}
-					</Row>
-
-					<Spacer h={1} />
-
-					<div className="text-center my-5">
-						<Link to={ROUTES.RECIPES} className="btn btn-brand btn-lg">
-							See All Recipes
-						</Link>
-					</div>
-				</Container>
-			</section>
+			<SectionRecipes recipes={recipes} />
 		</Layout>
 	)
 }
