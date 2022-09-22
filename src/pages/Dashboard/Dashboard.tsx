@@ -40,7 +40,7 @@ export function Dashboard(props: IDashboardProps) {
 				</Row>
 				<Row>
 					<Col lg={3}>
-						<div className="mb-5">
+						<div className="mb-3">
 							<ListGroup>
 								<LinkContainer to={ROUTES.MEAL_PLANS} style={{ cursor: 'pointer' }}>
 									<ListGroup.Item>My Meal Plans</ListGroup.Item>
@@ -54,7 +54,7 @@ export function Dashboard(props: IDashboardProps) {
 							</ListGroup>
 
 							{activePlan && (
-								<div className="mt-3">
+								<div className="mt-3 d-none d-lg-block">
 									<Card>
 										<Card.Header>
 											<div className="d-flex align-items-baseline justify-content-between">

@@ -9,6 +9,7 @@ import { MealPlanCreateButton } from './MealPlan.Create'
 import MealPlanDeleteButton from './MealPlan.Delete'
 import MealPlanEditButton from './MealPlan.Edit'
 import MealPlan from '../../types/MealPlan'
+import ROUTES from 'routes/routes'
 
 const MealPlanTable = () => {
 	const userPlans = useUserMealPlans()
@@ -57,7 +58,8 @@ const MealPlanTable = () => {
 				</p>
 			</Alert>
 			<Card>
-				<Card.Header>My Meal Plans</Card.Header>
+				<Card.Header className='d-flex align-items-center justify-content-between'><div>My Meal Plans</div>
+				<div className='small text-danger d-lg-none'>Swipe <i className="fad fa-right"></i> on the table</div></Card.Header>
 				<Card.Body>
 					{userPlans.length > 0 ? (
 						<Table responsive size="sm">
@@ -85,7 +87,7 @@ const MealPlanTable = () => {
 												</Button>
 											</td>
 											<td>
-												<Link to={`/meal-plan/${plan.id}`}>
+												<Link to={ROUTES.TO_MEAL_PLAN(plan.id)}>
 													{plan.planName}
 												</Link>
 												<br />
@@ -96,7 +98,7 @@ const MealPlanTable = () => {
 											<td>{plan.$numberOfDays}</td>
 											<td>
 												<div className="flex-column d-flex flex-lg-row">
-													<Link to={`/meal-plan/${plan.id}`}>
+													<Link to={ROUTES.TO_MEAL_PLAN(plan.id)}>
 														<Button size="sm" variant="secondary" className="me-lg-1">
 															View
 														</Button>

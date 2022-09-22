@@ -5,7 +5,7 @@ import Spacer from 'components/Spacer'
 import { IMeasuredIngredient, IRecipe, Recipe } from 'types/Recipe'
 import ScheduledMeal from 'types/ScheduledMeal'
 import * as React from 'react'
-import { Button, Card, Col, Form, InputGroup, Row } from 'react-bootstrap'
+import { Alert, Button, Card, Col, Form, InputGroup, Row } from 'react-bootstrap'
 import Papa from 'papaparse'
 import jsPDF from 'jspdf'
 import { useActivePlan, useGroceryItems, useIncludedItems } from 'hooks/MealPlanProvider'
@@ -241,6 +241,17 @@ export default function GroceryListTable(props: IGroceryListTableProps) {
 
 	return (
 		<>
+			<>
+				<Alert variant="primary">
+					<Alert.Heading>Grocery Planner</Alert.Heading>
+					<p>Here you'll find all the ingredients need for your meal plan in one place.</p>
+					<p>
+						You can use this page to create a shopping list for your next grocery trip. If you don't need all the
+						ingredients, you can uncheck them to leave them out.
+					</p>
+					<p className="mb-0">When you're finished, you can save this as a report.</p>
+				</Alert>
+			</>
 			{!scheduledMeals.length ? (
 				<GroceryPageInfo hasScheduledMeals={!!scheduledMeals.length} hasActivePlan={!!activePlan} />
 			) : (

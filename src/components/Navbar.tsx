@@ -1,4 +1,4 @@
-import { Container, Nav, Navbar as BootstrapNavbar, NavbarBrand, NavDropdown } from 'react-bootstrap'
+import { ButtonGroup, Container, Nav, Navbar as BootstrapNavbar, NavbarBrand, NavDropdown } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import ROUTES from 'routes/routes'
 import { signOut } from 'firebase/auth'
@@ -34,7 +34,13 @@ export const Navbar = (props: INavbarProps) => {
 	if (isHidden) return <></>
 
 	return (
-		<BootstrapNavbar bg="white" expand="lg" fixed="top" className="border-brand border-top border-5 shadow-sm" data-testid='navbar'>
+		<BootstrapNavbar
+			bg="white"
+			expand="lg"
+			fixed="top"
+			className="border-brand border-top border-5 shadow-sm"
+			data-testid="navbar"
+			style={{ height: 67.5 }}>
 			<Container fluid className="justify-content-start align-items-center">
 				<BootstrapNavbar.Collapse id="navbar-nav" className="order-lg-1">
 					<Nav className="mb-3 mb-lg-0">
@@ -68,9 +74,7 @@ export const Navbar = (props: INavbarProps) => {
 						)} */}
 
 						<LinkContainer to={ROUTES.RECIPES}>
-							<Nav.Link className="mx-2">
-								Search Recipes
-							</Nav.Link>
+							<Nav.Link className="mx-2">Search Recipes</Nav.Link>
 						</LinkContainer>
 						<LinkContainer to={ROUTES.HOW_IT_WORKS}>
 							<Nav.Link className="mx-2"> How it works</Nav.Link>
@@ -86,19 +90,25 @@ export const Navbar = (props: INavbarProps) => {
 				</LinkContainer>
 
 				<Nav className="ms-auto order-3 d-flex align-items-center flex-row">
-					<LinkContainer to={ROUTES.RECIPES}>
-						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
-							<Tippy content="Search Recipes">
-								<i className="far fa-search text-secondary fs-3" />
-							</Tippy>
-						</Nav.Link>
-					</LinkContainer>
 					{/* <LinkContainer to={ROUTES.RECIPES}>
 						<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
 							<i className="far fa-basket-shopping text-secondary fs-3" />
 						</Nav.Link>
 					</LinkContainer> */}
-					{!user ? <SignInSignUpButtons /> : <UserDropdown user={user} activePlan={activePlan} />}
+					{!user ? (
+						<SignInSignUpButtons />
+					) : (
+						<>
+							<LinkContainer to={ROUTES.RECIPES}>
+								<Nav.Link style={{ padding: 8 }} className="mx-1 mx-lg-0">
+									<Tippy content="Search Recipes">
+										<i className="far fa-search text-secondary fs-3" />
+									</Tippy>
+								</Nav.Link>
+							</LinkContainer>
+							<UserDropdown user={user} activePlan={activePlan} />
+						</>
+					)}
 				</Nav>
 			</Container>
 		</BootstrapNavbar>
@@ -108,10 +118,10 @@ export const Navbar = (props: INavbarProps) => {
 const SignInSignUpButtons = () => {
 	return (
 		<>
-			<Link className="btn btn-brand btn-sm mx-1" to={ROUTES.REGISTER}>
+			<Link className="btn btn-brand btn-sm ms-lg-1" to={ROUTES.REGISTER}>
 				Sign Up
 			</Link>
-			<Link className="btn btn-secondary btn-sm mx-1" data-testid='navbar-sign-in' to={ROUTES.LOGIN}>
+			<Link className="btn btn-secondary btn-sm ms-1 ms-lg-1" data-testid="navbar-sign-in" to={ROUTES.LOGIN}>
 				Sign In
 			</Link>
 		</>
@@ -162,7 +172,9 @@ const UserDropdown = ({ user, activePlan: plan }: { user: IUser; activePlan?: Me
 			{planDisplay}
 			<NavDropdown.Divider />
 			<NavDropdown.Header>{user.email}</NavDropdown.Header>
-			<NavDropdown.Item data-testid='navbar-sign-out' onClick={() => signOut(auth).then(() => navigate(ROUTES.HOME))}>
+			<NavDropdown.Item
+				data-testid="navbar-sign-out"
+				onClick={() => signOut(auth).then(() => navigate(ROUTES.HOME))}>
 				<div className="d-flex justify-content-between align-items-center">
 					<span>Sign Out</span>
 					<i className="fad fa-sign-out-alt" />
