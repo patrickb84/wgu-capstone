@@ -31,7 +31,6 @@ export interface IMealPlan extends IAppModel {
 
 export default class MealPlan implements IMealPlan {
 	static add = async (userPlan: Partial<IMealPlan>, userId: string) => {
-		console.log(this.collectionName, userPlan)
 		try {
 			userPlan.userId = userId
 			userPlan.createdOn = new Date()
@@ -52,7 +51,6 @@ export default class MealPlan implements IMealPlan {
 	static getUserMealPlans = async (userId: string) => {
 		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
 		const plans: IMealPlan[] = queryDocs.map(this.mapIterator)
-		console.log('🚀 ~ MealPlan ~ getUserMealPlans= ~ plans', plans)
 		return plans
 	}
 	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): MealPlan => {
@@ -72,8 +70,6 @@ export default class MealPlan implements IMealPlan {
 			let idMeals = res.map(r => r.idMeal as string)
 			randomMeals.push(...idMeals)
 		}
-
-		console.log(randomMeals)
 
 		const toAdd = []
 		for (let i = 0; i <= numberOfDays; i++) {
@@ -98,7 +94,6 @@ export default class MealPlan implements IMealPlan {
 					async scheduledMeal =>
 						await ScheduledMeal.add(scheduledMeal, userId).then(id => {
 							if (id === undefined) throw new Error('No id returned')
-							console.log(id)
 							ids.push(id)
 						})
 				)

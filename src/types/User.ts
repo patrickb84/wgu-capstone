@@ -13,7 +13,6 @@ export const updateUser = async (user: IUser, params: Partial<IUser>) => {
 }
 
 export const getUser = async (id: string) => {
-	console.log('getUser', id)
 	const user = await DB.get('users', id)
 	if (!user) {
 		throw new Error('User not found')
@@ -28,7 +27,6 @@ export class User implements IUser {
 	id: string
 	photoURL?: string | null | undefined
 	constructor(user: IUser) {
-		console.log('🚀 ~ User ~ constructor ~ user', user)
 		this.id = user.id
 		this.email = user.email
 		this.displayName = user.displayName

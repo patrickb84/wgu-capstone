@@ -65,7 +65,7 @@ export const RecipeDataProvider = ({ children }: IProviderProps) => {
 				url: ROUTES.TO_RECIPE_TYPE_VIEW('ingredient', ingredient.strIngredient?.toLowerCase().split(' ').join('_') || '', ingredient.strIngredient || '')
 			})
 		})
-		// console.log('data', data)
+		
 		data.sort((a, b) => {
 			if (a.text < b.text) {
 				return -1

@@ -30,7 +30,6 @@ export function LoginForm() {
 	} = useForm<IFormInputs>()
 
 	const onSubmit: SubmitHandler<IFormInputs> = data => {
-		console.log(data)
 		signInWithEmailAndPassword(data.email, data.password)
 	}
 
@@ -41,8 +40,6 @@ export function LoginForm() {
 	if (error) {
 		console.error(error)
 	}
-
-	console.log('login', { user, loading, error })
 
 	if (currentUser) return <Navigate to={ROUTES.MEAL_PLANS} />
 

@@ -18,8 +18,6 @@ export const GoogleButton = ({ style, className }: IGoogleButtonProps) => {
 
 	if (error) console.error(error)
 
-	if (loading) console.log('loading @ google button')
-
 	return (
 		<>
 			<Button style={style} className={className} onClick={() => signInWithGoogle()}>

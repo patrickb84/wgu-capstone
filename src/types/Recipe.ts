@@ -24,7 +24,6 @@ export class Recipe implements IRecipe {
 	}
 	static findRecipeById = async (recipeId: string) => {
 		const recipe = await mealdb.fetchRecipe(recipeId)
-		console.log(recipe)
 		return new Recipe(recipe)
 	}
 	static findRecipesByArea = async (areaName: string) => {

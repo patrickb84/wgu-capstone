@@ -65,24 +65,9 @@ export const MealPlanProvider = ({ children }: IMealPlanProviderProps) => {
 		}
 	}
 
-	// useEffect(() => {
-	// 	const getMeals = async () => {
-	// 		if (!user || !activePlan || !activePlan.id) return
-
-	// 		const meals = await ScheduledMeal.getMealPlanScheduledMeals(activePlan.id)
-	// 		const consoleLogWithStyle = (style: string) => (message: string) => console.log(`%c${message}`, style)
-	// 		const log = consoleLogWithStyle('color: #00bfa5; font-weight: bold;')
-	// 		log('Scheduled meals for active plan:')
-	// 		console.table(meals)
-	// 	}
-
-	// 	getMeals()
-	// }, [activePlan, user])
-
 	const parseMealPlanScheduleAndRecipes = async () => {
 		if (!user || !activePlan || !activePlan.id) return
 		const meals = await ScheduledMeal.getMealPlanScheduledMeals(activePlan.id!)
-		console.log('meals', meals)
 		interface DatePlusRecipeName {
 			date: Date
 			recipeName: string

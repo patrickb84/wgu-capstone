@@ -27,10 +27,8 @@ export function SearchResults(props: ISearchResultsProps) {
 	useEffect(() => {
 		if (!searchParam) navigate(ROUTES.RECIPES)
 		if (searchParam && searchData) {
-			console.log('🚀 ~ useEffect ~ searchParam', searchParam)
 
 			const results = filterDataByParam(searchData, searchParam)
-			console.log('🚀 ~ useEffect ~ results', results)
 			setSearchResults(results)
 		}
 	}, [searchParam, searchData, navigate])
@@ -71,7 +69,6 @@ function Items({ currentItems }: { currentItems: ISearchItem[] }) {
 			const recipes = await Promise.all(
 				currentItems.filter(item => item.type === 'Recipe').map(item => item.id && mealdb.fetchRecipe(item.id))
 			)
-			console.log('🚀 ~ fetchRecipes ~ recipes', recipes)
 
 			setRecipes(recipes.map(r => new Recipe(r)))
 			setIsLoading(false)
@@ -156,7 +153,6 @@ function PaginatedItems({ itemsPerPage, items }: { itemsPerPage: number; items: 
 	// Invoke when user click to request another page.
 	const handlePageClick = (event: any) => {
 		const newOffset = (event.selected * itemsPerPage) % items.length
-		console.log(`User requested page number ${event.selected}, which is offset ${newOffset}`)
 		setItemOffset(newOffset)
 	}
 

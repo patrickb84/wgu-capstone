@@ -36,7 +36,6 @@ export interface IUserRecipe extends IAppModel {
 
 export class UserRecipe implements IUserRecipe {
 	static add = async (recipe: Partial<IUserRecipe>, userId: string) => {
-		console.log('add', recipe)
 		const docRefId = await DB.add(this.collectionName, { ...recipe, userId })
 		return docRefId
 	}
@@ -54,7 +53,6 @@ export class UserRecipe implements IUserRecipe {
 				console.warn(err)
 			}
 			await DB.delete(this.collectionName, userRecipeId)
-			console.log('deleted', userRecipeId)
 		}
 	}
 	static get = async (id: string) => {

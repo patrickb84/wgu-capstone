@@ -82,7 +82,6 @@ export default function UserRepiceForm(props: IUserRepiceFormProps) {
 	useEffect(() => {
 		if (userRecipe) {
 			const { name, ingredients, area, category, instructions } = userRecipe
-			console.log('🚀 ~ useEffect ~ userRecipe', userRecipe)
 			setValue('name', name)
 			setValue('ingredients', ingredients)
 			setValue('area', area)

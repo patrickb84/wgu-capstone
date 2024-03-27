@@ -38,9 +38,7 @@ export function ImageUploader(props: IImageUploaderProps) {
 		file: Blob | Uint8Array | ArrayBuffer,
 		metadata?: UploadMetadata | undefined
 	) => {
-		const snapshot = await uploadBytes(storageRef, file, metadata).then(snapshot => {
-			console.log('Uploaded a blob or file!')
-		})
+		const snapshot = await uploadBytes(storageRef, file, metadata)
 		return snapshot
 	}
 
@@ -73,7 +71,6 @@ export function ImageUploader(props: IImageUploaderProps) {
 	const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0]
 		if (!file) return
-		console.log('fileObj is', file)
 		const acceptableMimeTypes = ['image/jpeg', 'image/png']
 		if (!acceptableMimeTypes.includes(file.type)) {
 			setError('File type not supported')

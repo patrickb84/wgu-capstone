@@ -59,7 +59,6 @@ const MealPlanModal = (props: IModalProps) => {
 	const submitCreate = async (plan: Partial<IMealPlan>, userId: string) => {
 		try {
 			const docRefId = await MealPlan.add(plan, userId)
-			console.log('🚀 ~ onSubmit ~ docRef', docRefId)
 
 			if (!docRefId) throw new Error('No docRef returned from add')
 			else activatePlan(docRefId)
@@ -77,7 +76,6 @@ const MealPlanModal = (props: IModalProps) => {
 	useEffect(() => {
 		if (props.userPlan) {
 			const { planStartDate, planEndDate, planName, planDescription } = props.userPlan
-			console.log(format(planStartDate, 'yyyy-MM-dd'))
 			setValue('planStartDate', format(planStartDate, 'yyyy-MM-dd'))
 			setValue('planEndDate', format(planEndDate, 'yyyy-MM-dd'))
 			setValue('planName', planName)
@@ -137,7 +135,6 @@ const MealPlanModal = (props: IModalProps) => {
 										}
 									})}
 									type="date"
-									onChange={e => console.log('change', e.target.value)}
 								/>
 							</Col>
 						</Row>

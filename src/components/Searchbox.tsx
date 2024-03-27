@@ -22,7 +22,6 @@ function getFilter(inputValue: string) {
 
 export const filterDataByParam = (data: ISearchItem[], param: string) => {
 	const filtered = data.filter(getFilter(param.toLowerCase()))
-	console.log('filtered', filtered)
 	return filtered
 }
 
@@ -50,7 +49,6 @@ const Searchbox = () => {
 	const { isOpen, getMenuProps, getInputProps, getComboboxProps, highlightedIndex, getItemProps, selectedItem } =
 		useCombobox({
 			onInputValueChange({ inputValue }: any) {
-				console.log('inputValue', inputValue)
 				setInputValue(inputValue)
 				setResultItems(searchData.filter(getFilter(inputValue.toLowerCase())))
 			},

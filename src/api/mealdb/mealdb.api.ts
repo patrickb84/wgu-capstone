@@ -101,7 +101,6 @@ const filterRecipes = async (params: any) => {
 		headers
 	}
 	const data = await request(filterConfig)
-	console.log('🚀 ~ filterRecipes ~ data', data.meals)
 	return data.meals
 }
 

@@ -34,8 +34,6 @@ export function ListSelect(props: IListSelectProps) {
 		setSelected(newSelected)
 	}
 
-   console.log('selected', selected)
-
 	return (
 		<>
 			<div className="position-static">

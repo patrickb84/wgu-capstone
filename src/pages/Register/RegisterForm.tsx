@@ -38,11 +38,8 @@ export function RegisterForm() {
 	} = useForm<IFormInputs>()
 
 	const onSubmit: SubmitHandler<IFormInputs> = data => {
-		console.log(data)
 		createUserWithEmailAndPassword(data.email, data.newPassword)
 	}
-
-	console.log('register', { currentUser: user, user: user$, loading, error })
 
 	if (user$) return <Navigate to="/" />
 

@@ -19,7 +19,6 @@ import IAppModel from 'types/AppModel'
 
 export default class DB {
 	static add = async (collectionName: string, values: any) => {
-		console.log('DB.add', collectionName, values)
 		try {
 			values.createdOn = new Date()
 			const docRef = await addDoc(collection(firestore, collectionName), values)

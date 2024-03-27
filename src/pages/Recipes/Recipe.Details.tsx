@@ -167,13 +167,13 @@ function RecipeInstructions(props: Pick<Recipe, 'instructions'>) {
 			<h2 className="display-4 mt-0 font-hand text-brand d-flex align-items-end justify-content-between">
 				Instructions
 			</h2>
-			<ol>
+			<ul>
 				{props.instructions?.map((instruction, idx) => (
 					<li key={idx} className="my-4 pb-1">
 						{instruction}
 					</li>
 				))}
-			</ol>
+			</ul>
 		</>
 	)
 }
