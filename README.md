@@ -6,7 +6,7 @@ It uses Firebase to authenticate and Firestore as database.
 
 ## Developer: Getting started
 
-In the project directory, you can run:
+First run `npm install` to install all dependencies. In the project directory, you can run:
 
 ### `npm start`
 
