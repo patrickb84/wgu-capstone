@@ -292,7 +292,7 @@ To run the test suite, execute the following command in the project root directo
 npm test
 ```
 
-## Test Example 
+### Test Example 
 
 ```ts
 import { render, screen } from '@testing-library/react'
