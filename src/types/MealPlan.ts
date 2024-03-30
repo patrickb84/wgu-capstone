@@ -40,25 +40,31 @@ export default class MealPlan implements IMealPlan {
 			console.error(error)
 		}
 	}
+
 	static collectionName = 'userPlan'
+
 	static delete = async (userPlanId: string) => {
 		await deleteDoc(doc(firestore, this.collectionName, userPlanId))
 	}
+
 	static get = async (planId: string) => {
 		const plan = (await DB.get(this.collectionName, planId)) as IMealPlan
 		return new MealPlan(plan)
 	}
+
 	static getUserMealPlans = async (userId: string) => {
 		const queryDocs = await DB.getCollectionByUserId(this.collectionName, userId)
 		const plans: IMealPlan[] = queryDocs.map(this.mapIterator)
 		return plans
 	}
+	
 	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): MealPlan => {
 		return new MealPlan({
 			id: doc.id,
 			...(doc.data() as MealPlan)
 		})
 	}
+
 	static populateNewMealPlan = async (startDate: Date, endDate: Date, planId: string, userId: string) => {
 		const numberOfDays = differenceInDays(endDate, startDate)
 
@@ -110,11 +116,13 @@ export default class MealPlan implements IMealPlan {
 			}
 		}
 	}
+
 	static subscribe = (userId: string, callback: Dispatch<SetStateAction<MealPlan[]>>) => {
 		const q = query(collection(firestore, this.collectionName), where('userId', '==', userId))
 		const unsubscribe = DB.subscribeToCollection(q, this.mapIterator, callback)
 		return unsubscribe
 	}
+
 	static update = async (values: Partial<IMealPlan>, id: string) => {
 		try {
 			const docRef = doc(firestore, this.collectionName, id)
@@ -123,6 +131,7 @@ export default class MealPlan implements IMealPlan {
 			console.error(error)
 		}
 	}
+
 	createdBy?: string
 	createdOn: Date
 	id?: string
@@ -133,6 +142,7 @@ export default class MealPlan implements IMealPlan {
 	updatedBy?: string
 	updatedOn?: Date
 	userId: string
+
 	constructor(mealPlan: IMealPlan) {
 		const { userId, id, planName, planDescription, planStartDate, planEndDate } = mealPlan
 		this.userId = userId

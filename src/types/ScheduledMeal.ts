@@ -29,10 +29,13 @@ export default class ScheduledMeal implements IScheduledMeal {
 		const id = await DB.add(this.collectionName, { ...scheduledMeal, userId })
 		return id
 	}
+
 	static collectionName = 'scheduledMeals'
+
 	static delete = async (id: string) => {
 		await deleteDoc(doc(firestore, this.collectionName, id))
 	}
+
 	static get = async (id: string) => {
 		const docRef = doc(firestore, this.collectionName, id)
 		const docSnap = await getDoc(docRef)
@@ -42,18 +45,21 @@ export default class ScheduledMeal implements IScheduledMeal {
 			return null
 		}
 	}
+
 	static getMealPlanScheduledMeals = async (mealPlanId: string) => {
 		const q = query(collection(firestore, this.collectionName), where('mealPlanId', '==', mealPlanId))
 		const docs = await DB.getCollectionByQuery(q)
 		const elements: IScheduledMeal[] = docs.map(this.mapIterator)
 		return elements
 	}
+
 	static mapIterator = (doc: QueryDocumentSnapshot<DocumentData>): ScheduledMeal => {
 		return new ScheduledMeal({
 			id: doc.id,
 			...(doc.data() as ScheduledMeal)
 		})
 	}
+
 	static update = async (values: Partial<IScheduledMeal>, id: string) => {
 		try {
 			const docRef = doc(firestore, this.collectionName, id)
@@ -62,12 +68,14 @@ export default class ScheduledMeal implements IScheduledMeal {
 			console.error(error)
 		}
 	}
+
 	id?: string
 	isUserRecipe?: boolean = false
 	mealDate: Date
 	mealPlanId: string
 	recipeId: string
 	userId: string
+	
 	constructor(scheduledMeal: IScheduledMeal) {
 		const { id, userId, mealDate, mealPlanId, recipeId, isUserRecipe: isUserCreated } = scheduledMeal
 		this.id = id
